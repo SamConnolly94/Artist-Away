@@ -27,3 +27,13 @@
 *.exe
 *.out
 *.app
+
+#Exe folders.
+*/[Dd]ebug
+*/[Rr]elease
+
+#Large files we don't really need.
+*.VC.db
+
+#Log files.
+*_Log.txt
