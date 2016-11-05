@@ -1,0 +1,2 @@
+﻿  Main.cpp
+LINK : fatal error LNK1181: cannot open input file 'assimp_release.lib'

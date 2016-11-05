@@ -21,7 +21,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -29,11 +28,12 @@
 *.app
 
 #Exe folders.
-*[Dd]ebug
-*[Rr]elease
+#*[Dd]ebug
+#*[Rr]elease
 
 #Large files we don't really need.
 *.VC.db
+*.VC.opendb
 
 #Log files.
 *_Log.txt

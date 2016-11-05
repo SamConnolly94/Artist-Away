@@ -72,7 +72,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
-    <LibraryPath>Engine\Lib\Debug;Engine\Dependencies\assimp-3.3.1\lib\Debug;$(LibraryPath);$(DXSDK_DIR)Lib\x86;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>Engine\Dependencies\assimp-3.3.1\lib\Debug;Engine\Lib\Debug;$(LibraryPath);$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
