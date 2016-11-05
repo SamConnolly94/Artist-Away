@@ -29,8 +29,8 @@
 *.app
 
 #Exe folders.
-*/[Dd]ebug
-*/[Rr]elease
+*[Dd]ebug
+*[Rr]elease
 
 #Large files we don't really need.
 *.VC.db
