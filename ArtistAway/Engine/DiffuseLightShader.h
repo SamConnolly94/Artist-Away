@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <D3DX10math.h>
 #include <D3DX11async.h>
-#include "Logger.h"
+#include "PrioEngineVars.h"
 
 class CDirectionalLightShader
 {
@@ -49,7 +49,7 @@ private:
 	ID3D11SamplerState* mpSampleState;
 	ID3D11Buffer* mpLightBuffer;
 
-	CLogger* mpLogger;
+	;
 };
 
 #endif

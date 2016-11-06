@@ -6,7 +6,6 @@
 #include <D3DX10math.h>
 #include "VertexTypeManager.h"
 #include "PrioEngineVars.h"
-#include "Logger.h"
 #include "Texture.h"
 #include "ModelControl.h"
 
@@ -58,7 +57,7 @@ protected:
 	bool LoadTexture(ID3D11Device* device);
 
 	// Logger, used in all classes, parent and children.
-	CLogger* mpLogger;
+	;
 };
 
 #endif

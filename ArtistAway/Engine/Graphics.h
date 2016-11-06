@@ -26,7 +26,7 @@ const float SCREEN_NEAR = 0.1f;
 class CGraphics
 {
 private:
-	CLogger* mpLogger;
+	;
 	int mScreenWidth, mScreenHeight;
 	float mFieldOfView;
 public:

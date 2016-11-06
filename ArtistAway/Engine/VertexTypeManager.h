@@ -5,10 +5,8 @@
 // Include DirectX libraries.
 #include <d3d11.h>
 #include <D3DX10math.h>
-
-#include "PrioEngineVars.h"
-#include "Logger.h"
 #include <vector>
+#include "PrioEngineVars.h"
 
 class CVertexManager
 {
@@ -83,7 +81,7 @@ private:
 
 private:
 	// Logging variables.
-	CLogger* mpLogger;
+	;
 };
 
 #endif

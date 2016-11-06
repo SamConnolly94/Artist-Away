@@ -19,7 +19,7 @@ private:
 	ID3D11Device* mpDevice;
 
 	CVertexManager* mpVertexManager;
-	CLogger* mpLogger;
+	;
 
 	ID3D11Buffer* mpIndexBuffer;
 

@@ -1,8 +1,9 @@
-﻿  Generating code
-  All 1389 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+﻿  Main.cpp
+  PerlinNoise.cpp
+  Generating code
+  All 1397 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Finished generating code
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.exe
-  ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
@@ -18,10 +19,11 @@
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
   6 File(s) copied
-  File not found - DLLs
-  0 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll
+  1 File(s) copied
   "Made resources dir, copying resources to that dir."
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cone.FBX
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.obj
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Triangle.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Wooden_House.fbx
@@ -29,4 +31,4 @@
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
-  8 File(s) copied
+  9 File(s) copied

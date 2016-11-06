@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <D3DX10math.h>
 #include <D3DX11async.h>
-#include "Logger.h"
+#include "PrioEngineVars.h"
 
 class CColourShader
 {
@@ -39,7 +39,7 @@ private:
 	ID3D11InputLayout* mpLayout;
 	ID3D11Buffer* mpMatrixBuffer;
 
-	CLogger* mpLogger;
+	;
 };
 
 #endif

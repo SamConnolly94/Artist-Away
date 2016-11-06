@@ -1,17 +1,22 @@
+#include "Engine\PrioEngineVars.h"
 #include "Engine/Engine.h"
-
+#include "PerlinNoise.h"
 
 // Declaration of functions used to run game itself.
 void GameLoop(CEngine* &engine);
-
 void Control(CEngine* &engine, CCamera* cam);
 
-int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+// Globals
+CLogger* gLogger;
+
+// Main
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	// Enable run time memory check while running in debug.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+	gLogger = new CLogger();
 	// Start the game engine.
 	CEngine* PrioEngine;
 	bool result;
@@ -22,11 +27,11 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!PrioEngine)
 	{
 		// Write a message to the log to let the user know we couldn't create the engine object.
-		CLogger::GetLogger().WriteLine("Could not create the engine object.");
+		gLogger->WriteLine("Could not create the engine object.");
 		// Return 0, we're saying we're okay, implement error codes in future versions maybe? 
 		return 0;
 	}
-	CLogger::GetLogger().MemoryAllocWriteLine(typeid(PrioEngine).name());
+	gLogger->MemoryAllocWriteLine(typeid(PrioEngine).name());
 
 	// Set up the engine.
 	result = PrioEngine->Initialise();
@@ -40,12 +45,9 @@ int WINAPI WinMain(HINSTANCE hInstance,	HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Shutdown and release the engine.
 	PrioEngine->Shutdown();
 	delete PrioEngine;
-	CLogger::GetLogger().MemoryDeallocWriteLine(typeid(PrioEngine).name());
+	gLogger->MemoryDeallocWriteLine(typeid(PrioEngine).name());
 	PrioEngine = nullptr;
-
-
-	CLogger::GetLogger().MemoryAnalysis();
-	CLogger::GetLogger().Shutdown();
+	delete gLogger;
 
 	// The singleton logger will cause a memory leak. Don't worry about it. Should be no more than 64 bytes taken by it though, more likely will only take 48 bytes.
 	_CrtDumpMemoryLeaks();
@@ -70,6 +72,9 @@ void GameLoop(CEngine* &engine)
 	CMesh* coneMesh = nullptr;
 	CModel* cone = nullptr;
 
+	CPerlinNoise* noise = new CPerlinNoise();
+	delete noise;
+
 	// Camera init.
 	myCam = engine->CreateCamera();
 	myCam->SetPositionZ(-20.0f);
@@ -84,7 +89,7 @@ void GameLoop(CEngine* &engine)
 
 	// Model init.
 	cube = cubeMesh->CreateModel();
-	cube2 = engine->CreatePrimitive(L"Resources/Textures/seafloor.dds", false ,PrioEngine::Primitives::cube);
+	cube2 = engine->CreatePrimitive(L"Resources/Textures/seafloor.dds", false, PrioEngine::Primitives::cube);
 	cone = coneMesh->CreateModel();
 
 	cube2->SetXPos(-5.0f);
@@ -117,7 +122,7 @@ void Control(CEngine* &engine, CCamera* cam)
 	const float kRotationSpeed = 10.0f;
 	const float kCamRotationSpeed = 2.5f;
 	float frameTime = engine->GetFrameTime();
-	
+
 	/// Camera control.
 	// Move backwards
 	if (engine->KeyHeld(PrioEngine::Key::kS))

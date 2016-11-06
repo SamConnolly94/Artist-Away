@@ -7,12 +7,11 @@
 #pragma comment(lib, "d3dx11.lib")
 #pragma comment(lib, "d3dx10.lib")
 
-#include "Logger.h"
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11.h>
 #include <d3dx10math.h>
-
+#include "PrioEngineVars.h"
 
 const int STRING_NUMBER_OF_BITS = 128;
 
@@ -24,7 +23,7 @@ private:
 	bool mFullscreen;
 	bool mVsyncEnabled;
 	int mGraphicsCardMemory;
-	char mGraphicsCardDescription[STRING_NUMBER_OF_BITS];
+	std::string mGraphicsCardDescription;
 	IDXGISwapChain* mpSwapChain;
 	ID3D11Device* mpDevice;
 	ID3D11DeviceContext* mpDeviceContext;
@@ -36,7 +35,7 @@ private:
 	D3DXMATRIX mProjectionMatrix;
 	D3DXMATRIX mWorldMatrix;
 	D3DXMATRIX mOrthographicMatrix;
-	CLogger* mpLogger;
+	;
 	std::string mGraphicsCardName;
 public:
 	CD3D11();
@@ -55,7 +54,7 @@ public:
 	void GetWorldMatrix(D3DMATRIX& worldMatrix);
 	void GetOrthogonalMatrix(D3DMATRIX& orthogMatrix);
 
-	void GetGraphicsCardInfo(char* cardName, int& memory);
+	//void GetGraphicsCardInfo(char* cardName, int& memory);
 /* Setup functions. */
 private:
 	void CreateSwapChainDesc(HWND hwnd, DXGI_SWAP_CHAIN_DESC& swapChainDesc, int refRateNumerator, int refRateDenominator);

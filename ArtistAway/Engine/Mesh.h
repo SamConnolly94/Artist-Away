@@ -47,7 +47,7 @@ private:
 	// Shaders
 
 	// Loggers
-	CLogger* mpLogger;
+	;
 
 	// The object reffering to the texture for this mesh.
 	CTexture* mpTexture;

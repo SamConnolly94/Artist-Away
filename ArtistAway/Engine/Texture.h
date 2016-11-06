@@ -4,7 +4,7 @@
 // Include the necessary directX 10 libraries.
 #include <d3d11.h>
 #include <D3DX11tex.h>
-#include "Logger.h"
+#include "PrioEngineVars.h"
 
 class CTexture
 {
@@ -18,7 +18,7 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 private:
 	ID3D11ShaderResourceView* mpTexture;
-	CLogger* mpLogger;
+	;
 };
 
 #endif
