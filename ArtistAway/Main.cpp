@@ -1,6 +1,6 @@
-#include "Engine\PrioEngineVars.h"
 #include "Engine/Engine.h"
 #include "PerlinNoise.h"
+//#include "Engine\PrioEngineVars.h"
 
 // Declaration of functions used to run game itself.
 void GameLoop(CEngine* &engine);
