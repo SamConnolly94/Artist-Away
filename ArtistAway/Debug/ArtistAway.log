@@ -1,4 +1,8 @@
-﻿  Main.cpp
+﻿  HeightMap.cpp
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(23): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(40): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(57): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(64): warning C4018: '<': signed/unsigned mismatch
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."

@@ -76,8 +76,8 @@ void GameLoop(CEngine* &engine)
 	CModel* house = nullptr;
 	CTerrainGrid* grid = engine->CreateTerrainGrid();
 	CHeightMap* heightMap = new CHeightMap();
-	heightMap->SetHeight(1000);
-	heightMap->SetWidth(1000);
+	heightMap->SetHeight(100);
+	heightMap->SetWidth(100);
 	heightMap->InitialiseMap();
 	grid->SetHeight(heightMap->GetHeight());
 	grid->SetWidth(heightMap->GetWidth());

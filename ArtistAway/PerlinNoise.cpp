@@ -23,6 +23,8 @@ CPerlinNoise::CPerlinNoise()
 	// Duplicate the prenumeration vector.
 	p.insert(p.end(), p.begin(), p.end());
 
+	mFrequency = 1;
+	mAmplitude = 1;
 	repeat = -1;
 }
 
@@ -43,6 +45,10 @@ CPerlinNoise::CPerlinNoise(unsigned int seed)
 
 	// Duplicate the prenumeration vector.
 	p.insert(p.end(), p.begin(), p.end());
+
+	mFrequency = 1;
+	mAmplitude = 1;
+	repeat = -1;
 }
 
 
@@ -53,7 +59,6 @@ CPerlinNoise::~CPerlinNoise()
 
 double CPerlinNoise::Perlin(double x, double y, double z)
 {
-
 	if (repeat > 0)
 	{
 		x = static_cast<int>(x) % repeat;
@@ -62,9 +67,9 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 	}
 
 	// Discover the unit cube that contains the point.
-	int X = (int)std::floor(x) & 255;
-	int Y = (int)std::floor(y) & 255;
-	int Z = (int)std::floor(z) & 255;
+	int xi = (int)std::floor(x) & 255;
+	int yi = (int)std::floor(y) & 255;
+	int zi = (int)std::floor(z) & 255;
 
 	// Calculate the frequencies.
 	double xf = x - floor(x);
@@ -77,14 +82,15 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 	double w = Fade(z);
 
 	// Hash the coordinates of the 8 cube coordinates (vertices) which our perlin noise will occur in.
-	int aaa = p[p[p[X] + Y] + Z];
-	int aba = p[p[p[X] + inc(Y)] + Z];
-	int aab = p[p[p[X] + Y] + inc(Z)];
-	int abb = p[p[p[X] + inc(Y)] + inc(Z)];
-	int baa = p[p[p[inc(X)] + Y] + Z];
-	int bba = p[p[p[inc(X)] + inc(Y)] + Z];
-	int bab = p[p[p[inc(X)] + Y] + inc(Z)];
-	int bbb = p[p[p[inc(X)] + inc(Y)] + inc(Z)];
+	int aaa, aba, aab, abb, baa, bba, bab, bbb;
+	aaa = p[p[p[xi] + yi] + zi];
+	aba = p[p[p[xi] + inc(yi)] + zi];
+	aab = p[p[p[xi] + yi] + inc(zi)];
+	abb = p[p[p[xi] + inc(yi)] + inc(zi)];
+	baa = p[p[p[inc(xi)] + yi] + zi];
+	bba = p[p[p[inc(xi)] + inc(yi)] + zi];
+	bab = p[p[p[inc(xi)] + yi] + inc(zi)];
+	bbb = p[p[p[inc(xi)] + inc(yi)] + inc(zi)];
 	
 	double x1;
 	double x2;
@@ -105,20 +111,18 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int octaves, double persistence)
 {
 	double total = 0;
-	double frequency = 1;
-	double amplitude = 1;
 	// Max value can be used for normalising the result between 0 and 1.
 	double maxValue = 0;
 	
 	for (unsigned int i = 0; i < octaves; i++)
 	{
-		total += Perlin(x * frequency, y * frequency, z * frequency) * amplitude;
+		total += Perlin(x * mFrequency, y * mFrequency, z * mFrequency) * mAmplitude;
 
-		maxValue += amplitude;
+		maxValue += mAmplitude;
 
-		amplitude *= persistence;
+		mAmplitude *= persistence;
 
-		frequency *= 2;
+		mFrequency *= 2;
 	}
 
 	return total / maxValue;
@@ -146,18 +150,5 @@ double CPerlinNoise::Lerp(double time, double a, double b)
 
 double CPerlinNoise::Gradient(int hash, double x, double y, double z)
 {
-	int h = hash & 15;                                    // Take the hashed value and take the first 4 bits of it (15 == 0b1111)
-	double u = h < 8 /* 0b1000 */ ? x : y;                // If the most significant bit (MSB) of the hash is 0 then set u = x.  Otherwise y.
-
-	double v;                                             // In Ken Perlin's original implementation this was another conditional operator (?:).  I
-														  // expanded it for readability.
-
-	if (h < 4 /* 0b0100 */)                                // If the first and second significant bits are 0 set v = y
-		v = y;
-	else if (h == 12 /* 0b1100 */ || h == 14 /* 0b1110*/)  // If the first and second significant bits are 1 set v = x
-		v = x;
-	else                                                  // If the first and second significant bits are not equal (0/1, 1/0) set v = z
-		v = z;
-
-	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v); // Use the last 2 bits to decide if u and v are positive or negative.  Then return their addition.
+	return ((hash & 1) ? x : -x) + ((hash & 2) ? y : -y);
 }

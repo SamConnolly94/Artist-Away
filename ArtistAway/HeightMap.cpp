@@ -51,23 +51,36 @@ void CHeightMap::InitialiseMap()
 
 	int indexY = 0;
 	int indexX = 0;
-	float freq = 1.0f;
 
-	for (float y = 0; y < 10.0f; y += 0.01f) 
+	double amplification = 1.0;
+	float frequency = 100.0f;
+	mpPerlinNoise->SetFrequency(frequency);
+
+	for (float y = 0; y < mHeight / 10.0f; y += 0.1f)
 	{
-		if (indexY < mHeight && indexX < mWidth)
+		indexX = 0;
+		for (float x = 0; x < mWidth / 10.0f; x += 0.1f)
 		{
-			indexY = 0;
-			for (float x = 0; x < 10.0f; x += 0.1f) {
-				double nx = (x / 100 - 0.5);
-				double ny = (y / 100 - 0.5);
+			if (indexX < mWidth && indexY < mHeight)
+			{
+				float X = static_cast<float>(x) / mWidth;
+				float Y = static_cast<float>(y) / mHeight;
 
-				mpHeightMap[indexY][indexX] = mpPerlinNoise->OctavePerlin(nx * freq, ny * freq, 0.0, 2, 1);
-				indexY++;
+				double noise = 0.0;
+				double gain = 1.0;
+				for (int octaves = 0; octaves < 8; octaves++)
+				{
+					noise += mpPerlinNoise->Perlin(x * gain / frequency, y * gain / frequency, 0.0) * amplification / gain;
+					gain *= 2.0;
+				}
+				mpHeightMap[indexY][indexX] = noise;
+				indexX++;
 			}
-			indexX++;
 		}
+		indexY++;
 	}
 
+
+	gLogger->WriteLine("Heightmap created.");
 	return;
 }
