@@ -23,6 +23,7 @@ CPerlinNoise::CPerlinNoise()
 	// Duplicate the prenumeration vector.
 	p.insert(p.end(), p.begin(), p.end());
 
+	repeat = -1;
 }
 
 /* Constructor for a custom seed which we want to use, this will be more random. */
@@ -52,15 +53,23 @@ CPerlinNoise::~CPerlinNoise()
 
 double CPerlinNoise::Perlin(double x, double y, double z)
 {
+
+	if (repeat > 0)
+	{
+		x = static_cast<int>(x) % repeat;
+		y = static_cast<int>(y) % repeat;
+		z = static_cast<int>(z) % repeat;
+	}
+
 	// Discover the unit cube that contains the point.
 	int X = (int)std::floor(x) & 255;
 	int Y = (int)std::floor(y) & 255;
 	int Z = (int)std::floor(z) & 255;
 
-	// Find the relative positions of the point in a cube.
-	x -= floor(x);
-	y -= floor(y);
-	z -= floor(z);
+	// Calculate the frequencies.
+	double xf = x - floor(x);
+	double yf = y - floor(y);
+	double zf = z - floor(z);
 
 	// Calculate fade curves of u, v and w.
 	double u = Fade(x);
@@ -68,17 +77,61 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 	double w = Fade(z);
 
 	// Hash the coordinates of the 8 cube coordinates (vertices) which our perlin noise will occur in.
-	int a = p[X] + Y;
-	int b = p[a] + Z;
-	int c = p[a + 1] + Z;
-	int d = p[X + 1] + Y;
-	int e = p[d] + Z;
-	int f = p[d + 1] + Z;
+	int aaa = p[p[p[X] + Y] + Z];
+	int aba = p[p[p[X] + inc(Y)] + Z];
+	int aab = p[p[p[X] + Y] + inc(Z)];
+	int abb = p[p[p[X] + inc(Y)] + inc(Z)];
+	int baa = p[p[p[inc(X)] + Y] + Z];
+	int bba = p[p[p[inc(X)] + inc(Y)] + Z];
+	int bab = p[p[p[inc(X)] + Y] + inc(Z)];
+	int bbb = p[p[p[inc(X)] + inc(Y)] + inc(Z)];
+	
+	double x1;
+	double x2;
+	double y1;
+	double y2;
+	
+	x1 = Lerp(u, Gradient(aaa, xf, yf, zf), Gradient(baa, xf - 1, yf, zf));
+	x2 = Lerp(u, Gradient(aba, xf, yf - 1, zf), Gradient(bba, xf - 1, yf - 1, zf));
+	y1 = Lerp(v, x1, x2);
+	x1 = Lerp(u, Gradient(aab, xf, yf, zf - 1), Gradient(bab, xf - 1, yf, zf - 1));
+	x2 = Lerp(u, Gradient(abb, xf, yf - 1, zf - 1), Gradient(bbb, xf - 1, yf - 1, zf - 1));
+	y2 = Lerp(v, x1, x2);
 
-	// Add blended results from 8 corners of cube.
-	double result = Lerp(w, Lerp(v, Lerp(u, Gradient(p[b], x, y, z), Gradient(p[e], x - 1, y, z)), Lerp(u, Gradient(p[c], x, y - 1, z), Gradient(p[f], x - 1, y - 1, z))), Lerp(v, Lerp(u, Gradient(p[b + 1], x, y, z - 1), Gradient(p[e + 1], x - 1, y, z - 1)), Lerp(u, Gradient(p[c + 1], x, y - 1, z - 1), Gradient(p[f + 1], x - 1, y - 1, z - 1))));
+	return (Lerp(w, y1, y2) + 1.0) / 2.0;
+}
 
-	return (result + 1.0) / 2.0;
+/* A function which returns a number of layers of perlin noise. */
+double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int octaves, double persistence)
+{
+	double total = 0;
+	double frequency = 1;
+	double amplitude = 1;
+	// Max value can be used for normalising the result between 0 and 1.
+	double maxValue = 0;
+	
+	for (unsigned int i = 0; i < octaves; i++)
+	{
+		total += Perlin(x * frequency, y * frequency, z * frequency) * amplitude;
+
+		maxValue += amplitude;
+
+		amplitude *= persistence;
+
+		frequency *= 2;
+	}
+
+	return total / maxValue;
+}
+
+int CPerlinNoise::inc(int number)
+{
+	number++;
+	if (repeat > 0)
+	{
+		number %= repeat;
+	}
+	return number;
 }
 
 double CPerlinNoise::Fade(double time)
@@ -93,43 +146,18 @@ double CPerlinNoise::Lerp(double time, double a, double b)
 
 double CPerlinNoise::Gradient(int hash, double x, double y, double z)
 {
-	int h = hash & 15;
+	int h = hash & 15;                                    // Take the hashed value and take the first 4 bits of it (15 == 0b1111)
+	double u = h < 8 /* 0b1000 */ ? x : y;                // If the most significant bit (MSB) of the hash is 0 then set u = x.  Otherwise y.
 
-	// Convert lower 4 bits of hash into gradient directions.
-	double u;
-	double v;
+	double v;                                             // In Ken Perlin's original implementation this was another conditional operator (?:).  I
+														  // expanded it for readability.
 
-	if (h < 8)
-	{
-		u = x;
-	}
-	else
-	{
-		u = y;
-	}
-
-	if (h < 4)
-	{
+	if (h < 4 /* 0b0100 */)                                // If the first and second significant bits are 0 set v = y
 		v = y;
-	}
-	else if (h == 12 || h == 14)
-	{
+	else if (h == 12 /* 0b1100 */ || h == 14 /* 0b1110*/)  // If the first and second significant bits are 1 set v = x
 		v = x;
-	}
-	else
-	{
+	else                                                  // If the first and second significant bits are not equal (0/1, 1/0) set v = z
 		v = z;
-	}
 
-	if (h & 1 != 0)
-	{
-		u = -u;
-	}
-
-	if (h & 2 != 0)
-	{
-		v = -v;
-	}
-
-	return u + v;
+	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v); // Use the last 2 bits to decide if u and v are positive or negative.  Then return their addition.
 }

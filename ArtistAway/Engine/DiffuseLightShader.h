@@ -6,7 +6,7 @@
 #include <D3DX11async.h>
 #include "PrioEngineVars.h"
 
-class CDirectionalLightShader
+class CDiffuseLightShader
 {
 private:
 	struct MatrixBufferType
@@ -25,8 +25,8 @@ private:
 	};
 
 public:
-	CDirectionalLightShader();
-	~CDirectionalLightShader();
+	CDiffuseLightShader();
+	~CDiffuseLightShader();
 
 	bool Initialise(ID3D11Device* device, HWND hwnd);
 	void Shutdown();

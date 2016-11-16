@@ -116,11 +116,12 @@ namespace Colours
 }
 
 // Defines the types of vertex arrays we have, these should reflect the structures in the vertex shader.
-enum VertexType
+enum ShaderType
 {
 	Colour,
 	Texture,
-	Diffuse
+	Diffuse,
+	Specular
 };
 
 // A namespace containing any keys that can be pressed on the keyboard that our engine should be able to handle.

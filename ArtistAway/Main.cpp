@@ -1,5 +1,7 @@
 #include "Engine/Engine.h"
 #include "PerlinNoise.h"
+#include "HeightMap.h"
+
 //#include "Engine\PrioEngineVars.h"
 
 // Declaration of functions used to run game itself.
@@ -58,6 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 /* Controls any gameplay and things that should happen when we play the game. */
 void GameLoop(CEngine* &engine)
 {
+
 	// Constants.
 	const float kRotationSpeed = 100.0f;
 	const float kMovementSpeed = 1.0f;
@@ -66,37 +69,44 @@ void GameLoop(CEngine* &engine)
 	float frameTime;
 	CCamera* myCam;
 	CMesh* cubeMesh;
-	CModel* cube;
-	CPrimitive* cube2;
+	CMesh* houseMesh = nullptr;
+
 	CLight* ambientLight;
-	CMesh* coneMesh = nullptr;
-	CModel* cone = nullptr;
+	CModel* cube = nullptr;
+	CModel* house = nullptr;
+	CTerrainGrid* grid = engine->CreateTerrainGrid();
+	CHeightMap* heightMap = new CHeightMap();
+	heightMap->SetHeight(1000);
+	heightMap->SetWidth(1000);
+	heightMap->InitialiseMap();
+	grid->SetHeight(heightMap->GetHeight());
+	grid->SetWidth(heightMap->GetWidth());
+	grid->LoadHeightMap(heightMap->GetMap());
+	grid->CreateGrid();
 
-	CPerlinNoise* noise = new CPerlinNoise();
-	delete noise;
-
+	CPrimitive* colourCube = engine->CreatePrimitive(PrioEngine::Colours::red, PrioEngine::Primitives::cube);
 	// Camera init.
 	myCam = engine->CreateCamera();
-	myCam->SetPositionZ(-20.0f);
 
 	// Light init
 	ambientLight = engine->CreateLight(D3DXVECTOR4{ 1.0f, 1.0f, 1.0f, 1.0f }, D3DXVECTOR4{ 0.15f, 0.15f, 0.15f, 1.0f });
-	ambientLight->SetDirection({ 0.5f, -0.5f, 0.5f });
+	ambientLight->SetDirection(D3DXVECTOR3{ 0.0f, 0.0f, 1.0f });
+	ambientLight->SetSpecularColour(D3DXVECTOR4{ 1.0f, 1.0f, 1.0f, 1.0f });
+	ambientLight->SetSpecularPower(32.0f);
 
 	// Mesh init
-	cubeMesh = engine->LoadMesh("Resources/Models/Cube.obj", L"Resources/Textures/seafloor.dds", Diffuse);
-	coneMesh = engine->LoadMesh("Resources/Models/Wooden_House.fbx", L"Resources/Textures/House_Texture.png", Diffuse);
+	cubeMesh = engine->LoadMesh("Resources/Models/Cube.obj", L"Resources/Textures/seafloor.dds", PrioEngine::ShaderType::Specular);
+	houseMesh = engine->LoadMesh("Resources/Models/Wooden_House.fbx", L"Resources/Textures/House_Texture.png", PrioEngine::ShaderType::Diffuse);
 
 	// Model init.
 	cube = cubeMesh->CreateModel();
-	cube2 = engine->CreatePrimitive(L"Resources/Textures/seafloor.dds", false, PrioEngine::Primitives::cube);
-	cone = coneMesh->CreateModel();
+	house = houseMesh->CreateModel();
+	cube->SetZPos(-20.0f);
 
-	cube2->SetXPos(-5.0f);
-	cube->SetXPos(0.0f);
-	cone->SetXPos(5.0f);
-	cone->SetRotationX(90.0f);
-	cone->SetScale(10.0f);
+	house->SetXPos(0.0f);
+	house->SetXPos(5.0f);
+	house->SetRotationX(90.0f);
+	house->SetScale(10.0f);
 
 	// Start the game timer running.
 	engine->StartTimer();
@@ -113,6 +123,8 @@ void GameLoop(CEngine* &engine)
 		// Rotate the model which has been logged on.
 		cube->RotateY(kRotationSpeed * frameTime);
 	}
+
+	delete heightMap;
 }
 
 /* Control any user input here, must be called in every tick of the game loop. */

@@ -10,18 +10,12 @@
 #include "DiffuseLightShader.h"
 #include "ColourShader.h"
 #include "TextureShader.h"
+#include "SpecularLightingShader.h"
 #include "Light.h"
 #include <vector>
 #include "Dependencies/assimp-3.3.1/include/assimp/Importer.hpp"
 #include "Dependencies/assimp-3.3.1/include\assimp/scene.h"
 #include "Dependencies/assimp-3.3.1/include/assimp/postprocess.h"
-
-enum ShaderType
-{
-	Colour,
-	Diffuse,
-	Texture
-};
 
 class CMesh
 {
@@ -33,9 +27,10 @@ private:
 	ID3D11Device* mpDevice;
 
 	// Shader objects.
-	CDirectionalLightShader* mpDirectionalLightShader;
+	CDiffuseLightShader* mpDirectionalLightShader;
 	CTextureShader* mpTextureShader;
 	CColourShader* mpColourShader;
+	CSpecularLightingShader* mpSpecularShader;
 
 	// File strings
 	std::string mFilename;
@@ -43,11 +38,6 @@ private:
 
 	// A list of the instance of models belonging to this mesh.
 	std::list<CModel*> mpModels;
-
-	// Shaders
-
-	// Loggers
-	;
 
 	// The object reffering to the texture for this mesh.
 	CTexture* mpTexture;
@@ -58,8 +48,11 @@ private:
 	std::vector<D3DXVECTOR3> mpNormalsList;
 	std::vector<D3DXVECTOR4> mpVertexColourList;
 	std::vector<unsigned long> mpIndicesList;
+
+	// This will need to be updated every frame.
+	D3DXVECTOR3 mCameraPosition;
 public:
-	CMesh(ID3D11Device* device, HWND hwnd, ShaderType shaderType);
+	CMesh(ID3D11Device* device, HWND hwnd, PrioEngine::ShaderType shaderType);
 	~CMesh();
 
 	// Loads data from file into our mesh object.
@@ -67,6 +60,8 @@ public:
 	bool LoadMesh(char* filename, WCHAR* textureName);
 
 	void Render(ID3D11DeviceContext* context, D3DXMATRIX &view, D3DXMATRIX &proj, std::list<CLight*>lights);
+
+	void SetCameraPos(D3DXVECTOR3 cameraPos) { mCameraPosition = cameraPos; };
 private:
 	bool LoadAssimpModel(char* filename);
 	bool LoadSam();
@@ -83,6 +78,6 @@ private:
 	};
 
 
-	ShaderType mShaderType;
+	PrioEngine::ShaderType mShaderType;
 };
 #endif

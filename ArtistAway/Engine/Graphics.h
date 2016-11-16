@@ -12,6 +12,7 @@
 #include "TextureShader.h"
 #include "DiffuseLightShader.h"
 #include "Light.h"
+#include "Terrain.h"
 
 // Global variables.
 // Will the window run in full screen?
@@ -45,7 +46,7 @@ private:
 	CPrimitive* mpTriangle;
 	CColourShader* mpColourShader;
 	CTextureShader* mpTextureShader;
-	CDirectionalLightShader* mpDiffuseLightShader;
+	CDiffuseLightShader* mpDiffuseLightShader;
 	
 	bool RenderPrimitiveWithTexture(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
 	bool RenderPrimitiveWithColour(CPrimitive* model, D3DMATRIX worldMatrix, D3DMATRIX viewMatrix, D3DMATRIX projMatrix);
@@ -54,9 +55,10 @@ private:
 	std::list<CPrimitive*> mpPrimitives;
 	std::list<CMesh*> mpMeshes;
 	std::list<CLight*> mpLights;
+	std::list<CTerrainGrid*> mpTerrainGrids;
 
 	bool CreateTextureShaderForModel(HWND hwnd);
-	bool CreateColourShaderForModel(HWND hwnd);
+	bool CreateColourShader(HWND hwnd);
 	bool CreateTextureAndDiffuseLightShaderFromModel(HWND hwnd);
 	bool RenderModels(D3DXMATRIX view, D3DXMATRIX world, D3DXMATRIX proj);
 
@@ -73,8 +75,10 @@ public:
 
 	// Model creation / deletion.
 	CMesh* LoadMesh(char* filename, WCHAR* textureFilename);
-	CMesh* LoadMesh(char * filename, WCHAR* textureFilename, ShaderType shaderType);
+	CMesh* LoadMesh(char * filename, WCHAR* textureFilename, PrioEngine::ShaderType shaderType);
 	bool RemoveMesh(CMesh* &mesh);
+
+	CTerrainGrid* CreateTerrainGrid();
 
 	CLight* CreateLight(D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
 	bool RemoveLight(CLight* &light);

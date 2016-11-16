@@ -28,21 +28,29 @@ private:
 		D3DXVECTOR2 texture;
 		D3DXVECTOR3 normal;
 	};
+	struct VertexSpecularLightingType
+	{
+		D3DXVECTOR3 position;
+		D3DXVECTOR2 texture;
+		D3DXVECTOR3 normal;
+	};
 
 	// Definitions of each of the vertex shaders input buffers so that we can use it in C++.
 	VertexTextureType* mpVerticesTexture;
 	VertexColourType* mpVerticesColour;
+	VertexDiffuseLightingType* mpVerticesDiffuse;
+	VertexSpecularLightingType* mpVerticesSpecular;
+
 	
 	ID3D11Device* mpDevice;
 	ID3D11Buffer* mpVertexBuffer;
 
-	VertexDiffuseLightingType* mpVerticesDiffuse;
 	PrioEngine::Primitives mShape;
 	PrioEngine::RGBA mColour;
 	
 public:
-	CVertexManager(PrioEngine::VertexType vertexType);
-	CVertexManager(PrioEngine::VertexType vertexType, PrioEngine::Primitives shape);
+	CVertexManager(PrioEngine::ShaderType vertexType);
+	CVertexManager(PrioEngine::ShaderType vertexType, PrioEngine::Primitives shape);
 	~CVertexManager();
 	void SetDevicePtr(ID3D11Device* device);
 	void CleanArrays();
@@ -63,25 +71,24 @@ public:
 private:
 	int mNumOfVertices;
 
-	PrioEngine::VertexType mVertexType;
+	PrioEngine::ShaderType mShaderType;
 
-	void CreateVertexColour();
-	void CreateVertexDiffuse();
-	void CreateVertexTexture();
+	void CreateColourVerticesArray();
+	void CreateTextureVerticesArray();
+	void CreateDiffuseVerticesArray();
+	void CreateSpecularVerticesArray();
 
 	// Sets vertice points for cubes.
 	void SetColourCube(float x, float y, float z);
 	void SetTextureCube(float x, float y, float z);
 	void SetDiffuseCube(float x, float y, float z);
+	void SetSpecularCube(float x, float y, float z);
 
 	// Sets vertice points for triangles.
 	void SetColourTriangle(float x, float y, float z);
 	void SetTextureTriangle(float x, float y, float z);
 	void SetDiffuseTriangle(float x, float y, float z);
-
-private:
-	// Logging variables.
-	;
+	void SetSpecularTriangle(float x, float y, float z);
 };
 
 #endif
