@@ -4,8 +4,9 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 #include "PrioEngineVars.h"
+#include "ModelControl.h"
 
-class CTerrainGrid
+class CTerrainGrid : public CModelControl
 {
 public:
 	CTerrainGrid(ID3D11Device* device);
@@ -16,6 +17,9 @@ private:
 		D3DXVECTOR3 position;
 		D3DXVECTOR4 colour;
 	};
+
+	float mLowestPoint;
+	float mHighestPoint;
 public:
 	bool CreateGrid();
 	void Render(ID3D11DeviceContext* context);
@@ -48,7 +52,8 @@ public:
 	int GetHeight() { return mHeight; };
 	void SetWidth(int value) { mWidth = value; };
 	void SetHeight(int value) { mHeight = value; };
-
+	float GetHighestPoint() { return mHighestPoint; };
+	float GetLowestPoint() { return mLowestPoint; };
 	void LoadHeightMap(double** heightMap);
 };
 

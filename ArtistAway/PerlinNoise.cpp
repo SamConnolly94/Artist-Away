@@ -110,21 +110,6 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 /* A function which returns a number of layers of perlin noise. */
 double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int octaves, double persistence)
 {
-	//double total = 0;
-	//// Max value can be used for normalising the result between 0 and 1.
-	//double maxValue = 0;
-	//
-	//for (unsigned int i = 0; i < octaves; i++)
-	//{
-	//	total += Perlin(x * mFrequency, y * mFrequency, z * mFrequency) * mAmplitude;
-
-	//	maxValue += mAmplitude;
-
-	//	mAmplitude *= persistence;
-
-	//	mFrequency *= 2;
-	//}
-
 	//return total / maxValue;
 	double total = 0.0;
 
@@ -135,16 +120,6 @@ double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int oct
 	}
 	return total;
 }
-//
-//int CPerlinNoise::inc(int number)
-//{
-//	number++;
-//	if (repeat > 0)
-//	{
-//		number %= repeat;
-//	}
-//	return number;
-//}
 
 double CPerlinNoise::Fade(double t)
 {
