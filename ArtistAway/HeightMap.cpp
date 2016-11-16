@@ -52,32 +52,28 @@ void CHeightMap::InitialiseMap()
 	int indexY = 0;
 	int indexX = 0;
 
-	double amplification = 1.0;
-	float frequency = 100.0f;
+	double amplification = 4.0;
+	double frequency = 10;
+	unsigned int numberOfOctaves = 8;
 	mpPerlinNoise->SetFrequency(frequency);
+	mpPerlinNoise->SetAmplitude(amplification);
 
-	for (float y = 0; y < mHeight / 10.0f; y += 0.1f)
+	for (unsigned int y = 0; y < mHeight; y++)
 	{
-		indexX = 0;
-		for (float x = 0; x < mWidth / 10.0f; x += 0.1f)
+		for (unsigned int x = 0; x < mWidth; x++)
 		{
-			if (indexX < mWidth && indexY < mHeight)
-			{
-				float X = static_cast<float>(x) / mWidth;
-				float Y = static_cast<float>(y) / mHeight;
+			double X = (double)x / ((double)mWidth);
+			double Y = (double)y / ((double)mHeight);
+			 
+			// Typical Perlin noise
+			double n = mpPerlinNoise->OctavePerlin(X, Y, 0.8, numberOfOctaves, 0.3); 
+			//for (unsigned int i = 0; i < numberOfOctaves; i++)
+			//{
+			//	n += mpPerlinNoise->Perlin(frequency * X, frequency * Y, 0.8);
+			//}
 
-				double noise = 0.0;
-				double gain = 1.0;
-				for (int octaves = 0; octaves < 8; octaves++)
-				{
-					noise += mpPerlinNoise->Perlin(x * gain / frequency, y * gain / frequency, 0.0) * amplification / gain;
-					gain *= 2.0;
-				}
-				mpHeightMap[indexY][indexX] = noise;
-				indexX++;
-			}
+			mpHeightMap[y][x] = n;
 		}
-		indexY++;
 	}
 
 

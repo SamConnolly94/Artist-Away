@@ -77,20 +77,20 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 	double zf = z - floor(z);
 
 	// Calculate fade curves of u, v and w.
-	double u = Fade(x);
-	double v = Fade(y);
-	double w = Fade(z);
+	double u = Fade(xf);
+	double v = Fade(yf);
+	double w = Fade(zf);
 
 	// Hash the coordinates of the 8 cube coordinates (vertices) which our perlin noise will occur in.
 	int aaa, aba, aab, abb, baa, bba, bab, bbb;
 	aaa = p[p[p[xi] + yi] + zi];
-	aba = p[p[p[xi] + inc(yi)] + zi];
-	aab = p[p[p[xi] + yi] + inc(zi)];
-	abb = p[p[p[xi] + inc(yi)] + inc(zi)];
-	baa = p[p[p[inc(xi)] + yi] + zi];
-	bba = p[p[p[inc(xi)] + inc(yi)] + zi];
-	bab = p[p[p[inc(xi)] + yi] + inc(zi)];
-	bbb = p[p[p[inc(xi)] + inc(yi)] + inc(zi)];
+	aba = p[p[p[xi] + yi + 1] + zi];
+	aab = p[p[p[xi] + yi] + zi + 1];
+	abb = p[p[p[xi] + yi + 1] + zi + 1];
+	baa = p[p[p[xi + 1] + yi] + zi];
+	bba = p[p[p[xi + 1] + yi + 1] + zi];
+	bab = p[p[p[xi + 1] + yi] + zi + 1];
+	bbb = p[p[p[xi + 1] + yi + 1] + zi + 1];
 	
 	double x1;
 	double x2;
@@ -110,45 +110,57 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 /* A function which returns a number of layers of perlin noise. */
 double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int octaves, double persistence)
 {
-	double total = 0;
-	// Max value can be used for normalising the result between 0 and 1.
-	double maxValue = 0;
-	
+	//double total = 0;
+	//// Max value can be used for normalising the result between 0 and 1.
+	//double maxValue = 0;
+	//
+	//for (unsigned int i = 0; i < octaves; i++)
+	//{
+	//	total += Perlin(x * mFrequency, y * mFrequency, z * mFrequency) * mAmplitude;
+
+	//	maxValue += mAmplitude;
+
+	//	mAmplitude *= persistence;
+
+	//	mFrequency *= 2;
+	//}
+
+	//return total / maxValue;
+	double total = 0.0;
+
+	double maxVal = 0;
 	for (unsigned int i = 0; i < octaves; i++)
 	{
 		total += Perlin(x * mFrequency, y * mFrequency, z * mFrequency) * mAmplitude;
-
-		maxValue += mAmplitude;
-
-		mAmplitude *= persistence;
-
-		mFrequency *= 2;
 	}
+	return total;
+}
+//
+//int CPerlinNoise::inc(int number)
+//{
+//	number++;
+//	if (repeat > 0)
+//	{
+//		number %= repeat;
+//	}
+//	return number;
+//}
 
-	return total / maxValue;
+double CPerlinNoise::Fade(double t)
+{
+	return t * t * t * (t * (t * 6 - 15) + 10);
 }
 
-int CPerlinNoise::inc(int number)
+double CPerlinNoise::Lerp(double t, double a, double b)
 {
-	number++;
-	if (repeat > 0)
-	{
-		number %= repeat;
-	}
-	return number;
-}
-
-double CPerlinNoise::Fade(double time)
-{
-	return time * time * time * (time * (time *  6 - 15) + 10);
-}
-
-double CPerlinNoise::Lerp(double time, double a, double b)
-{
-	return a + time * (b - a);
+	return a + t * (b - a);
 }
 
 double CPerlinNoise::Gradient(int hash, double x, double y, double z)
 {
-	return ((hash & 1) ? x : -x) + ((hash & 2) ? y : -y);
+	int h = hash & 15;
+	// Convert lower 4 bits of hash into 12 gradient directions
+	double u = h < 8 ? x : y,
+		v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 }
