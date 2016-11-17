@@ -6,7 +6,7 @@
 
 // Declaration of functions used to run game itself.
 void GameLoop(CEngine* &engine);
-void Control(CEngine* &engine, CCamera* cam);
+void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid);
 
 // Globals
 CLogger* gLogger;
@@ -101,7 +101,7 @@ void GameLoop(CEngine* &engine)
 		frameTime = engine->GetFrameTime();
 
 		// Process any keys pressed this frame.
-		Control(engine, myCam);
+		Control(engine, myCam, grid);
 
 	}
 
@@ -109,7 +109,7 @@ void GameLoop(CEngine* &engine)
 }
 
 /* Control any user input here, must be called in every tick of the game loop. */
-void Control(CEngine* &engine, CCamera* cam)
+void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid)
 {
 	const float kMoveSpeed = 10.0f;
 	const float kRotationSpeed = 10.0f;
@@ -165,6 +165,20 @@ void Control(CEngine* &engine, CCamera* cam)
 	if (engine->KeyHit(PrioEngine::Key::kEscape))
 	{
 		engine->Stop();
+	}
+
+	// If the user hits F1.
+	if (engine->KeyHit(PrioEngine::Key::kF1))
+	{
+		// Switch the fill mode of our terrain.
+		if (grid->GetDrawStyle() == Solid)
+		{
+			grid->SetDrawStyle(Wireframe);
+		}
+		else
+		{
+			grid->SetDrawStyle(Solid);
+		}
 	}
 
 

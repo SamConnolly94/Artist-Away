@@ -12,8 +12,9 @@
 class CEngine
 {
 private:
-	// Logger which writes to a default log file. Can be accessed through CLogger->GetInstance()->Write();
-	;
+	const float kKeyPressIntervalTime = 0.5f;
+	bool mKeyRecentlyHit;
+	float mTimeSinceLastKeyPress;
 public:
 	// Default constructor.
 	CEngine();

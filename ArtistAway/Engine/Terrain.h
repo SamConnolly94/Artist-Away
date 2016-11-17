@@ -6,6 +6,12 @@
 #include "PrioEngineVars.h"
 #include "ModelControl.h"
 
+enum DrawStyle
+{
+	Solid,
+	Wireframe
+};
+
 class CTerrainGrid : public CModelControl
 {
 public:
@@ -20,6 +26,7 @@ private:
 
 	float mLowestPoint;
 	float mHighestPoint;
+	DrawStyle mStyle;
 public:
 	bool CreateGrid();
 	void Render(ID3D11DeviceContext* context);
@@ -55,6 +62,8 @@ public:
 	float GetHighestPoint() { return mHighestPoint; };
 	float GetLowestPoint() { return mLowestPoint; };
 	void LoadHeightMap(double** heightMap);
+	void SetDrawStyle(DrawStyle style);
+	DrawStyle GetDrawStyle() { return mStyle; };
 };
 
 #endif
