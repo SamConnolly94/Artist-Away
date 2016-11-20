@@ -12,9 +12,11 @@ CHeightMap::CHeightMap()
 	mHeight = 100;
 
 	SetPersistence(0.6);
-	SetAmplitude(1.0);
-	SetFrequency(1.0);
+	SetAmplitude(1.0f);
+	SetFrequency(1.0f);
 	SetNumberOfOctaves(6);
+	SetGain(150.0f);
+
 }
 
 
@@ -57,13 +59,13 @@ void CHeightMap::InitialiseMap()
 	int indexY = 0;
 	int indexX = 0;
 
-	mpPerlinNoise->SetFrequency(mFrequency);
-	mpPerlinNoise->SetAmplitude(mAmplitude);
-
 	for (unsigned int y = 0; y < mHeight; y++)
 	{
 		for (unsigned int x = 0; x < mWidth; x++)
 		{
+			mpPerlinNoise->SetFrequency(mFrequency);
+			mpPerlinNoise->SetAmplitude(mAmplitude);
+
 			double X = (double)x / ((double)mWidth);
 			double Y = (double)y / ((double)mHeight);
 			 
@@ -73,7 +75,9 @@ void CHeightMap::InitialiseMap()
 			//{
 			//	n += mpPerlinNoise->Perlin(frequency * X, frequency * Y, 0.8);
 			//}
-			n = mpPerlinNoise->OctavePerlin(X, Y, 0.8, mNumberOfOctaves, mPersistence);
+			n = mpPerlinNoise->OctavePerlin(X, Y, 0.0, mNumberOfOctaves, mPersistence);
+
+			n *= mGain;
 
 			mpHeightMap[y][x] = n;
 		}

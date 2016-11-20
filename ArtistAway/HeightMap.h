@@ -14,8 +14,9 @@ private:
 	unsigned int mWidth;
 	unsigned int mNumberOfOctaves;
 	double mPersistence;
-	double mFrequency;
-	double mAmplitude;
+	float mFrequency;
+	float mAmplitude;
+	float mGain;
 public:
 	CHeightMap();
 	~CHeightMap();
@@ -28,8 +29,9 @@ public:
 	void SetWidth(unsigned int value) { mWidth = value; };
 	void SetNumberOfOctaves(unsigned int octaves) { mNumberOfOctaves = octaves; };
 	void SetPersistence(double persistence);
-	void SetFrequency(double frequency) { mFrequency = frequency; };
-	void SetAmplitude(double amplitude) { mAmplitude = amplitude; };
+	void SetFrequency(float frequency) { mFrequency = frequency; };
+	void SetAmplitude(float amplitude) { mAmplitude = amplitude; };
+	void SetGain(float gain) { mGain = gain; };
 };
 
 #endif

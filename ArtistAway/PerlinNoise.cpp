@@ -24,7 +24,7 @@ CPerlinNoise::CPerlinNoise()
 	p.insert(p.end(), p.begin(), p.end());
 
 	mFrequency = 1;
-	mAmplitude = 1;
+	mAmplitude = 0.5;
 	repeat = -1;
 }
 
@@ -122,7 +122,7 @@ double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int oct
 
 		mAmplitude *= persistence;
 
-		mFrequency *= 2;
+		mFrequency *= 2.0f;
 	}
 	return total / maxVal;
 }

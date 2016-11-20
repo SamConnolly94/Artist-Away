@@ -19,8 +19,8 @@ public:
 	~CPerlinNoise();
 
 	double Perlin(double x, double y, double z);
-	void SetFrequency(double value) { mFrequency = value; };
-	void SetAmplitude(double value) { mAmplitude = value; };
+	void SetFrequency(float value) { mFrequency = value; };
+	void SetAmplitude(float value) { mAmplitude = value; };
 
 	double OctavePerlin(double x, double y, double z, unsigned int octaves, double persistence);
 private:
@@ -31,8 +31,8 @@ private:
 	double Gradient(int hash, double x, double y, double z);
 
 	int repeat = -1;
-	double mFrequency;
-	double mAmplitude;
+	float mFrequency;
+	float mAmplitude;
 };
 
 #endif
