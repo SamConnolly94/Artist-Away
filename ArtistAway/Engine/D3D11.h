@@ -54,6 +54,8 @@ public:
 	void GetProjectionMatrix(D3DMATRIX& projMatrix);
 	void GetWorldMatrix(D3DMATRIX& worldMatrix);
 	void GetOrthogonalMatrix(D3DMATRIX& orthogMatrix);
+	void EnableWireframeFill();
+	void EnableSolidFill();
 
 	//void GetGraphicsCardInfo(char* cardName, int& memory);
 /* Setup functions. */

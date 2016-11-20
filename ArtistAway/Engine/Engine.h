@@ -15,6 +15,7 @@ private:
 	const float kKeyPressIntervalTime = 0.5f;
 	bool mKeyRecentlyHit;
 	float mTimeSinceLastKeyPress;
+	bool mWireframeEnabled;
 public:
 	// Default constructor.
 	CEngine();
@@ -77,6 +78,8 @@ public:
 
 	float GetFrameTime();
 	CCamera* CreateCamera();
+
+	void ToggleWireframe();
 
 	// Control user input.
 public:

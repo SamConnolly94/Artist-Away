@@ -27,9 +27,9 @@ const float SCREEN_NEAR = 0.1f;
 class CGraphics
 {
 private:
-	;
 	int mScreenWidth, mScreenHeight;
 	float mFieldOfView;
+	bool mWireframeEnabled;
 public:
 	CGraphics();
 	~CGraphics();
@@ -85,6 +85,7 @@ public:
 	/* Camera control, required by the engine. */
 	CCamera* CreateCamera();
 	void SetCameraPos(float x, float y, float z);
+	void ToggleWireframe();
 };
 
 #endif

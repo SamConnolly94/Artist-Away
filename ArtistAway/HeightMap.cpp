@@ -15,6 +15,7 @@ CHeightMap::CHeightMap()
 	SetAmplitude(1.0f);
 	SetFrequency(1.0f);
 	SetNumberOfOctaves(6);
+	// Default gain quite high, great for terrain maps.
 	SetGain(150.0f);
 
 }
@@ -82,7 +83,6 @@ void CHeightMap::InitialiseMap()
 			mpHeightMap[y][x] = n;
 		}
 	}
-
 
 	gLogger->WriteLine("Heightmap created.");
 	return;
