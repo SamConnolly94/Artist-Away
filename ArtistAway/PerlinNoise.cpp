@@ -113,12 +113,18 @@ double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int oct
 	//return total / maxValue;
 	double total = 0.0;
 
-	double maxVal = 0;
+	double maxVal = 0.0;
 	for (unsigned int i = 0; i < octaves; i++)
 	{
 		total += Perlin(x * mFrequency, y * mFrequency, z * mFrequency) * mAmplitude;
+
+		maxVal += mAmplitude;
+
+		mAmplitude *= persistence;
+
+		mFrequency *= 2;
 	}
-	return total;
+	return total / maxVal;
 }
 
 double CPerlinNoise::Fade(double t)

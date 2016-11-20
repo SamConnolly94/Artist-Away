@@ -10,6 +10,11 @@ CHeightMap::CHeightMap()
 
 	mWidth = 100;
 	mHeight = 100;
+
+	SetPersistence(0.6);
+	SetAmplitude(1.0);
+	SetFrequency(1.0);
+	SetNumberOfOctaves(6);
 }
 
 
@@ -52,11 +57,8 @@ void CHeightMap::InitialiseMap()
 	int indexY = 0;
 	int indexX = 0;
 
-	double amplification = 4.0;
-	double frequency = 25;
-	unsigned int numberOfOctaves = 8;
-	mpPerlinNoise->SetFrequency(frequency);
-	mpPerlinNoise->SetAmplitude(amplification);
+	mpPerlinNoise->SetFrequency(mFrequency);
+	mpPerlinNoise->SetAmplitude(mAmplitude);
 
 	for (unsigned int y = 0; y < mHeight; y++)
 	{
@@ -67,10 +69,11 @@ void CHeightMap::InitialiseMap()
 			 
 			// Typical Perlin noise
 			double n = 0.0; /*mpPerlinNoise->OctavePerlin(X, Y, 0.8, numberOfOctaves, 0.3); */
-			for (unsigned int i = 0; i < numberOfOctaves; i++)
-			{
-				n += mpPerlinNoise->Perlin(frequency * X, frequency * Y, 0.8);
-			}
+			//for (unsigned int i = 0; i < numberOfOctaves; i++)
+			//{
+			//	n += mpPerlinNoise->Perlin(frequency * X, frequency * Y, 0.8);
+			//}
+			n = mpPerlinNoise->OctavePerlin(X, Y, 0.8, mNumberOfOctaves, mPersistence);
 
 			mpHeightMap[y][x] = n;
 		}
@@ -79,4 +82,23 @@ void CHeightMap::InitialiseMap()
 
 	gLogger->WriteLine("Heightmap created.");
 	return;
+}
+
+/* Set the persistence used in noise generation.
+* @Param persistence - value of persistence used must be between 0.0 and 1.0.
+*/
+void CHeightMap::SetPersistence(double persistence)
+{
+	if (persistence > 1.0)
+	{
+		gLogger->WriteLine("You tried to set a persistence of more than 1. Range is 0.0 - 1.0.");
+		return;
+	}
+	else if (persistence < 0.0)
+	{
+		gLogger->WriteLine("You tried to set a persistence of less than 0.0. Range is 0.0 - 1.0.");
+		return;
+	}
+
+	mPersistence = persistence;
 }

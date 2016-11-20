@@ -20,7 +20,7 @@ public:
 
 	double Perlin(double x, double y, double z);
 	void SetFrequency(double value) { mFrequency = value; };
-	void SetAmplitude(unsigned int value) { mAmplitude = value; };
+	void SetAmplitude(double value) { mAmplitude = value; };
 
 	double OctavePerlin(double x, double y, double z, unsigned int octaves, double persistence);
 private:
@@ -32,7 +32,7 @@ private:
 
 	int repeat = -1;
 	double mFrequency;
-	unsigned int mAmplitude;
+	double mAmplitude;
 };
 
 #endif

@@ -1,5 +1,7 @@
-﻿  ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
-  ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
+﻿  HeightMap.cpp
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(28): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(45): warning C4018: '<': signed/unsigned mismatch
+  ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   "Made dir, copying shaders to that dir."
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
