@@ -225,6 +225,15 @@ namespace Math
 	{
 		return (vectorA.x * vectorB.x + vectorA.y * vectorB.y + vectorA.z * vectorB.z);
 	}
+	
+	inline VEC3 Subtract(const VEC3 A, const VEC3 B)
+	{
+		VEC3 result;
+		result.x = A.x - B.x;
+		result.y = A.y - B.y;
+		result.z = A.z - B.z;
+		return result;
+	}
 
 	/* Finds the cross product of two vectors.
 	* @Returns VEC3, the vector representation of the cross of these two vectors.
@@ -234,9 +243,9 @@ namespace Math
 	inline VEC3 CrossProduct(VEC3 vectorA, VEC3 vectorB)
 	{
 		VEC3 result;
-		result.x = vectorA.y * vectorB.z - vectorB.y * vectorA.z;
-		result.y = vectorA.z * vectorB.x - vectorB.z * vectorA.x;
-		result.z = vectorA.x * vectorB.y - vectorB.x * vectorA.y;
+		result.x = vectorA.y * vectorB.z - vectorA.z * vectorB.y;
+		result.y = vectorA.z * vectorB.x - vectorA.x * vectorB.z;
+		result.z = vectorA.x * vectorB.y - vectorA.y * vectorB.x;
 		return result;
 	}
 }
