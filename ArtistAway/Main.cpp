@@ -87,7 +87,7 @@ void GameLoop(CEngine* &engine)
 
 	// Light init
 	ambientLight = engine->CreateLight(D3DXVECTOR4{ 1.0f, 1.0f, 1.0f, 1.0f }, D3DXVECTOR4{ 0.15f, 0.15f, 0.15f, 1.0f });
-	ambientLight->SetDirection(D3DXVECTOR3{ 0.0f, 0.0f, 1.0f });
+	ambientLight->SetDirection(D3DXVECTOR3{ 0.0f, 0.0f, -1.0f});
 	ambientLight->SetSpecularColour(D3DXVECTOR4{ 1.0f, 1.0f, 1.0f, 1.0f });
 	ambientLight->SetSpecularPower(32.0f);
 

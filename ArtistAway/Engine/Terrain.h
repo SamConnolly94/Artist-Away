@@ -5,6 +5,7 @@
 #include <d3dx10math.h>
 #include "PrioEngineVars.h"
 #include "ModelControl.h"
+#include "Texture.h"
 
 class CTerrainGrid : public CModelControl
 {
@@ -15,15 +16,16 @@ private:
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
-		D3DXVECTOR4 colour;
+		D3DXVECTOR2 UV;
+		D3DXVECTOR3 normal;
 	};
-
+	CTexture* mpTexture;
 	float mLowestPoint;
 	float mHighestPoint;
 public:
 	bool CreateGrid();
 	void Render(ID3D11DeviceContext* context);
-
+	CTexture* GetTexture() { return mpTexture; };
 private:
 	bool InitialiseBuffers(ID3D11Device* device);
 	void ShutdownBuffers();
