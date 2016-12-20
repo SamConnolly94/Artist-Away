@@ -235,6 +235,13 @@ namespace Math
 		return result;
 	}
 
+	inline float GetLength(VEC3 vec)
+	{
+		float result = 0.0f;
+		result = sqrt((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
+		return result;
+	}
+
 	/* Finds the cross product of two vectors.
 	* @Returns VEC3, the vector representation of the cross of these two vectors.
 	*
@@ -243,9 +250,9 @@ namespace Math
 	inline VEC3 CrossProduct(VEC3 vectorA, VEC3 vectorB)
 	{
 		VEC3 result;
-		result.x = vectorA.y * vectorB.z - vectorA.z * vectorB.y;
-		result.y = vectorA.z * vectorB.x - vectorA.x * vectorB.z;
-		result.z = vectorA.x * vectorB.y - vectorA.y * vectorB.x;
+		result.x = (vectorA.y * vectorB.z) - (vectorA.z * vectorB.y);
+		result.y = (vectorB.z * vectorA.x) - (vectorB.x * vectorA.z);
+		result.z = (vectorA.x * vectorB.y) - (vectorA.y * vectorB.x);
 		return result;
 	}
 }

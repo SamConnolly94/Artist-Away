@@ -88,21 +88,78 @@ void CHeightMap::InitialiseMap()
 	return;
 }
 
+void CHeightMap::UpdateMap()
+{
+	// Allocate row space.
+	mpHeightMap = new double*[mHeight];
+
+	// Iterate through all the rows.
+	for (int x = 0; x < mHeight; x++)
+	{
+		// Allocate space for the columns.
+		mpHeightMap[x] = new double[mWidth];
+	}
+
+	int indexY = 0;
+	int indexX = 0;
+
+	for (unsigned int y = 0; y < mHeight; y++)
+	{
+		for (unsigned int x = 0; x < mWidth; x++)
+		{
+			mpPerlinNoise->SetFrequency(mFrequency);
+			mpPerlinNoise->SetAmplitude(mAmplitude);
+
+			double X = (double)x / ((double)mWidth);
+			double Y = (double)y / ((double)mHeight);
+
+			// Typical Perlin noise
+			double n = 0.0; 
+			n = mpPerlinNoise->OctavePerlin(X, Y, 0.0, mNumberOfOctaves, mPersistence);
+
+			n *= mGain;
+
+			mpHeightMap[y][x] = n;
+		}
+	}
+
+	gLogger->WriteLine("Heightmap created.");
+	return;
+}
+
 /* Set the persistence used in noise generation.
 * @Param persistence - value of persistence used must be between 0.0 and 1.0.
 */
 void CHeightMap::SetPersistence(double persistence)
 {
-	if (persistence > 1.0)
-	{
-		gLogger->WriteLine("You tried to set a persistence of more than 1. Range is 0.0 - 1.0.");
-		return;
-	}
-	else if (persistence < 0.0)
-	{
-		gLogger->WriteLine("You tried to set a persistence of less than 0.0. Range is 0.0 - 1.0.");
-		return;
-	}
+	//if (persistence > 1.0)
+	//{
+	//	gLogger->WriteLine("You tried to set a persistence of more than 1. Range is 0.0 - 1.0.");
+	//	return;
+	//}
+	//else if (persistence < 0.0)
+	//{
+	//	gLogger->WriteLine("You tried to set a persistence of less than 0.0. Range is 0.0 - 1.0.");
+	//	return;
+	//}
 
 	mPersistence = persistence;
+}
+
+/* Write height map to a file. Standard should be to use the .map extension. */
+void CHeightMap::WriteMapToFile(std::string fileName)
+{
+	std::ofstream outFile;
+	outFile.open(fileName);
+
+	for (int heightCount = 0; heightCount < mHeight; heightCount++)
+	{
+		for (int widthCount = 0; widthCount < mWidth; widthCount++)
+		{
+			outFile << mpHeightMap[heightCount][widthCount] << " ";
+		}
+		outFile << std::endl;
+	}
+
+	gLogger->WriteLine("Wrote height map to: " + fileName);
 }

@@ -30,14 +30,16 @@ private:
 	ID3D11DeviceContext* mpDeviceContext;
 	ID3D11RenderTargetView* mpRenderTargetView;
 	ID3D11Texture2D* mpDepthStencilBuffer;
-	ID3D11DepthStencilState* mpDepthStencilState;
+	ID3D11DepthStencilState* mpDepthEnabledStencilState;
+	ID3D11DepthStencilState* mpDepthDisabledStencilState;
 	ID3D11DepthStencilView* mpDepthStencilView;
 	ID3D11RasterizerState* mpRasterizerState;
 	D3DXMATRIX mProjectionMatrix;
 	D3DXMATRIX mWorldMatrix;
-	D3DXMATRIX mOrthographicMatrix;
-	;
+	D3DXMATRIX mOrthoMatrix;
 	std::string mGraphicsCardName;
+	ID3D11BlendState* mpAlphaBlendingStateEnabled;
+	ID3D11BlendState* mpAlphaBlendingStateDisabled;
 public:
 	CD3D11();
 	~CD3D11();
@@ -57,6 +59,13 @@ public:
 	void EnableWireframeFill();
 	void EnableSolidFill();
 
+	void EnableAlphaBlending();
+	void DisableAlphaBlending();
+
+	void DisableZBuffer();
+	void EnableZBuffer();
+	bool ToggleFullscreen(bool fullscreenEnabled);
+
 	//void GetGraphicsCardInfo(char* cardName, int& memory);
 /* Setup functions. */
 private:
@@ -64,6 +73,7 @@ private:
 	bool CreateSwapChain(D3D_FEATURE_LEVEL& featureLevel, DXGI_SWAP_CHAIN_DESC& swapChainDesc);
 	bool CreateDepthBuffer(D3D11_TEXTURE2D_DESC& depthBufferDesc);
 	bool CreateDepthStencilView(D3D11_DEPTH_STENCIL_VIEW_DESC& depthStencilViewDesc);
+	bool CreateDepthDisabledStencilState(D3D11_DEPTH_STENCIL_DESC& depthStencilBufferDesc);
 	bool CreateDepthStencilBuffer(D3D11_DEPTH_STENCIL_DESC& depthStencilBufferDesc);
 	bool InitRasterizer(D3D11_RASTERIZER_DESC& rasterDesc);
 	void InitViewport(D3D11_VIEWPORT& viewport);

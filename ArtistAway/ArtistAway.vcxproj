@@ -71,23 +71,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
-    <LibraryPath>Engine\Dependencies\assimp-3.3.1\lib\Debug;Engine\Lib\Debug;$(LibraryPath);$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>Engine\Dependencies\AntTweakBar\include;$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
+    <LibraryPath>Engine\Dependencies\AntTweakBar\lib;Engine\Dependencies\assimp-3.3.1\lib\Debug;Engine\Lib\Debug;$(LibraryPath);$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
-    <LibraryPath>Engine\Lib\Debug;Engine\Dependencies\assimp-3.3.1\lib\Debug;$(LibraryPath);$(DXSDK_DIR)Lib\x64;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>Engine\Dependencies\AntTweakBar\include;$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
+    <LibraryPath>Engine\Dependencies\AntTweakBar\lib;Engine\Lib\Debug;Engine\Dependencies\assimp-3.3.1\lib\Debug;$(LibraryPath);$(DXSDK_DIR)Lib\x64;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
-    <LibraryPath>Engine\Lib\Release;Engine\Dependencies\assimp-3.3.1\lib\Release;$(LibraryPath);$(DXSDK_DIR)Lib\x86;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>Engine\Dependencies\AntTweakBar\include;$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
+    <LibraryPath>Engine\Dependencies\AntTweakBar\lib;Engine\Lib\Release;Engine\Dependencies\assimp-3.3.1\lib\Release;$(LibraryPath);$(DXSDK_DIR)Lib\x86;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
-    <LibraryPath>Engine\Lib\Release;Engine\Dependencies\assimp-3.3.1\lib\Release;$(LibraryPath);$(DXSDK_DIR)Lib\x64;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>Engine\Dependencies\AntTweakBar\include;$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
+    <LibraryPath>Engine\Dependencies\AntTweakBar\lib;Engine\Lib\Release;Engine\Dependencies\assimp-3.3.1\lib\Release;$(LibraryPath);$(DXSDK_DIR)Lib\x64;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -102,7 +102,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp_debug.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;assimp_debug.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(TargetDir)Shaders" mkdir "$(TargetDir)Shaders"
@@ -129,7 +129,7 @@ xcopy /e /y "$(ProjectDir)Resources" "$(TargetDir)Resources"</Command>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp_debug.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;assimp_debug.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(TargetDir)Shaders" mkdir "$(TargetDir)Shaders"
@@ -161,7 +161,7 @@ xcopy /e /y "$(ProjectDir)Resources" "$(TargetDir)Resources"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp_release.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;assimp_release.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(TargetDir)Shaders" mkdir "$(TargetDir)Shaders"
@@ -193,7 +193,7 @@ xcopy /e /y "$(ProjectDir)Resources" "$(TargetDir)Resources"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp_release.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;assimp_release.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(TargetDir)Shaders" mkdir "$(TargetDir)Shaders"

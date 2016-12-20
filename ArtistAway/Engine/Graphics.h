@@ -10,13 +10,16 @@
 #include "Mesh.h"
 #include "ColourShader.h"
 #include "TextureShader.h"
-#include "DiffuseLightShader.h"
+#include "DirectionalLightShader.h"
 #include "Light.h"
 #include "Terrain.h"
+#include "GameText.h"
+#include "2DImage.h"
+#include <AntTweakBar.h>
 
 // Global variables.
 // Will the window run in full screen?
-const bool FULL_SCREEN = false;
+
 // Will VSYNC be enabled? (Caps at your monitor refresh rate)
 const bool VSYNC_ENABLED = true;
 // Far clip
@@ -30,6 +33,8 @@ private:
 	int mScreenWidth, mScreenHeight;
 	float mFieldOfView;
 	bool mWireframeEnabled;
+
+	bool mFullScreen = false;
 public:
 	CGraphics();
 	~CGraphics();
@@ -46,7 +51,9 @@ private:
 	CPrimitive* mpTriangle;
 	CColourShader* mpColourShader;
 	CTextureShader* mpTextureShader;
-	CDiffuseLightShader* mpDiffuseLightShader;
+	CDirectionalLightShader* mpDiffuseLightShader;
+	CGameText* mpText;
+	D3DXMATRIX mBaseView;
 	
 	bool RenderPrimitiveWithTexture(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
 	bool RenderPrimitiveWithColour(CPrimitive* model, D3DMATRIX worldMatrix, D3DMATRIX viewMatrix, D3DMATRIX projMatrix);
@@ -56,11 +63,14 @@ private:
 	std::list<CMesh*> mpMeshes;
 	std::list<CLight*> mpLights;
 	std::list<CTerrainGrid*> mpTerrainGrids;
+	std::list<C2DImage*> mpUIImages;
 
 	bool CreateTextureShaderForModel(HWND hwnd);
 	bool CreateColourShader(HWND hwnd);
 	bool CreateTextureAndDiffuseLightShaderFromModel(HWND hwnd);
 	bool RenderModels(D3DXMATRIX view, D3DXMATRIX world, D3DXMATRIX proj);
+	bool RenderText(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho);
+	bool RenderBitmaps(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho);
 
 	float mRotation;
 
@@ -86,6 +96,14 @@ public:
 	CCamera* CreateCamera();
 	void SetCameraPos(float x, float y, float z);
 	void ToggleWireframe();
+	CCamera* GetMainCamera() {return mpCamera;};
+	SentenceType* CreateSentence(std::string text, int posX, int posY, int maxLength);
+	bool UpdateSentence(SentenceType* &sentence, std::string text, int posX, int posY, PrioEngine::RGB colour);
+	C2DImage* CreateUIImages(WCHAR* filename, int width, int height, int posX, int posY );
+	bool RemoveUIImage(C2DImage* &element);
+	bool UpdateTerrainBuffers(CTerrainGrid* &grid, double** heightmap, int width, int height);
+	bool IsFullscreen();
+	bool SetFullscreen(bool enabled);
 };
 
 #endif

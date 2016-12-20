@@ -13,7 +13,7 @@ class CEngine
 {
 private:
 	const float kKeyPressIntervalTime = 0.5f;
-	bool mKeyRecentlyHit;
+	bool mKeyRecentlyHit[256];
 	float mTimeSinceLastKeyPress;
 	bool mWireframeEnabled;
 public:
@@ -81,11 +81,19 @@ public:
 
 	void ToggleWireframe();
 
+	SentenceType* CreateText(std::string text, int posX, int posY, int maxLength);
+	bool UpdateText(SentenceType *& sentence, std::string text, int posX, int posY, PrioEngine::RGB colour);
+
 	// Control user input.
 public:
 	bool KeyHit(const unsigned int key);
 	bool KeyHeld(const unsigned int key);
 	void Stop();
+	CCamera* GetMainCamera() { return mpGraphics->GetMainCamera(); };
+	C2DImage* CreateUIImages(WCHAR* filename, int width, int height, int posX, int posY);
+	bool RemoveUIImage(C2DImage *& element);
+	bool UpdateTerrainBuffers(CTerrainGrid* &grid, double** heightmap, int width, int height);
+	bool ToggleFullscreen(unsigned int fullscreenKey);
 };
 
 // Define WndProc and the application handle pointer here so that we can re-direct the windows system messaging into our message handler 

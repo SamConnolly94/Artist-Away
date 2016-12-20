@@ -1,4 +1,9 @@
-﻿  Main.cpp
+﻿  HeightMap.cpp
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(31): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(48): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(97): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(155): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(157): warning C4018: '<': signed/unsigned mismatch
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
@@ -6,31 +11,44 @@
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  8 File(s) copied
+  10 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  8 File(s) copied
+  10 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar.dll
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar64.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll
-  1 File(s) copied
+  3 File(s) copied
   "Made resources dir, copying resources to that dir."
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\defaultFontData.txt
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.tga
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.txt
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cone.FBX
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.obj
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Triangle.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Wooden_House.fbx
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\House_Texture.png
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Test.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
-  10 File(s) copied
+  17 File(s) copied

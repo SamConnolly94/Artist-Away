@@ -7,11 +7,14 @@
 #include "ModelControl.h"
 #include "Texture.h"
 
+#include <sstream>
+
 class CTerrainGrid : public CModelControl
 {
 public:
 	CTerrainGrid(ID3D11Device* device);
 	~CTerrainGrid();
+	void ReleaseHeightMap();
 private:
 	struct VertexType
 	{
@@ -30,6 +33,7 @@ private:
 	bool InitialiseBuffers(ID3D11Device* device);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext* context);
+	PrioEngine::Math::VEC3 CalculateNormal(VertexType* vertices, int index);
 private:
 	int mWidth;
 	int mHeight;
@@ -57,6 +61,8 @@ public:
 	float GetHighestPoint() { return mHighestPoint; };
 	float GetLowestPoint() { return mLowestPoint; };
 	void LoadHeightMap(double** heightMap);
+	void LoadHeightMapFromFile(std::string filename);
+	bool UpdateBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceContext, double** heightMap, int newWidth, int newHeight);
 };
 
 #endif
