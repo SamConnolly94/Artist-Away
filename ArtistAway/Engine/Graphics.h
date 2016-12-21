@@ -99,6 +99,8 @@ public:
 	CCamera* GetMainCamera() {return mpCamera;};
 	SentenceType* CreateSentence(std::string text, int posX, int posY, int maxLength);
 	bool UpdateSentence(SentenceType* &sentence, std::string text, int posX, int posY, PrioEngine::RGB colour);
+	bool RemoveSentence(SentenceType* &sentence);
+
 	C2DImage* CreateUIImages(WCHAR* filename, int width, int height, int posX, int posY );
 	bool RemoveUIImage(C2DImage* &element);
 	bool UpdateTerrainBuffers(CTerrainGrid* &grid, double** heightmap, int width, int height);

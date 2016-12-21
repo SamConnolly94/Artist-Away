@@ -14,7 +14,6 @@ class CTerrainGrid : public CModelControl
 public:
 	CTerrainGrid(ID3D11Device* device);
 	~CTerrainGrid();
-	void ReleaseHeightMap();
 private:
 	struct VertexType
 	{
@@ -22,6 +21,7 @@ private:
 		D3DXVECTOR2 UV;
 		D3DXVECTOR3 normal;
 	};
+	void ReleaseHeightMap();
 	CTexture* mpTexture;
 	float mLowestPoint;
 	float mHighestPoint;
@@ -37,6 +37,8 @@ private:
 private:
 	int mWidth;
 	int mHeight;
+	int mMaxWidth;
+	int mMaxHeight;
 	int mVertexCount;
 	int mIndexCount;
 	double** mpHeightMap;

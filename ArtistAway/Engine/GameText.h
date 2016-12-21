@@ -35,6 +35,7 @@ public:
 	bool Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX orthoMatrix);
 	SentenceType* CreateSentence(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string text, int posX, int posY, int maxLength);
 	bool UpdateSentence(SentenceType* &sentence, std::string text, int posX, int posY, float red, float green, float blue, ID3D11DeviceContext* deviceContext);
+	bool RemoveSentence(SentenceType* &sentence);
 private:
 	bool InitialiseSentence(SentenceType** sentence, int maxLength, ID3D11Device * device);
 	void ReleaseSentence(SentenceType* sentence);

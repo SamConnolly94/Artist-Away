@@ -2,6 +2,7 @@
 #include "PerlinNoise.h"
 #include "HeightMap.h"
 #include <thread>
+#include <process.h>
 
 //#include "Engine\PrioEngineVars.h"
 
@@ -27,19 +28,26 @@ void TW_CALL GetAmplitude(void *value, void * /*clientData*/);
 void TW_CALL SetPersistence(const void *value, void * /*Client data. */);
 void TW_CALL GetPersistence(void *value, void * /*clientData*/);
 
+void TW_CALL UpdateTerrain(void* clientData);
+
+HANDLE hUpdateHeightThread;
+HANDLE hUpdateWidthThread;
+HANDLE hUpdateFrequencyThread;
+HANDLE hUpdatePersistenceThread;
+
+unsigned int __stdcall UpdateMapThread(void* pdata);
+bool readyForJoin;
+
 //void JoinThreads();
 
 CHeightMap* heightMap;
 CEngine* engine; 
 CTerrainGrid* grid;
 
-//bool widthThreadReadyForJoin;
-
 // Main
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	//widthThreadReadyForJoin = false;
-
+	readyForJoin = true;
 	// Enable run time memory check while running in debug.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -90,6 +98,7 @@ void GameLoop(CEngine* &engine)
 	// Constants.
 	const float kRotationSpeed = 100.0f;
 	const float kMovementSpeed = 1.0f;
+	readyForJoin = false;
 
 	// Variables
 	float frameTime;
@@ -131,6 +140,14 @@ void GameLoop(CEngine* &engine)
 
 		// Process any keys pressed this frame.
 		Control(engine, myCam, grid);
+
+		if (readyForJoin)
+		{
+			// Close the thread handle
+			CloseHandle(hUpdateHeightThread);
+			engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
+			readyForJoin = false;
+		}
 	}
 
 	delete heightMap;
@@ -213,14 +230,13 @@ void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr)
 	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, NULL, "min=1 max=1000 step=0.1 group=Terrain label='Persistence' ");
 	TwAddVarCB(ptr, "Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, NULL, "min=0 max=1000 step=0.1 group=Terrain label='Frequency' ");
 	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, NULL, "min=0 max=1000 step=0.1 group=Terrain label='Amplitude' ");
+	TwAddButton(ptr, "Update", UpdateTerrain, NULL, "group=Terrain label='Update'");
 }
 
 void TW_CALL SetHeight(const void *value, void * /*clientData*/)
 {
 	int height = *static_cast<const int *>(value);
 	heightMap->SetHeight(height);
-	heightMap->UpdateMap();
-	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
 }
 
 void TW_CALL GetHeight(void *value, void * /*clientData*/)
@@ -232,8 +248,6 @@ void TW_CALL SetWidth(const void * value, void *)
 {
 	int width = *static_cast<const int *>(value);
 	heightMap->SetWidth(width);
-	heightMap->UpdateMap();
-	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());	
 }
 
 void TW_CALL GetWidth(void * value, void *)
@@ -245,8 +259,6 @@ void TW_CALL SetFrequency(const void * value, void *)
 {
 	float frequency = *static_cast<const float *>(value);
 	heightMap->SetFrequency(frequency);
-	heightMap->UpdateMap();
-	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
 }
 
 void TW_CALL GetFrequency(void * value, void *)
@@ -258,8 +270,6 @@ void TW_CALL SetAmplitude(const void * value, void *)
 {
 	float amplitude = *static_cast<const float *>(value);
 	heightMap->SetAmplitude(amplitude);
-	heightMap->UpdateMap();
-	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
 }
 
 void TW_CALL GetAmplitude(void * value, void *)
@@ -271,11 +281,30 @@ void TW_CALL SetPersistence(const void * value, void *)
 {
 	float persistence = *static_cast<const double *>(value);
 	heightMap->SetPersistence(persistence);
-	heightMap->UpdateMap();
-	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
 }
 
 void TW_CALL GetPersistence(void * value, void *)
 {
 	*static_cast<double *>(value) = heightMap->GetPersistence();
+}
+
+void TW_CALL UpdateTerrain(void * clientData)
+{
+	hUpdateHeightThread = (HANDLE)_beginthreadex(NULL, 0, UpdateMapThread, (void*)nullptr, 0, NULL);
+	//heightMap->UpdateMap();
+	//// Update the grid in the engine.
+	//engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
+}
+
+unsigned int __stdcall UpdateMapThread(void* pdata)
+{
+	SentenceType* sentence = engine->CreateText("Generating terrain on separate thread, please wait...", 500, 100, 128);
+	heightMap->UpdateMap();
+	// Update the grid in the engine.
+	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
+	engine->RemoveText(sentence);
+	readyForJoin = true;
+
+	return 0;
+
 }

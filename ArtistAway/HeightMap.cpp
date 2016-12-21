@@ -1,6 +1,19 @@
 #include "HeightMap.h"
 
 
+void CHeightMap::ReleaseHeightmap()
+{
+	if (mpHeightMap != nullptr)
+	{
+		for (int i = 0; i < mHeight; ++i) {
+			delete[] mpHeightMap[i];
+			gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap[i]).name());
+		}
+		delete[] mpHeightMap;
+		gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap).name());
+	}
+}
+
 CHeightMap::CHeightMap()
 {
 	mpPerlinNoise = new CPerlinNoise();
@@ -10,6 +23,8 @@ CHeightMap::CHeightMap()
 
 	mWidth = 100;
 	mHeight = 100;
+	mOldHeight = 100;
+	mOldWidth = 100;
 
 	SetPersistence(0.6);
 	SetAmplitude(1.0f);
@@ -20,21 +35,12 @@ CHeightMap::CHeightMap()
 
 }
 
-
 CHeightMap::~CHeightMap()
 {
 	delete mpPerlinNoise;
 	gLogger->MemoryDeallocWriteLine(typeid(mpPerlinNoise).name());
 
-	if (mpHeightMap != nullptr)
-	{
-		for (int i = 0; i < mHeight; ++i) {
-			delete[] mpHeightMap[i];
-			gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap[i]).name());
-		}
-		delete[] mpHeightMap;
-		gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap).name());
-	}
+	ReleaseHeightmap();
 }
 
 void CHeightMap::InitialiseMap()
@@ -91,13 +97,13 @@ void CHeightMap::InitialiseMap()
 void CHeightMap::UpdateMap()
 {
 	// Allocate row space.
-	mpHeightMap = new double*[mHeight];
+	double** heightMap = new double*[mHeight];
 
 	// Iterate through all the rows.
 	for (int x = 0; x < mHeight; x++)
 	{
 		// Allocate space for the columns.
-		mpHeightMap[x] = new double[mWidth];
+		heightMap[x] = new double[mWidth];
 	}
 
 	int indexY = 0;
@@ -119,9 +125,22 @@ void CHeightMap::UpdateMap()
 
 			n *= mGain;
 
-			mpHeightMap[y][x] = n;
+			heightMap[y][x] = n;
 		}
 	}
+	// Release old height map.
+	if (mpHeightMap != nullptr)
+	{
+		for (int i = 0; i < mOldHeight; i++) {
+			delete[] mpHeightMap[i];
+			gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap[i]).name());
+		}
+		delete[] mpHeightMap;
+		gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap).name());
+	}
+
+	mOldHeightSet = false;
+	mpHeightMap = heightMap;
 
 	gLogger->WriteLine("Heightmap created.");
 	return;
@@ -132,17 +151,6 @@ void CHeightMap::UpdateMap()
 */
 void CHeightMap::SetPersistence(double persistence)
 {
-	//if (persistence > 1.0)
-	//{
-	//	gLogger->WriteLine("You tried to set a persistence of more than 1. Range is 0.0 - 1.0.");
-	//	return;
-	//}
-	//else if (persistence < 0.0)
-	//{
-	//	gLogger->WriteLine("You tried to set a persistence of less than 0.0. Range is 0.0 - 1.0.");
-	//	return;
-	//}
-
 	mPersistence = persistence;
 }
 
