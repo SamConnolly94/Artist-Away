@@ -4,12 +4,9 @@
 #include <thread>
 #include <process.h>
 
-//#include "Engine\PrioEngineVars.h"
+/// Custom types and structures.
 
-// Declaration of functions used to run game itself.
-void GameLoop(CEngine* &engine);
-void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid);
-
+/* The variables that are required to set up our tweak bar. */
 struct TweakStruct
 {
 	HANDLE hUpdateTerrainThread;
@@ -19,29 +16,62 @@ struct TweakStruct
 	bool readyForJoin;
 };
 
-// Globals
-void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr, TweakStruct* tweakVars);
-void TW_CALL SetHeight(const void *value, void * /*Client data. */);
-void TW_CALL GetHeight(void *value, void * /*clientData*/);
+/// Function definitions.
 
-void TW_CALL SetWidth(const void *value, void * /*Client data. */);
-void TW_CALL GetWidth(void *value, void * /*clientData*/);
+/* This is where the game runs. This part should really only contain the loop itself, but if we want to we can put scene init here as well.
+ * PARAM engine - The engine which we'll be running on, must already be initialised and allocated memory before being passed in.
+*/
+void GameLoop(CEngine* &engine);
 
-void TW_CALL SetFrequency(const void *value, void * /*Client data. */);
-void TW_CALL GetFrequency(void *value, void * /*clientData*/);
+/* This is where user input is controlled. This function must be called once every tick of our gameloop without exceptions, because we need to make sure we don't miss something like the quit key! 
+ * PARAM engine - The pointer to the engine which is being used in our gameloop.
+ * PARAM cam - The main camera being used throughout our game.
+ * PARAM grid - This is the terrain grid, required to be passed in as we are controlling the terrain in this loop. It is expected to be initialised outside of the control function, by the engine appropriate functions.
+*/
+void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid);
 
-void TW_CALL SetAmplitude(const void *value, void * /*Client data. */);
-void TW_CALL GetAmplitude(void *value, void * /*clientData*/);
+/* Sets up the tweakbar on our window, adds variables to the window.
+ * PARAM ptr - This is the pointer to your tweakbar. It is of type CTwBar, will be passed in by reference so we'll take care of the rest for you.
+ * PARAM tweakVars - These are all the variables that will be required to be used throughout our tweakbar. Please look at the TweakStruct to understand the layout of this bar.
+*/
+void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars);
 
-void TW_CALL SetPersistence(const void *value, void * /*Client data. */);
-void TW_CALL GetPersistence(void *value, void * /*clientData*/);
+/* A callback function which dictates what behaviour should occur when the height setting on the tweakbar is changed. */
+void TW_CALL SetHeight(const void *value, void * clientData);
+/* A getter function which keeps the height variable in our tweakbar up to date. */
+void TW_CALL GetHeight(void *value, void * clientData);
 
+/* A callback function which dictates what behaviour should occur when the width setting on the tweakbar is changed. */
+void TW_CALL SetWidth(const void *value, void * clientData);
+/* A getter function which keeps the width variable in our tweakbar up to date. */
+void TW_CALL GetWidth(void *value, void * clientData);
+
+/* A callback function which dictates what behaviour should occur when the frequency setting on the tweakbar is changed. */
+void TW_CALL SetFrequency(const void *value, void *clientData);
+/* A getter function which keeps the frequency variable in our tweakbar up to date. */
+void TW_CALL GetFrequency(void *value, void * clientData);
+
+/* A callback function which dictates what behaviour should occur when the amplitude setting on the tweakbar is changed. */
+void TW_CALL SetAmplitude(const void *value, void *clientData);
+/* A getter function which keeps the amplitude variable in our tweakbar up to date. */
+void TW_CALL GetAmplitude(void *value, void * clientData);
+
+/* A callback function which dictates what behaviour should occur when the persistence setting on the tweakbar is changed. */
+void TW_CALL SetPersistence(const void *value, void *clientData);
+/* A getter function which keeps the persistence variable in our tweakbar up to date. */
+void TW_CALL GetPersistence(void *value, void * clientData);
+
+/* The callback function for our update button. Should run the thread which updates the terrain.*/
 void TW_CALL UpdateTerrain(void* clientData);
 
+/* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */
 unsigned int __stdcall UpdateMapThread(void* pdata);
+
+/// Globals
+
 CLogger* gLogger;
 
-// Main
+/* Entrypoint. */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	CEngine* engine;
@@ -83,8 +113,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete engine;
 	gLogger->MemoryDeallocWriteLine(typeid(engine).name());
 	engine = nullptr;
+
+	// Delete our logger, we're done with this now.
 	gLogger->MemoryDeallocWriteLine(typeid(gLogger).name());
 	delete gLogger;
+	gLogger = nullptr;
 
 	// The singleton logger will cause a memory leak. Don't worry about it. Should be no more than 64 bytes taken by it though, more likely will only take 48 bytes.
 	_CrtDumpMemoryLeaks();
@@ -92,7 +125,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return 0;
 }
 
-/* Controls any gameplay and things that should happen when we play the game. */
+/* This is where the game runs. This part should really only contain the loop itself, but if we want to we can put scene init here as well.
+* PARAM engine - The engine which we'll be running on, must already be initialised and allocated memory before being passed in.
+*/
 void GameLoop(CEngine* &engine)
 {
 	// Constants.
@@ -124,7 +159,7 @@ void GameLoop(CEngine* &engine)
 	tweakVars->heightMapPtr = heightMap;
 	tweakVars->terrainPtr = terrain;
 	tweakVars->readyForJoin = false;
-	SetupTweakbar(tweakBar, heightMap, tweakVars);
+	SetupTweakbar(tweakBar, tweakVars);
 
 	// Camera init.
 	CCamera* myCam = engine->GetMainCamera();
@@ -173,7 +208,11 @@ void GameLoop(CEngine* &engine)
 	gLogger->MemoryDeallocWriteLine(typeid(heightMap).name());
 }
 
-/* Control any user input here, must be called in every tick of the game loop. */
+/* This is where user input is controlled. This function must be called once every tick of our gameloop without exceptions, because we need to make sure we don't miss something like the quit key!
+* PARAM engine - The pointer to the engine which is being used in our gameloop.
+* PARAM cam - The main camera being used throughout our game.
+* PARAM grid - This is the terrain grid, required to be passed in as we are controlling the terrain in this loop. It is expected to be initialised outside of the control function, by the engine appropriate functions.
+*/
 void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid)
 {
 	const float kMoveSpeed = 10.0f;
@@ -240,7 +279,11 @@ void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid)
 
 }
 
-void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr, TweakStruct* tweakVars)
+/* Sets up the tweakbar on our window, adds variables to the window.
+* PARAM ptr - This is the pointer to your tweakbar. It is of type CTwBar, will be passed in by reference so we'll take care of the rest for you.
+* PARAM tweakVars - These are all the variables that will be required to be used throughout our tweakbar. Please look at the TweakStruct to understand the layout of this bar.
+*/
+void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 {
 	void* tweakVarsPtr = reinterpret_cast<void*>(tweakVars);
 	ptr = TwNewBar("Perlin Noise");
@@ -254,6 +297,7 @@ void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr, TweakStruct* tweakV
 	TwAddButton(ptr, "Update", UpdateTerrain, tweakVarsPtr, "group=Terrain label='Update'");
 }
 
+/* A callback function which dictates what behaviour should occur when the height setting on the tweakbar is changed. */
 void TW_CALL SetHeight(const void *value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -261,12 +305,14 @@ void TW_CALL SetHeight(const void *value, void * clientData)
 	tweakVars->heightMapPtr->SetRequestedHeight(height);
 }
 
+/* A getter function which keeps the height variable in our tweakbar up to date. */
 void TW_CALL GetHeight(void *value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	*static_cast<int *>(value) = tweakVars->heightMapPtr->GetRequestedHeight();
 }
 
+/* A callback function which dictates what behaviour should occur when the width setting on the tweakbar is changed. */
 void TW_CALL SetWidth(const void * value, void *clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -274,12 +320,14 @@ void TW_CALL SetWidth(const void * value, void *clientData)
 	tweakVars->heightMapPtr->SetRequestedWidth(width);
 }
 
+/* A getter function which keeps the width variable in our tweakbar up to date. */
 void TW_CALL GetWidth(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	*static_cast<int*>(value) = tweakVars->heightMapPtr->GetRequestedWidth();
 }
 
+/* A callback function which dictates what behaviour should occur when the frequency setting on the tweakbar is changed. */
 void TW_CALL SetFrequency(const void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -287,12 +335,14 @@ void TW_CALL SetFrequency(const void * value, void * clientData)
 	tweakVars->heightMapPtr->SetFrequency(frequency);
 }
 
+/* A getter function which keeps the frequency variable in our tweakbar up to date. */
 void TW_CALL GetFrequency(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	*static_cast<float *>(value) = tweakVars->heightMapPtr->GetFrequency();
 }
 
+/* A callback function which dictates what behaviour should occur when the amplitude setting on the tweakbar is changed. */
 void TW_CALL SetAmplitude(const void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -300,12 +350,14 @@ void TW_CALL SetAmplitude(const void * value, void * clientData)
 	tweakVars->heightMapPtr->SetAmplitude(amplitude);
 }
 
+/* A getter function which keeps the amplitude variable in our tweakbar up to date. */
 void TW_CALL GetAmplitude(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	*static_cast<float *>(value) = tweakVars->heightMapPtr->GetAmplitude();
 }
 
+/* A callback function which dictates what behaviour should occur when the persistence setting on the tweakbar is changed. */
 void TW_CALL SetPersistence(const void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -313,29 +365,39 @@ void TW_CALL SetPersistence(const void * value, void * clientData)
 	tweakVars->heightMapPtr->SetPersistence(persistence);
 }
 
+/* A getter function which keeps the persistence variable in our tweakbar up to date. */
 void TW_CALL GetPersistence(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	*static_cast<double *>(value) = tweakVars->heightMapPtr->GetPersistence();
 }
 
+/* The callback function for our update button. Should run the thread which updates the terrain.*/
 void TW_CALL UpdateTerrain(void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	tweakVars->hUpdateTerrainThread = (HANDLE)_beginthreadex(NULL, 0, UpdateMapThread, clientData, 0, NULL);
 }
 
+/* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */
 unsigned int __stdcall UpdateMapThread(void* pdata)
 {
+	// Cast the void data back over to our TweakStructure type.
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(pdata);
+	// Define a new sentence and display it on the screen so that the user is aware what's happening since they've clicked update.
 	SentenceType* sentence = tweakVars->enginePtr->CreateText("Generating terrain on separate thread, please wait...", 500, 100, 128);
+	// Update the heightmap with new values.
 	tweakVars->heightMapPtr->UpdateMap();
- // Update the grid in the engine.
+	// Set the new values in the vertex and index buffers of the terrain, and copy over the values out the new heightmap we just generated.
 	tweakVars->enginePtr->UpdateTerrainBuffers(tweakVars->terrainPtr, tweakVars->heightMapPtr->GetMap(), tweakVars->heightMapPtr->GetWidth(), tweakVars->heightMapPtr->GetHeight());
+	// Remove thhe sentence because we're done now.
 	tweakVars->enginePtr->RemoveText(sentence);
+	// Output a deallocation of memory message to the log.
 	gLogger->MemoryDeallocWriteLine(typeid(sentence).name());
+	// Set flag which indicates that the thread is ready to rejoin the main thread, the mainthread should be checking this in the game loop.
 	tweakVars->readyForJoin = true;
 
+	// No errors, return success!
 	return 0;
 
 }
