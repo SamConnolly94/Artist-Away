@@ -151,8 +151,6 @@ void GameLoop(CEngine* &engine)
 
 		if (tweakVars->readyForJoin)
 		{
-			// Close the thread handle
-			WaitForSingleObject(tweakVars->hUpdateTerrainThread, INFINITE);
 			if (!CloseHandle(tweakVars->hUpdateTerrainThread))
 			{
 				gLogger->WriteLine("Failed to close handle of thread.");
@@ -162,6 +160,9 @@ void GameLoop(CEngine* &engine)
 			tweakVars->readyForJoin = false;
 		}
 	}
+	// Close the thread handle
+	WaitForSingleObject(tweakVars->hUpdateTerrainThread, INFINITE);
+
 	TwDeleteBar(tweakBar);
 	gLogger->MemoryDeallocWriteLine(typeid(tweakBar).name());
 	

@@ -1,5 +1,5 @@
 ﻿  Main.cpp
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(311): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(312): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
