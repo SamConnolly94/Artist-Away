@@ -1,15 +1,5 @@
-﻿  HeightMap.cpp
-c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(8): warning C4018: '<': signed/unsigned mismatch
-c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(54): warning C4018: '<': signed/unsigned mismatch
-c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(103): warning C4018: '<': signed/unsigned mismatch
-c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(134): warning C4018: '<': signed/unsigned mismatch
-c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(163): warning C4018: '<': signed/unsigned mismatch
-c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(165): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  Compiling...
-  Main.cpp
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(282): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
-  Generating Code...
+﻿  Main.cpp
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(311): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."

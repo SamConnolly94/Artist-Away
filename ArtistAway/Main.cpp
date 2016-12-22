@@ -10,9 +10,17 @@
 void GameLoop(CEngine* &engine);
 void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid);
 
+struct TweakStruct
+{
+	HANDLE hUpdateTerrainThread;
+	CEngine* enginePtr;
+	CTerrainGrid* terrainPtr;
+	CHeightMap* heightMapPtr;
+	bool readyForJoin;
+};
+
 // Globals
-CLogger* gLogger;
-void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr);
+void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr, TweakStruct* tweakVars);
 void TW_CALL SetHeight(const void *value, void * /*Client data. */);
 void TW_CALL GetHeight(void *value, void * /*clientData*/);
 
@@ -30,29 +38,20 @@ void TW_CALL GetPersistence(void *value, void * /*clientData*/);
 
 void TW_CALL UpdateTerrain(void* clientData);
 
-HANDLE hUpdateHeightThread;
-HANDLE hUpdateWidthThread;
-HANDLE hUpdateFrequencyThread;
-HANDLE hUpdatePersistenceThread;
-
 unsigned int __stdcall UpdateMapThread(void* pdata);
-bool readyForJoin;
-
-//void JoinThreads();
-
-CHeightMap* heightMap;
-CEngine* engine; 
-CTerrainGrid* grid;
+CLogger* gLogger;
 
 // Main
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	readyForJoin = true;
+	CEngine* engine;
+
 	// Enable run time memory check while running in debug.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 	gLogger = new CLogger();
+	gLogger->MemoryAllocWriteLine(typeid(gLogger).name());
 	// Start the game engine.
 	bool result;
 
@@ -84,6 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete engine;
 	gLogger->MemoryDeallocWriteLine(typeid(engine).name());
 	engine = nullptr;
+	gLogger->MemoryDeallocWriteLine(typeid(gLogger).name());
 	delete gLogger;
 
 	// The singleton logger will cause a memory leak. Don't worry about it. Should be no more than 64 bytes taken by it though, more likely will only take 48 bytes.
@@ -98,28 +98,36 @@ void GameLoop(CEngine* &engine)
 	// Constants.
 	const float kRotationSpeed = 100.0f;
 	const float kMovementSpeed = 1.0f;
-	readyForJoin = false;
 
 	// Variables
 	float frameTime;
-	CCamera* myCam;
 	CLight* ambientLight;
-	grid = engine->CreateTerrainGrid();
+	CHeightMap* heightMap;
+	CTerrainGrid* terrain;
+	terrain = engine->CreateTerrainGrid();
 	heightMap = new CHeightMap();
+	gLogger->MemoryAllocWriteLine(typeid(heightMap).name());
 	CTwBar* tweakBar;
-	SetupTweakbar(tweakBar, heightMap);
 
 	heightMap->SetHeight(200);
 	heightMap->SetWidth(200);
 	heightMap->InitialiseMap();
 	heightMap->WriteMapToFile("Default.map");
-	grid->SetHeight(heightMap->GetHeight());
-	grid->SetWidth(heightMap->GetWidth());
-	grid->LoadHeightMap(heightMap->GetMap());
-	grid->CreateGrid();
-	
+	terrain->SetHeight(200);
+	terrain->SetWidth(200);
+	terrain->LoadHeightMap(heightMap->GetMap());
+	terrain->CreateGrid();
+
+	TweakStruct* tweakVars = new TweakStruct();
+	gLogger->MemoryAllocWriteLine(typeid(tweakVars).name());
+	tweakVars->enginePtr = engine;
+	tweakVars->heightMapPtr = heightMap;
+	tweakVars->terrainPtr = terrain;
+	tweakVars->readyForJoin = false;
+	SetupTweakbar(tweakBar, heightMap, tweakVars);
+
 	// Camera init.
-	myCam = engine->CreateCamera();
+	CCamera* myCam = engine->GetMainCamera();
 	myCam->SetPosizionY(50.0f);
 	myCam->RotateX(45.0f);
 
@@ -139,18 +147,29 @@ void GameLoop(CEngine* &engine)
 		frameTime = engine->GetFrameTime();
 
 		// Process any keys pressed this frame.
-		Control(engine, myCam, grid);
+		Control(engine, myCam, terrain);
 
-		if (readyForJoin)
+		if (tweakVars->readyForJoin)
 		{
 			// Close the thread handle
-			CloseHandle(hUpdateHeightThread);
-			engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
-			readyForJoin = false;
+			WaitForSingleObject(tweakVars->hUpdateTerrainThread, INFINITE);
+			if (!CloseHandle(tweakVars->hUpdateTerrainThread))
+			{
+				gLogger->WriteLine("Failed to close handle of thread.");
+			}
+
+			
+			tweakVars->readyForJoin = false;
 		}
 	}
+	TwDeleteBar(tweakBar);
+	gLogger->MemoryDeallocWriteLine(typeid(tweakBar).name());
+	
 
+	delete tweakVars;
+	gLogger->MemoryDeallocWriteLine(typeid(tweakVars).name());
 	delete heightMap;
+	gLogger->MemoryDeallocWriteLine(typeid(heightMap).name());
 }
 
 /* Control any user input here, must be called in every tick of the game loop. */
@@ -218,92 +237,103 @@ void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid)
 		engine->ToggleWireframe();
 	}
 
-
 }
 
-void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr)
+void SetupTweakbar(CTwBar *& ptr, CHeightMap* &heightMapPtr, TweakStruct* tweakVars)
 {
+	void* tweakVarsPtr = reinterpret_cast<void*>(tweakVars);
 	ptr = TwNewBar("Perlin Noise");
+	gLogger->MemoryAllocWriteLine(typeid(ptr).name());
 	TwDefine(" GLOBAL help='Control the perlin noise generation through these tabs. ' ");
-	TwAddVarCB(ptr, "Height", TW_TYPE_INT32, SetHeight, GetHeight, NULL, "min=10 max=1000 step=1 group=Terrain label='Height' ");
-	TwAddVarCB(ptr, "Width", TW_TYPE_INT32, SetWidth, GetWidth, NULL, "min=10 max=1000 step=1 group=Terrain label='Width' ");
-	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, NULL, "min=1 max=1000 step=0.1 group=Terrain label='Persistence' ");
-	TwAddVarCB(ptr, "Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, NULL, "min=0 max=1000 step=0.1 group=Terrain label='Frequency' ");
-	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, NULL, "min=0 max=1000 step=0.1 group=Terrain label='Amplitude' ");
-	TwAddButton(ptr, "Update", UpdateTerrain, NULL, "group=Terrain label='Update'");
+	TwAddVarCB(ptr, "Height", TW_TYPE_INT32, SetHeight, GetHeight, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Height' ");
+	TwAddVarCB(ptr, "Width", TW_TYPE_INT32, SetWidth, GetWidth, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Width' ");
+	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, tweakVarsPtr, "min=1 max=1000 step=0.1 group=Terrain label='Persistence' ");
+	TwAddVarCB(ptr, "Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, tweakVarsPtr, "min=0 max=1000 step=0.1 group=Terrain label='Frequency' ");
+	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, tweakVarsPtr, "min=0 max=100000 step=10000 group=Terrain label='Amplitude' ");
+	TwAddButton(ptr, "Update", UpdateTerrain, tweakVarsPtr, "group=Terrain label='Update'");
 }
 
-void TW_CALL SetHeight(const void *value, void * /*clientData*/)
+void TW_CALL SetHeight(const void *value, void * clientData)
 {
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	int height = *static_cast<const int *>(value);
-	heightMap->SetHeight(height);
+	tweakVars->heightMapPtr->SetRequestedHeight(height);
 }
 
-void TW_CALL GetHeight(void *value, void * /*clientData*/)
+void TW_CALL GetHeight(void *value, void * clientData)
 {
-	*static_cast<int *>(value) = heightMap->GetHeight();
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<int *>(value) = tweakVars->heightMapPtr->GetRequestedHeight();
 }
 
-void TW_CALL SetWidth(const void * value, void *)
+void TW_CALL SetWidth(const void * value, void *clientData)
 {
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	int width = *static_cast<const int *>(value);
-	heightMap->SetWidth(width);
+	tweakVars->heightMapPtr->SetRequestedWidth(width);
 }
 
-void TW_CALL GetWidth(void * value, void *)
+void TW_CALL GetWidth(void * value, void * clientData)
 {
-	*static_cast<int*>(value) = heightMap->GetWidth();
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<int*>(value) = tweakVars->heightMapPtr->GetRequestedWidth();
 }
 
-void TW_CALL SetFrequency(const void * value, void *)
+void TW_CALL SetFrequency(const void * value, void * clientData)
 {
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	float frequency = *static_cast<const float *>(value);
-	heightMap->SetFrequency(frequency);
+	tweakVars->heightMapPtr->SetFrequency(frequency);
 }
 
-void TW_CALL GetFrequency(void * value, void *)
+void TW_CALL GetFrequency(void * value, void * clientData)
 {
-	*static_cast<float *>(value) = heightMap->GetFrequency();
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->heightMapPtr->GetFrequency();
 }
 
-void TW_CALL SetAmplitude(const void * value, void *)
+void TW_CALL SetAmplitude(const void * value, void * clientData)
 {
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	float amplitude = *static_cast<const float *>(value);
-	heightMap->SetAmplitude(amplitude);
+	tweakVars->heightMapPtr->SetAmplitude(amplitude);
 }
 
-void TW_CALL GetAmplitude(void * value, void *)
+void TW_CALL GetAmplitude(void * value, void * clientData)
 {
-	*static_cast<float *>(value) = heightMap->GetAmplitude();
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->heightMapPtr->GetAmplitude();
 }
 
-void TW_CALL SetPersistence(const void * value, void *)
+void TW_CALL SetPersistence(const void * value, void * clientData)
 {
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	float persistence = *static_cast<const double *>(value);
-	heightMap->SetPersistence(persistence);
+	tweakVars->heightMapPtr->SetPersistence(persistence);
 }
 
-void TW_CALL GetPersistence(void * value, void *)
+void TW_CALL GetPersistence(void * value, void * clientData)
 {
-	*static_cast<double *>(value) = heightMap->GetPersistence();
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<double *>(value) = tweakVars->heightMapPtr->GetPersistence();
 }
 
 void TW_CALL UpdateTerrain(void * clientData)
 {
-	hUpdateHeightThread = (HANDLE)_beginthreadex(NULL, 0, UpdateMapThread, (void*)nullptr, 0, NULL);
-	//heightMap->UpdateMap();
-	//// Update the grid in the engine.
-	//engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	tweakVars->hUpdateTerrainThread = (HANDLE)_beginthreadex(NULL, 0, UpdateMapThread, clientData, 0, NULL);
 }
 
 unsigned int __stdcall UpdateMapThread(void* pdata)
 {
-	SentenceType* sentence = engine->CreateText("Generating terrain on separate thread, please wait...", 500, 100, 128);
-	heightMap->UpdateMap();
-	// Update the grid in the engine.
-	engine->UpdateTerrainBuffers(grid, heightMap->GetMap(), heightMap->GetWidth(), heightMap->GetHeight());
-	engine->RemoveText(sentence);
-	readyForJoin = true;
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(pdata);
+	SentenceType* sentence = tweakVars->enginePtr->CreateText("Generating terrain on separate thread, please wait...", 500, 100, 128);
+	tweakVars->heightMapPtr->UpdateMap();
+ // Update the grid in the engine.
+	tweakVars->enginePtr->UpdateTerrainBuffers(tweakVars->terrainPtr, tweakVars->heightMapPtr->GetMap(), tweakVars->heightMapPtr->GetWidth(), tweakVars->heightMapPtr->GetHeight());
+	tweakVars->enginePtr->RemoveText(sentence);
+	gLogger->MemoryDeallocWriteLine(typeid(sentence).name());
+	tweakVars->readyForJoin = true;
 
 	return 0;
 

@@ -12,15 +12,16 @@ private:
 
 	unsigned int mHeight;
 	unsigned int mWidth;
-	unsigned int mOldHeight;
-	unsigned int mOldWidth;
+
+	unsigned int mRequestedHeight;
+	unsigned int mRequestedWidth;
+
 	unsigned int mNumberOfOctaves;
 	double mPersistence;
 	float mFrequency;
 	float mAmplitude;
 	float mGain;
 	bool mUpdating = false;
-	bool mOldHeightSet = false;
 	void ReleaseHeightmap();
 public:
 	CHeightMap();
@@ -32,22 +33,19 @@ public:
 	// Getters
 	double** GetMap() { return mpHeightMap; };
 	unsigned int GetHeight() { return mHeight; };
+	unsigned int GetRequestedHeight(){ return mRequestedHeight; };
 	unsigned int GetWidth() { return mWidth; };
+	unsigned int GetRequestedWidth() { return mRequestedWidth; };
 	float GetFrequency() { return mFrequency; };
 	float GetAmplitude() { return mAmplitude; };
 	float GetGain() { return mGain; };
 	double GetPersistence() { return mPersistence; };
 
 	// Setters
-	void SetHeight(unsigned int value) { 
-		if (!mOldHeightSet)
-		{
-			mOldHeight = mHeight;
-			mOldHeightSet = true;
-		}
-		mHeight = value; 
-	};
-	void SetWidth(unsigned int value) { mOldWidth = mWidth; mWidth = value; };
+	void SetHeight(unsigned int value) { mHeight = value; mRequestedHeight = mHeight; };
+	void SetRequestedHeight(unsigned int value) { mRequestedHeight = value;	};
+	void SetWidth(unsigned int value) { mWidth = value;  mRequestedWidth = mWidth; };
+	void SetRequestedWidth(unsigned int value) { mRequestedWidth = value; };
 	void SetNumberOfOctaves(unsigned int octaves) { mNumberOfOctaves = octaves; };
 	void SetPersistence(double persistence);
 	void SetFrequency(float frequency) { mFrequency = frequency; };
