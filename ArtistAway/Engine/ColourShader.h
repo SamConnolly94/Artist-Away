@@ -38,8 +38,6 @@ private:
 	ID3D11PixelShader* mpPixelShader;
 	ID3D11InputLayout* mpLayout;
 	ID3D11Buffer* mpMatrixBuffer;
-
-	;
 };
 
 #endif

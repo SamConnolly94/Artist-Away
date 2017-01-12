@@ -1,34 +1,63 @@
 ﻿  Main.cpp
-  PerlinNoise.cpp
+Main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   Generating code
-  All 1397 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  1 of 1698 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    25 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.exe
+  ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  6 File(s) copied
+  12 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  6 File(s) copied
+  12 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar.dll
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar64.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll
-  1 File(s) copied
+  3 File(s) copied
   "Made resources dir, copying resources to that dir."
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\defaultFontData.txt
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.tga
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.txt
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cone.FBX
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.obj
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Triangle.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Wooden_House.fbx
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\House_Texture.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Ice.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Rock.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Sand.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Test.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
-  9 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\YellowGrass.dds
+  21 File(s) copied

@@ -120,7 +120,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	gLogger = nullptr;
 
 	// The singleton logger will cause a memory leak. Don't worry about it. Should be no more than 64 bytes taken by it though, more likely will only take 48 bytes.
-	_CrtDumpMemoryLeaks();
+	bool hasMemoryLeaks = _CrtDumpMemoryLeaks();
 
 	return 0;
 }
@@ -130,6 +130,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 */
 void GameLoop(CEngine* &engine)
 {
+	const int frameTimePosX = 10;
+	const int frameTimePosY = 10;
+	const int FPSPosX = 10;
+	const int FPSPosY = 50;
+
 	// Constants.
 	const float kRotationSpeed = 100.0f;
 	const float kMovementSpeed = 1.0f;
@@ -175,6 +180,11 @@ void GameLoop(CEngine* &engine)
 	// Start the game timer running.
 	engine->StartTimer();
 
+	SentenceType* frametimeText = engine->CreateText("Frametime: ", frameTimePosX, frameTimePosY, 32);
+	SentenceType* FPSText = engine->CreateText("FPS: ", FPSPosX, FPSPosY, 32);
+	const float kTextUpdateInterval = 0.2f;
+	float timeSinceTextUpdate = kTextUpdateInterval;
+
 	// Process anything which should happen in the game here.
 	while (engine->IsRunning())
 	{
@@ -191,9 +201,17 @@ void GameLoop(CEngine* &engine)
 				gLogger->WriteLine("Failed to close handle of thread.");
 			}
 
-			
 			tweakVars->readyForJoin = false;
 		}
+
+		// Update the text on our game.
+		if (timeSinceTextUpdate >= kTextUpdateInterval)
+		{
+			engine->UpdateText(frametimeText, "FrameTime: " + std::to_string(frameTime), frameTimePosX, frameTimePosY, { 1.0f, 1.0f, 0.0f });
+			engine->UpdateText(FPSText, "FPS: " + std::to_string(1.0f / frameTime), static_cast<int>(FPSPosX), static_cast<int>(FPSPosY), { 1.0f, 1.0f, 0.0f });
+			timeSinceTextUpdate = 0.0f;
+		}
+		timeSinceTextUpdate += frameTime;
 	}
 	// Close the thread handle
 	WaitForSingleObject(tweakVars->hUpdateTerrainThread, INFINITE);

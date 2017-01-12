@@ -1,5 +1,6 @@
 ﻿  Main.cpp
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(312): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(123): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
@@ -11,9 +12,11 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(312): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  10 File(s) copied
+  12 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
@@ -22,9 +25,11 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(312): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  10 File(s) copied
+  12 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar64.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll
@@ -43,8 +48,12 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(312): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\House_Texture.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Ice.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Rock.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Sand.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Test.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
-  17 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\YellowGrass.dds
+  21 File(s) copied

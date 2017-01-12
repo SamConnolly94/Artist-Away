@@ -10,12 +10,16 @@
 #include "Mesh.h"
 #include "ColourShader.h"
 #include "TextureShader.h"
-#include "DirectionalLightShader.h"
+#include "DiffuseLightShader.h"
+#include "TerrainShader.h"
 #include "Light.h"
 #include "Terrain.h"
 #include "GameText.h"
 #include "2DImage.h"
 #include <AntTweakBar.h>
+#include "Frustum.h"
+#include <thread>
+#include <functional>
 
 // Global variables.
 // Will the window run in full screen?
@@ -25,7 +29,7 @@ const bool VSYNC_ENABLED = true;
 // Far clip
 const float SCREEN_DEPTH = 1000.0f;
 // Near clip
-const float SCREEN_NEAR = 0.1f;
+const float SCREEN_NEAR = 0.01f;
 
 class CGraphics
 {
@@ -33,7 +37,7 @@ private:
 	int mScreenWidth, mScreenHeight;
 	float mFieldOfView;
 	bool mWireframeEnabled;
-
+	CFrustum* mpFrustum;
 	bool mFullScreen = false;
 public:
 	CGraphics();
@@ -44,14 +48,19 @@ public:
 	bool Frame();
 private:
 	bool Render();
-
+private:
+	bool RenderPrimitives(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
+	bool RenderMeshes(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
+	bool RenderTerrains(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
+private:
 	CD3D11* mpD3D;
 
 	CCamera* mpCamera;
 	CPrimitive* mpTriangle;
 	CColourShader* mpColourShader;
 	CTextureShader* mpTextureShader;
-	CDirectionalLightShader* mpDiffuseLightShader;
+	CDiffuseLightShader* mpDiffuseLightShader;
+	CTerrainShader* mpTerrainShader;
 	CGameText* mpText;
 	D3DXMATRIX mBaseView;
 	
@@ -68,6 +77,7 @@ private:
 	bool CreateTextureShaderForModel(HWND hwnd);
 	bool CreateColourShader(HWND hwnd);
 	bool CreateTextureAndDiffuseLightShaderFromModel(HWND hwnd);
+	bool CreateTerrainShader(HWND hwnd);
 	bool RenderModels(D3DXMATRIX view, D3DXMATRIX world, D3DXMATRIX proj);
 	bool RenderText(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho);
 	bool RenderBitmaps(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho);

@@ -7,7 +7,7 @@
 
 #include "Model.h"
 #include "Texture.h"
-#include "DirectionalLightShader.h"
+#include "DiffuseLightShader.h"
 #include "ColourShader.h"
 #include "TextureShader.h"
 #include "SpecularLightingShader.h"
@@ -27,7 +27,7 @@ private:
 	ID3D11Device* mpDevice;
 
 	// Shader objects.
-	CDirectionalLightShader* mpDirectionalLightShader;
+	CDiffuseLightShader* mpDirectionalLightShader;
 	CTextureShader* mpTextureShader;
 	CColourShader* mpColourShader;
 	CSpecularLightingShader* mpSpecularShader;
