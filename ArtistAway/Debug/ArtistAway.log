@@ -1,6 +1,15 @@
-﻿  Main.cpp
+﻿  PerlinNoise.cpp
+c:\users\sam\source\repos\artist-away\artistaway\perlinnoise.cpp(123): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+  Main.cpp
 c:\users\sam\source\repos\artist-away\artistaway\main.cpp(123): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
 c:\users\sam\source\repos\artist-away\artistaway\main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+  HeightMap.cpp
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(12): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(54): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(99): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(151): warning C4018: '<': signed/unsigned mismatch
+c:\users\sam\source\repos\artist-away\artistaway\heightmap.cpp(153): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
@@ -12,8 +21,8 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(382): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
   12 File(s) copied
@@ -25,8 +34,8 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(382): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
   12 File(s) copied
@@ -52,8 +61,9 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(382): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Rock.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Sand.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Snow.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Test.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\YellowGrass.dds
-  21 File(s) copied
+  22 File(s) copied

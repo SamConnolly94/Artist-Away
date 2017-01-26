@@ -19,6 +19,7 @@ public:
 	{
 		D3DXVECTOR3 position;
 		D3DXVECTOR2 UV;
+		//D3DXVECTOR2 sandUV;
 		D3DXVECTOR3 normal;
 	};
 public:
