@@ -72,7 +72,7 @@ private:
 	std::list<CPrimitive*> mpPrimitives;
 	std::list<CMesh*> mpMeshes;
 	std::list<CLight*> mpLights;
-	std::list<CTerrainGrid*> mpTerrainGrids;
+	std::list<CTerrain*> mpTerrainGrids;
 	std::list<C2DImage*> mpUIImages;
 
 	bool CreateTextureShaderForModel(HWND hwnd);
@@ -98,7 +98,8 @@ public:
 	CMesh* LoadMesh(char * filename, WCHAR* textureFilename, PrioEngine::ShaderType shaderType);
 	bool RemoveMesh(CMesh* &mesh);
 
-	CTerrainGrid* CreateTerrainGrid();
+	CTerrain* CreateTerrain(std::string mapFile);
+	CTerrain* CreateTerrain(double ** heightMap, int mapWidth, int mapHeight);
 
 	CLight* CreateLight(D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
 	bool RemoveLight(CLight* &light);
@@ -113,7 +114,7 @@ public:
 
 	C2DImage* CreateUIImages(WCHAR* filename, int width, int height, int posX, int posY );
 	bool RemoveUIImage(C2DImage* &element);
-	bool UpdateTerrainBuffers(CTerrainGrid* &grid, double** heightmap, int width, int height);
+	bool UpdateTerrainBuffers(CTerrain* &terrain, double** heightmap, int width, int height);
 	bool IsFullscreen();
 	bool SetFullscreen(bool enabled);
 };

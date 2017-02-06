@@ -11,7 +11,7 @@ struct TweakStruct
 {
 	HANDLE hUpdateTerrainThread;
 	CEngine* enginePtr;
-	CTerrainGrid* terrainPtr;
+	CTerrain* terrainPtr;
 	CHeightMap* heightMapPtr;
 	bool readyForJoin;
 };
@@ -28,7 +28,7 @@ void GameLoop(CEngine* &engine);
  * PARAM cam - The main camera being used throughout our game.
  * PARAM grid - This is the terrain grid, required to be passed in as we are controlling the terrain in this loop. It is expected to be initialised outside of the control function, by the engine appropriate functions.
 */
-void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid);
+void Control(CEngine* &engine, CCamera* cam, CTerrain* terrain);
 
 /* Sets up the tweakbar on our window, adds variables to the window.
  * PARAM ptr - This is the pointer to your tweakbar. It is of type CTwBar, will be passed in by reference so we'll take care of the rest for you.
@@ -143,8 +143,8 @@ void GameLoop(CEngine* &engine)
 	float frameTime;
 	CLight* ambientLight;
 	CHeightMap* heightMap;
-	CTerrainGrid* terrain;
-	terrain = engine->CreateTerrainGrid();
+	CTerrain* terrain;
+	terrain = engine->CreateTerrain("");
 	heightMap = new CHeightMap();
 	gLogger->MemoryAllocWriteLine(typeid(heightMap).name());
 	CTwBar* tweakBar;
@@ -153,10 +153,11 @@ void GameLoop(CEngine* &engine)
 	heightMap->SetWidth(200);
 	heightMap->InitialiseMap();
 	heightMap->WriteMapToFile("Default.map");
-	terrain->SetHeight(200);
-	terrain->SetWidth(200);
-	terrain->LoadHeightMap(heightMap->GetMap());
-	terrain->CreateGrid();
+	//terrain->SetHeight(200);
+	//terrain->SetWidth(200);
+	//terrain->LoadHeightMap(heightMap->GetMap());
+	//terrain->CreateGrid();
+	terrain = engine->CreateTerrain(heightMap->GetMap(), 200, 200);
 
 	TweakStruct* tweakVars = new TweakStruct();
 	gLogger->MemoryAllocWriteLine(typeid(tweakVars).name());
@@ -231,7 +232,7 @@ void GameLoop(CEngine* &engine)
 * PARAM cam - The main camera being used throughout our game.
 * PARAM grid - This is the terrain grid, required to be passed in as we are controlling the terrain in this loop. It is expected to be initialised outside of the control function, by the engine appropriate functions.
 */
-void Control(CEngine* &engine, CCamera* cam, CTerrainGrid* grid)
+void Control(CEngine* &engine, CCamera* cam, CTerrain* terrain)
 {
 	const float kMoveSpeed = 10.0f;
 	const float kRotationSpeed = 10.0f;

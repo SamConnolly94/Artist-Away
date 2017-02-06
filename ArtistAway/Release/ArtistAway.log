@@ -1,9 +1,17 @@
-﻿  Main.cpp
-Main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+﻿  HeightMap.cpp
+HeightMap.cpp(12): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(54): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(99): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(151): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(153): warning C4018: '<': signed/unsigned mismatch
+  Main.cpp
+Main.cpp(383): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+  PerlinNoise.cpp
+PerlinNoise.cpp(123): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
   Generating code
-  1 of 1698 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    25 functions had inline decision re-evaluated but remain unchanged
+  1197 of 1528 functions (78.3%) were compiled, the rest were copied from previous compilation.
+    121 functions were new in current compilation
+    38 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.pdb (Full PDB)
@@ -16,8 +24,8 @@ Main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
   12 File(s) copied
@@ -29,8 +37,8 @@ Main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.ps.hlsl
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainDiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
   12 File(s) copied
@@ -49,6 +57,7 @@ Main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Triangle.sam
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Wooden_House.fbx
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Baize.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\House_Texture.png
@@ -56,8 +65,9 @@ Main.cpp(382): warning C4244: 'initializing': conversion from 'const double' to 
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Rock.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Sand.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Snow.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Test.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\YellowGrass.dds
-  21 File(s) copied
+  23 File(s) copied

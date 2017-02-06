@@ -67,7 +67,8 @@ public:
 	CLight* CreateLight(D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
 	bool RemoveLight(CLight* &light);
 
-	CTerrainGrid* CreateTerrainGrid();
+	CTerrain* CreateTerrain(std::string mapFile);
+	CTerrain* CreateTerrain(double** heightMap, int mapWidth, int mapHeight);
 
 	bool RemovePrimitive(CPrimitive* model);
 	bool RemoveMesh(CMesh* mesh);
@@ -93,7 +94,7 @@ public:
 	CCamera* GetMainCamera() { return mpGraphics->GetMainCamera(); };
 	C2DImage* CreateUIImages(WCHAR* filename, int width, int height, int posX, int posY);
 	bool RemoveUIImage(C2DImage *& element);
-	bool UpdateTerrainBuffers(CTerrainGrid* &grid, double** heightmap, int width, int height);
+	bool UpdateTerrainBuffers(CTerrain *& terrain, double** heightmap, int width, int height);
 	bool ToggleFullscreen(unsigned int fullscreenKey);
 };
 
