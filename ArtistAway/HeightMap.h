@@ -40,6 +40,7 @@ public:
 	float GetAmplitude() { return mAmplitude; };
 	float GetGain() { return mGain; };
 	double GetPersistence() { return mPersistence; };
+	unsigned int GetNumberOfOctaves() { return mNumberOfOctaves; };
 
 	// Setters
 	void SetHeight(unsigned int value) { mHeight = value; mRequestedHeight = mHeight; };

@@ -1,17 +1,9 @@
-﻿  HeightMap.cpp
-HeightMap.cpp(12): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(54): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(99): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(151): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(153): warning C4018: '<': signed/unsigned mismatch
-  Main.cpp
-Main.cpp(383): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
-  PerlinNoise.cpp
-PerlinNoise.cpp(123): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+﻿  Main.cpp
+Main.cpp(387): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   Generating code
-  1197 of 1528 functions (78.3%) were compiled, the rest were copied from previous compilation.
-    121 functions were new in current compilation
-    38 functions had inline decision re-evaluated but remain unchanged
+  7 of 1531 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+    3 functions were new in current compilation
+    48 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.pdb (Full PDB)

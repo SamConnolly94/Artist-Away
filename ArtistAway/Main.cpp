@@ -64,6 +64,9 @@ void TW_CALL GetPersistence(void *value, void * clientData);
 /* The callback function for our update button. Should run the thread which updates the terrain.*/
 void TW_CALL UpdateTerrain(void* clientData);
 
+void TW_CALL SetOctaves(const void * value, void * clientData);
+void TW_CALL GetOctaves(void * value, void * clientData);
+
 /* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */
 unsigned int __stdcall UpdateMapThread(void* pdata);
 
@@ -312,6 +315,7 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	TwAddVarCB(ptr, "Width", TW_TYPE_INT32, SetWidth, GetWidth, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Width' ");
 	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, tweakVarsPtr, "min=1 max=1000 step=0.1 group=Terrain label='Persistence' ");
 	TwAddVarCB(ptr, "Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, tweakVarsPtr, "min=0 max=1000 step=0.1 group=Terrain label='Frequency' ");
+	TwAddVarCB(ptr, "Octaves", TW_TYPE_UINT32, SetOctaves, GetOctaves, tweakVarsPtr, "min=1 max=100 step=1 group=Terrain label='Octaves'");
 	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, tweakVarsPtr, "min=0 max=100000 step=10000 group=Terrain label='Amplitude' ");
 	TwAddButton(ptr, "Update", UpdateTerrain, tweakVarsPtr, "group=Terrain label='Update'");
 }
@@ -389,6 +393,19 @@ void TW_CALL GetPersistence(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	*static_cast<double *>(value) = tweakVars->heightMapPtr->GetPersistence();
+}
+
+void TW_CALL SetOctaves(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	int octaves = *static_cast<const int *>(value);
+	tweakVars->heightMapPtr->SetNumberOfOctaves(octaves);
+}
+
+void TW_CALL GetOctaves(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<unsigned int *>(value) = tweakVars->heightMapPtr->GetNumberOfOctaves();
 }
 
 /* The callback function for our update button. Should run the thread which updates the terrain.*/
