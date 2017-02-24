@@ -11,6 +11,8 @@
 class CVertexManager
 {
 private:
+	CLogger* logger;
+private:
 	// Structure types, should reflect the vertex / pixel shader.
 	struct VertexColourType
 	{

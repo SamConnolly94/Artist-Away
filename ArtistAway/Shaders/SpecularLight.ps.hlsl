@@ -2,7 +2,7 @@
 Texture2D shaderTexture;
 SamplerState SampleType;
 
-cbuffer LightBuffer
+cbuffer LightBuffer : register(b0)
 {
 	float4 ambientColour;
 	float4 diffuseColour;

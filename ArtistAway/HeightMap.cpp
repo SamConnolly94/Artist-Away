@@ -5,23 +5,23 @@ void CHeightMap::ReleaseHeightmap()
 {
 	if (mUpdating)
 	{
-		gLogger->WriteLine("Thread was being updated. This would cause issues trying to deallocate memory.");
+		logger->GetInstance().WriteLine("Thread was being updated. This would cause issues trying to deallocate memory.");
 	}
 	else if (mpHeightMap != nullptr)
 	{
 		for (int i = 0; i < mHeight; ++i) {
 			delete[] mpHeightMap[i];
-			gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap[i]).name());
+			logger->GetInstance().MemoryDeallocWriteLine(typeid(mpHeightMap[i]).name());
 		}
 		delete[] mpHeightMap;
-		gLogger->MemoryDeallocWriteLine(typeid(mpHeightMap).name());
+		logger->GetInstance().MemoryDeallocWriteLine(typeid(mpHeightMap).name());
 	}
 }
 
 CHeightMap::CHeightMap()
 {
 	mpPerlinNoise = new CPerlinNoise();
-	gLogger->MemoryAllocWriteLine(typeid(mpPerlinNoise).name());
+	logger->GetInstance().MemoryAllocWriteLine(typeid(mpPerlinNoise).name());
 	
 	mpHeightMap = nullptr;
 
@@ -40,7 +40,7 @@ CHeightMap::CHeightMap()
 CHeightMap::~CHeightMap()
 {
 	delete mpPerlinNoise;
-	gLogger->MemoryDeallocWriteLine(typeid(mpPerlinNoise).name());
+	logger->GetInstance().MemoryDeallocWriteLine(typeid(mpPerlinNoise).name());
 
 	ReleaseHeightmap();
 }
@@ -81,7 +81,7 @@ void CHeightMap::InitialiseMap()
 		}
 	}
 
-	gLogger->WriteLine("Heightmap created.");
+	logger->GetInstance().WriteLine("Heightmap created.");
 	return;
 }
 
@@ -93,14 +93,14 @@ void CHeightMap::UpdateMap()
 
 	// Allocate row space.
 	mpHeightMap = new double*[mRequestedHeight];
-	gLogger->MemoryAllocWriteLine(typeid(mpHeightMap).name());
+	logger->GetInstance().MemoryAllocWriteLine(typeid(mpHeightMap).name());
 
 	// Iterate through all the rows.
 	for (int x = 0; x < mRequestedHeight; x++)
 	{
 		// Allocate space for the columns.
 		mpHeightMap[x] = new double[mRequestedWidth];
-		gLogger->MemoryAllocWriteLine(typeid(mpHeightMap[x]).name());
+		logger->GetInstance().MemoryAllocWriteLine(typeid(mpHeightMap[x]).name());
 	}
 
 	mWidth = mRequestedWidth;
@@ -129,7 +129,7 @@ void CHeightMap::UpdateMap()
 		}
 	}
 
-	gLogger->WriteLine("Heightmap created.");
+	logger->GetInstance().WriteLine("Heightmap created.");
 	mUpdating = false;
 	return;
 }
@@ -157,5 +157,5 @@ void CHeightMap::WriteMapToFile(std::string fileName)
 		outFile << std::endl;
 	}
 
-	gLogger->WriteLine("Wrote height map to: " + fileName);
+	logger->GetInstance().WriteLine("Wrote height map to: " + fileName);
 }

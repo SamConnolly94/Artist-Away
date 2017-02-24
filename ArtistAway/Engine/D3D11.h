@@ -19,6 +19,8 @@ const int STRING_NUMBER_OF_BITS = 128;
 class CD3D11
 {
 private:
+	CLogger* logger;
+private:
 	int mScreenWidth;
 	int mScreenHeight;
 	bool mFullscreen;
@@ -40,6 +42,7 @@ private:
 	std::string mGraphicsCardName;
 	ID3D11BlendState* mpAlphaBlendingStateEnabled;
 	ID3D11BlendState* mpAlphaBlendingStateDisabled;
+	ID3D11RasterizerState* mpRasterStateNoCulling;
 public:
 	CD3D11();
 	~CD3D11();
@@ -65,6 +68,9 @@ public:
 	void DisableZBuffer();
 	void EnableZBuffer();
 	bool ToggleFullscreen(bool fullscreenEnabled);
+
+	void TurnOnBackFaceCulling();
+	void TurnOffBackFaceCulling();
 
 	//void GetGraphicsCardInfo(char* cardName, int& memory);
 /* Setup functions. */

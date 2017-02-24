@@ -16,68 +16,64 @@
 #include "Dependencies/assimp-3.3.1/include/assimp/Importer.hpp"
 #include "Dependencies/assimp-3.3.1/include\assimp/scene.h"
 #include "Dependencies/assimp-3.3.1/include/assimp/postprocess.h"
+#include "PrioEngineVars.h"
+
+const int mNumberOfTextures = 3;
 
 class CMesh
 {
 private:
-	// Handle of our main window.
-	HWND mHwnd;
-
-	// Pointer to the device object.
-	ID3D11Device* mpDevice;
-
-	// Shader objects.
-	CDiffuseLightShader* mpDirectionalLightShader;
-	CTextureShader* mpTextureShader;
-	CColourShader* mpColourShader;
-	CSpecularLightingShader* mpSpecularShader;
-
+	CLogger* logger;
+private:
 	// File strings
 	std::string mFilename;
-	std::string mFileExtension;
 
 	// A list of the instance of models belonging to this mesh.
 	std::list<CModel*> mpModels;
 
-	// The object reffering to the texture for this mesh.
-	CTexture* mpTexture;
+	struct VertexType
+	{
+		D3DXVECTOR3 position;
+		D3DXVECTOR2 uv;
+		D3DXVECTOR3 normal;
+	};
+
+	struct MaterialType
+	{
+		ID3D11ShaderResourceView* mTextures[mNumberOfTextures];
+	};
 
 	// Arrays to store data about vertices in.
-	std::vector<D3DXVECTOR3> mpVerticesList;
-	std::vector<D3DXVECTOR2> mpUVList;
-	std::vector<D3DXVECTOR3> mpNormalsList;
-	std::vector<D3DXVECTOR4> mpVertexColourList;
-	std::vector<unsigned long> mpIndicesList;
+	struct SubMesh
+	{
+		int numberOfVertices;
+		int numberOfIndices;
+		int materialIndex;
+		aiVector3D* vertices;
+		ID3D11Buffer* vertexBuffer;
+		ID3D11Buffer* indexBuffer;
+		aiFace* faces;
+	};
 
-	// This will need to be updated every frame.
-	D3DXVECTOR3 mCameraPosition;
+	ID3D11Device* mpDevice;
+	SubMesh* mpSubMeshes;
+	unsigned int mNumberOfSubMeshes;
+	bool CreateSubmesh(const aiMesh& mesh, SubMesh* subMesh);
 public:
-	CMesh(ID3D11Device* device, HWND hwnd, PrioEngine::ShaderType shaderType);
+	CMesh(ID3D11Device* device);
 	~CMesh();
 
 	// Loads data from file into our mesh object.
 	CModel* CreateModel();
-	bool LoadMesh(char* filename, WCHAR* textureName);
+	bool LoadMesh(std::string filename);
 
-	void Render(ID3D11DeviceContext* context, D3DXMATRIX &view, D3DXMATRIX &proj, std::list<CLight*>lights);
-
-	void SetCameraPos(D3DXVECTOR3 cameraPos) { mCameraPosition = cameraPos; };
+	void Render(ID3D11DeviceContext* context, CDiffuseLightShader* shader, D3DXMATRIX &view, D3DXMATRIX &proj, std::list<CLight*>lights);
+	void Shutdown();
 private:
-	bool LoadAssimpModel(char* filename);
-	bool LoadSam();
-	bool GetSizes();
-	bool InitialiseArrays();
+	bool LoadAssimpModel(std::string filename);
 	unsigned int mVertexCount;
 	unsigned int mIndexCount;
-	
-	struct FaceStruct
-	{
-		unsigned int x;
-		unsigned int y;
-		unsigned int z;
-	};
-
-
-	PrioEngine::ShaderType mShaderType;
+	MaterialType* mSubMeshMaterials;
+	int numberOfSubMaterials;
 };
 #endif

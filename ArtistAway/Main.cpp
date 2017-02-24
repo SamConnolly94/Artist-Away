@@ -83,8 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-	gLogger = new CLogger();
-	gLogger->MemoryAllocWriteLine(typeid(gLogger).name());
+	gLogger->GetInstance().MemoryAllocWriteLine(typeid(gLogger).name());
 	// Start the game engine.
 	bool result;
 
@@ -98,7 +97,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Return 0, we're saying we're okay, implement error codes in future versions maybe? 
 		return 0;
 	}
-	gLogger->MemoryAllocWriteLine(typeid(engine).name());
+	gLogger->GetInstance().MemoryAllocWriteLine(typeid(engine).name());
 
 	// Set up the engine.
 	result = engine->Initialise();
@@ -114,13 +113,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// Shutdown and release the engine.
 	engine->Shutdown();
 	delete engine;
-	gLogger->MemoryDeallocWriteLine(typeid(engine).name());
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(engine).name());
 	engine = nullptr;
 
 	// Delete our logger, we're done with this now.
-	gLogger->MemoryDeallocWriteLine(typeid(gLogger).name());
-	delete gLogger;
-	gLogger = nullptr;
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(gLogger).name());
 
 	// The singleton logger will cause a memory leak. Don't worry about it. Should be no more than 64 bytes taken by it though, more likely will only take 48 bytes.
 	bool hasMemoryLeaks = _CrtDumpMemoryLeaks();
@@ -149,21 +146,17 @@ void GameLoop(CEngine* &engine)
 	CTerrain* terrain;
 	terrain = engine->CreateTerrain("");
 	heightMap = new CHeightMap();
-	gLogger->MemoryAllocWriteLine(typeid(heightMap).name());
+	gLogger->GetInstance().MemoryAllocWriteLine(typeid(heightMap).name());
 	CTwBar* tweakBar;
 
 	heightMap->SetHeight(200);
 	heightMap->SetWidth(200);
 	heightMap->InitialiseMap();
 	heightMap->WriteMapToFile("Default.map");
-	//terrain->SetHeight(200);
-	//terrain->SetWidth(200);
-	//terrain->LoadHeightMap(heightMap->GetMap());
-	//terrain->CreateGrid();
 	terrain = engine->CreateTerrain(heightMap->GetMap(), 200, 200);
 
 	TweakStruct* tweakVars = new TweakStruct();
-	gLogger->MemoryAllocWriteLine(typeid(tweakVars).name());
+	gLogger->GetInstance().MemoryAllocWriteLine(typeid(tweakVars).name());
 	tweakVars->enginePtr = engine;
 	tweakVars->heightMapPtr = heightMap;
 	tweakVars->terrainPtr = terrain;
@@ -174,12 +167,6 @@ void GameLoop(CEngine* &engine)
 	CCamera* myCam = engine->GetMainCamera();
 	myCam->SetPosizionY(50.0f);
 	myCam->RotateX(45.0f);
-
-	// Light init
-	ambientLight = engine->CreateLight(D3DXVECTOR4{ 1.0f, 1.0f, 1.0f, 1.0f }, D3DXVECTOR4{ 0.15f, 0.15f, 0.15f, 1.0f });
-	ambientLight->SetDirection(D3DXVECTOR3{ 0.0f, -0.3f, 1.0f});
-	ambientLight->SetSpecularColour(D3DXVECTOR4{ 1.0f, 1.0f, 1.0f, 1.0f });
-	ambientLight->SetSpecularPower(30000.0f);
 
 	// Start the game timer running.
 	engine->StartTimer();
@@ -202,7 +189,7 @@ void GameLoop(CEngine* &engine)
 		{
 			if (!CloseHandle(tweakVars->hUpdateTerrainThread))
 			{
-				gLogger->WriteLine("Failed to close handle of thread.");
+				gLogger->GetInstance().WriteLine("Failed to close handle of thread.");
 			}
 
 			tweakVars->readyForJoin = false;
@@ -221,13 +208,15 @@ void GameLoop(CEngine* &engine)
 	WaitForSingleObject(tweakVars->hUpdateTerrainThread, INFINITE);
 
 	TwDeleteBar(tweakBar);
-	gLogger->MemoryDeallocWriteLine(typeid(tweakBar).name());
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(tweakBar).name());
 	
 
+	heightMap->WriteMapToFile("Final.map");
+
 	delete tweakVars;
-	gLogger->MemoryDeallocWriteLine(typeid(tweakVars).name());
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(tweakVars).name());
 	delete heightMap;
-	gLogger->MemoryDeallocWriteLine(typeid(heightMap).name());
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(heightMap).name());
 }
 
 /* This is where user input is controlled. This function must be called once every tick of our gameloop without exceptions, because we need to make sure we don't miss something like the quit key!
@@ -309,7 +298,7 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 {
 	void* tweakVarsPtr = reinterpret_cast<void*>(tweakVars);
 	ptr = TwNewBar("Perlin Noise");
-	gLogger->MemoryAllocWriteLine(typeid(ptr).name());
+	gLogger->GetInstance().MemoryAllocWriteLine(typeid(ptr).name());
 	TwDefine(" GLOBAL help='Control the perlin noise generation through these tabs. ' ");
 	TwAddVarCB(ptr, "Height", TW_TYPE_INT32, SetHeight, GetHeight, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Height' ");
 	TwAddVarCB(ptr, "Width", TW_TYPE_INT32, SetWidth, GetWidth, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Width' ");
@@ -429,7 +418,7 @@ unsigned int __stdcall UpdateMapThread(void* pdata)
 	// Remove thhe sentence because we're done now.
 	tweakVars->enginePtr->RemoveText(sentence);
 	// Output a deallocation of memory message to the log.
-	gLogger->MemoryDeallocWriteLine(typeid(sentence).name());
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(sentence).name());
 	// Set flag which indicates that the thread is ready to rejoin the main thread, the mainthread should be checking this in the game loop.
 	tweakVars->readyForJoin = true;
 

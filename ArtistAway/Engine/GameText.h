@@ -3,6 +3,7 @@
 
 #include "GameFont.h"
 #include "FontShader.h"
+#include "PrioEngineVars.h"
 
 struct SentenceType
 {
@@ -18,6 +19,8 @@ struct SentenceType
 
 class CGameText
 {
+private:
+	CLogger* logger;
 private:
 
 	struct VertexType

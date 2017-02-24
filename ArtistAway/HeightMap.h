@@ -6,6 +6,8 @@
 class CHeightMap
 {
 private:
+	CLogger* logger;
+private:
 	CPerlinNoise* mpPerlinNoise;
 
 	double** mpHeightMap;

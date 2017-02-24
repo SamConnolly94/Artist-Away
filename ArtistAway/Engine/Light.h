@@ -7,6 +7,8 @@
 
 class CLight : public CModelControl
 {
+private:
+	CLogger* logger;
 public:
 	CLight();
 	~CLight();

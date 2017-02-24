@@ -5,11 +5,14 @@
 #include <D3DX10math.h>
 #include "Primitive.h"
 
+
 class CTriangle : public CPrimitive
 {
+private:
+	CLogger* logger;
 	public:
-		CTriangle(WCHAR* textureFilename);
-		CTriangle(WCHAR* filename, bool useLighting);
+		CTriangle(std::string filename);
+		CTriangle(std::string filename, bool useLighting);
 		CTriangle(PrioEngine::RGBA colour);
 
 		~CTriangle();

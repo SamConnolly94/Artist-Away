@@ -31,7 +31,7 @@ struct PixelInputType
 
 // Vertex shader
 PixelInputType TerrainVertex(VertexInputType input)
-{
+{	
 	PixelInputType output;
 
 	// Give a 4th element to our matrix so it's the correct size;

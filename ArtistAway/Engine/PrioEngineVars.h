@@ -1,10 +1,8 @@
 #ifndef PRIO_ENGINE_VARS_H
 #define PRIO_ENGINE_VARS_H
 
-#include "Logger.h"
 #include <windows.h>
-
-extern CLogger* gLogger;
+#include "Logger.h"
 
 namespace PrioEngine
 {

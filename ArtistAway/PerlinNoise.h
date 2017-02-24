@@ -10,6 +10,8 @@
 
 class CPerlinNoise
 {
+private:
+	CLogger* logger;
 public:
 	// Constructors.
 	CPerlinNoise();

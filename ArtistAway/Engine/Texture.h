@@ -8,17 +8,20 @@
 
 class CTexture
 {
+private:
+	CLogger* logger;
 public:
 	CTexture();
 	~CTexture();
 
-	bool Initialise(ID3D11Device* device, WCHAR* filename);
+	bool Initialise(ID3D11Device * device, std::string filename);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();
 private:
 	ID3D11ShaderResourceView* mpTexture;
-	;
+	std::wstring s2ws(const std::string str);
+	std::string mFilename;
 };
 
 #endif

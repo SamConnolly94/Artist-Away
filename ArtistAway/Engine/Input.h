@@ -1,8 +1,12 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "PrioEngineVars.h"
+
 class CInput
 {
+private:
+	CLogger* logger;
 public:
 	CInput();
 	CInput(const CInput&);

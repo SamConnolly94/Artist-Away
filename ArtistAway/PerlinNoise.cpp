@@ -4,7 +4,7 @@
 /* Default constructor which uses default prenumeration. */
 CPerlinNoise::CPerlinNoise()
 {
-	gLogger->MemoryAllocWriteLine(typeid(this).name());
+	logger->GetInstance().MemoryAllocWriteLine(typeid(this).name());
 
 	// Initialise the prenumeration vector with the reccomended values from the author of the perlin noise algorithm himself.
 	p = {	151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142,
@@ -54,7 +54,7 @@ CPerlinNoise::CPerlinNoise(unsigned int seed)
 
 CPerlinNoise::~CPerlinNoise()
 {
-	gLogger->MemoryDeallocWriteLine(typeid(this).name());
+	logger->GetInstance().MemoryDeallocWriteLine(typeid(this).name());
 }
 
 double CPerlinNoise::Perlin(double x, double y, double z)

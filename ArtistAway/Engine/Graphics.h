@@ -20,6 +20,8 @@
 #include "Frustum.h"
 #include <thread>
 #include <functional>
+#include "SkyBox.h"
+#include "SkyboxShader.h"
 
 // Global variables.
 // Will the window run in full screen?
@@ -34,11 +36,15 @@ const float SCREEN_NEAR = 0.01f;
 class CGraphics
 {
 private:
-	int mScreenWidth, mScreenHeight;
+	CLogger* logger;
+private:
+	int mScreenWidth;
+	int mScreenHeight;
 	float mFieldOfView;
 	bool mWireframeEnabled;
 	CFrustum* mpFrustum;
 	bool mFullScreen = false;
+	CSkyboxShader* mpSkyboxShader;
 public:
 	CGraphics();
 	~CGraphics();
@@ -53,6 +59,7 @@ private:
 	bool RenderPrimitives(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
 	bool RenderMeshes(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
 	bool RenderTerrains(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
+	bool RenderSkybox(D3DXMATRIX &world, D3DXMATRIX &view, D3DXMATRIX &proj);
 private:
 	CD3D11* mpD3D;
 
@@ -67,13 +74,14 @@ private:
 	
 	bool RenderPrimitiveWithTexture(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
 	bool RenderPrimitiveWithColour(CPrimitive* model, D3DMATRIX worldMatrix, D3DMATRIX viewMatrix, D3DMATRIX projMatrix);
-	bool RenderPrimitiveWithTextureAndDiffuseLight(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
+	//bool RenderPrimitiveWithTextureAndDiffuseLight(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
 
 	std::list<CPrimitive*> mpPrimitives;
 	std::list<CMesh*> mpMeshes;
 	std::list<CLight*> mpLights;
 	std::list<CTerrain*> mpTerrainGrids;
 	std::list<C2DImage*> mpUIImages;
+	std::vector<CSkyBox*> mpSkyboxList;
 
 	bool CreateTextureShaderForModel(HWND hwnd);
 	bool CreateColourShader(HWND hwnd);
@@ -88,14 +96,13 @@ private:
 public:
 	/* Model control from the engine. */
 	// Primitive creation / deletion.
-	CPrimitive* CreatePrimitive(WCHAR* TextureFilename, PrioEngine::Primitives shape);
+	CPrimitive* CreatePrimitive(std::string TextureFilename, PrioEngine::Primitives shape);
 	CPrimitive* CreatePrimitive(PrioEngine::RGBA colour, PrioEngine::Primitives shape);
-	CPrimitive* CreatePrimitive(WCHAR* TextureFilename, bool useLighting, PrioEngine::Primitives shape);
+	CPrimitive* CreatePrimitive(std::string TextureFilename, bool useLighting, PrioEngine::Primitives shape);
 	bool RemovePrimitive(CPrimitive* &model);
 
 	// Model creation / deletion.
-	CMesh* LoadMesh(char* filename, WCHAR* textureFilename);
-	CMesh* LoadMesh(char * filename, WCHAR* textureFilename, PrioEngine::ShaderType shaderType);
+	CMesh* LoadMesh(std::string filename);
 	bool RemoveMesh(CMesh* &mesh);
 
 	CTerrain* CreateTerrain(std::string mapFile);
@@ -112,11 +119,12 @@ public:
 	bool UpdateSentence(SentenceType* &sentence, std::string text, int posX, int posY, PrioEngine::RGB colour);
 	bool RemoveSentence(SentenceType* &sentence);
 
-	C2DImage* CreateUIImages(WCHAR* filename, int width, int height, int posX, int posY );
+	C2DImage* CreateUIImages(std::string filename, int width, int height, int posX, int posY );
 	bool RemoveUIImage(C2DImage* &element);
 	bool UpdateTerrainBuffers(CTerrain* &terrain, double** heightmap, int width, int height);
 	bool IsFullscreen();
 	bool SetFullscreen(bool enabled);
+	CSkyBox* CreateSkybox(D3DXVECTOR4 ambientColour);
 };
 
 #endif

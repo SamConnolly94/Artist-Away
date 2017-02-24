@@ -2,8 +2,12 @@
 #define MODELCONTROL_H
 
 #include <D3DX10math.h>
+#include "PrioEngineVars.h"
+
 class CModelControl
 {
+private:
+	CLogger* logger;
 protected:
 	D3DXVECTOR3 mPosition;
 	D3DXVECTOR3 mRotation;

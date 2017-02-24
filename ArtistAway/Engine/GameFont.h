@@ -6,9 +6,12 @@
 #include <fstream>
 
 #include "Texture.h"
+#include "PrioEngineVars.h"
 
 class CGameFont
 {
+private:
+	CLogger* logger;
 private:
 	struct FontType
 	{
@@ -27,7 +30,7 @@ public:
 	CGameFont();
 	~CGameFont();
 
-	bool Initialise(ID3D11Device* device, char* fontDataFile, WCHAR* fontTexture);
+	bool Initialise(ID3D11Device * device, char * fontDataFile, std::string fontTexture);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();
@@ -35,7 +38,7 @@ public:
 private:
 	bool LoadFontData(char* dataFile);
 	void ReleaseFontData();
-	bool LoadTextureFile(ID3D11Device* device, WCHAR* fontTexture);
+	bool LoadTextureFile(ID3D11Device * device, std::string fontTexture);
 	void ReleaseTexture();
 private:
 	FontType* mpFont;
