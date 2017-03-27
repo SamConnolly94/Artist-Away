@@ -4,7 +4,7 @@
 
 // Globals
 
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix worldMatrix;
 	matrix viewMatrix;
@@ -17,7 +17,6 @@ struct VertexInputType
 {
 	float4 position : POSITION;
 	float2 tex : TEXCOORD0;
-	//float2 tex2 : TEXCOORD1;
 	float3 normal : NORMAL;
 };
 

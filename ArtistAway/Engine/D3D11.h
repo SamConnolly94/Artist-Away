@@ -13,8 +13,7 @@
 #include <d3dx10math.h>
 #include <string>
 #include "PrioEngineVars.h"
-
-const int STRING_NUMBER_OF_BITS = 128;
+#include <AntTweakBar.h>
 
 class CD3D11
 {
@@ -72,7 +71,8 @@ public:
 	void TurnOnBackFaceCulling();
 	void TurnOffBackFaceCulling();
 
-	//void GetGraphicsCardInfo(char* cardName, int& memory);
+	ID3D11DepthStencilView* GetDepthStencilView();
+	void SetBackBufferRenderTarget();
 /* Setup functions. */
 private:
 	void CreateSwapChainDesc(HWND hwnd, DXGI_SWAP_CHAIN_DESC& swapChainDesc, int refRateNumerator, int refRateDenominator);

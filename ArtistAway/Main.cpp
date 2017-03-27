@@ -3,6 +3,7 @@
 #include "HeightMap.h"
 #include <thread>
 #include <process.h>
+#include <mutex>
 
 /// Custom types and structures.
 
@@ -15,6 +16,8 @@ struct TweakStruct
 	CHeightMap* heightMapPtr;
 	bool readyForJoin;
 };
+
+bool AutomaticSkyboxChangeEnabled;
 
 /// Function definitions.
 
@@ -67,6 +70,35 @@ void TW_CALL UpdateTerrain(void* clientData);
 void TW_CALL SetOctaves(const void * value, void * clientData);
 void TW_CALL GetOctaves(void * value, void * clientData);
 
+void TW_CALL SetDayTime(const void * value, void * clientData);
+void TW_CALL GetDayTime(void * value, void * clientData);
+void TW_CALL SetEveningTime(const void * value, void * clientData);
+void TW_CALL GetEveningTime(void * value, void * clientData);
+void TW_CALL SetNightTime(const void * value, void * clientData);
+void TW_CALL GetNightTime(void * value, void * clientData);
+void TW_CALL SetAutomaticSkyboxChange(const void * value, void * clientData);
+void TW_CALL GetAutomaticSkyboxChange(void * value, void * clientData);
+
+
+void TW_CALL SetWaterMovementX(const void * value, void * clientData);
+void TW_CALL GetWaterMovementX(void * value, void * clientData);
+void TW_CALL SetWaterMovementY(const void * value, void * clientData);
+void TW_CALL GetWaterMovementY(void * value, void * clientData);
+void TW_CALL SetWaveHeight(const void * value, void * clientData);
+void TW_CALL GetWaveHeight(void * value, void * clientData);
+void TW_CALL SetWaveScale(const void * value, void * clientData);
+void TW_CALL GetWaveScale(void * value, void * clientData);
+void TW_CALL SetRefractionDistortion(const void * value, void * clientData);
+void TW_CALL GetRefractionDistortion(void * value, void * clientData);
+void TW_CALL SetReflectionDistortion(const void * value, void * clientData);
+void TW_CALL GetReflectionDistortion(void * value, void * clientData);
+void TW_CALL SetRefractionStrength(const void * value, void * clientData);
+void TW_CALL GetRefractionStrength(void * value, void * clientData);
+void TW_CALL SetReflectionStrength(const void * value, void * clientData);
+void TW_CALL GetReflectionStrength(void * value, void * clientData);
+void TW_CALL SetDepth(const void * value, void * clientData);
+void TW_CALL GetDepth(void * value, void * clientData);
+
 /* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */
 unsigned int __stdcall UpdateMapThread(void* pdata);
 
@@ -78,7 +110,7 @@ CLogger* gLogger;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	CEngine* engine;
-
+	AutomaticSkyboxChangeEnabled = true;
 	// Enable run time memory check while running in debug.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -100,7 +132,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	gLogger->GetInstance().MemoryAllocWriteLine(typeid(engine).name());
 
 	// Set up the engine.
-	result = engine->Initialise();
+	result = engine->Initialise("Artist Away");
 	// If we successfully initialised the game engine
 	if (result)
 	{
@@ -191,7 +223,10 @@ void GameLoop(CEngine* &engine)
 			{
 				gLogger->GetInstance().WriteLine("Failed to close handle of thread.");
 			}
-
+			// Remove the unecessary meshes which will no longer be used.
+			tweakVars->enginePtr->RemoveScenery();
+			// The list should have been populated now, so add scenery to the terrain again.
+			tweakVars->enginePtr->AddSceneryToTerrain(tweakVars->terrainPtr);
 			tweakVars->readyForJoin = false;
 		}
 
@@ -226,9 +261,8 @@ void GameLoop(CEngine* &engine)
 */
 void Control(CEngine* &engine, CCamera* cam, CTerrain* terrain)
 {
-	const float kMoveSpeed = 10.0f;
-	const float kRotationSpeed = 10.0f;
-	const float kCamRotationSpeed = 2.5f;
+	const float kMoveSpeed = 25.0f;
+	const float kCamRotationSpeed = 100.0f;
 	float frameTime = engine->GetFrameTime();
 
 	/// Camera control.
@@ -307,6 +341,21 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	TwAddVarCB(ptr, "Octaves", TW_TYPE_UINT32, SetOctaves, GetOctaves, tweakVarsPtr, "min=1 max=100 step=1 group=Terrain label='Octaves'");
 	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, tweakVarsPtr, "min=0 max=100000 step=10000 group=Terrain label='Amplitude' ");
 	TwAddButton(ptr, "Update", UpdateTerrain, tweakVarsPtr, "group=Terrain label='Update'");
+
+	TwAddVarCB(ptr, "Set Day Time", TW_TYPE_BOOL8, SetDayTime, GetDayTime, tweakVarsPtr, "group=Skybox label='Day Time'");
+	TwAddVarCB(ptr, "Set Evening Time", TW_TYPE_BOOL8, SetEveningTime, GetEveningTime, tweakVarsPtr, "group=Skybox label='Evening Time'");
+	TwAddVarCB(ptr, "Set Night Time", TW_TYPE_BOOL8, SetNightTime, GetNightTime, tweakVarsPtr, "group=Skybox label='Night Time'");
+	TwAddVarCB(ptr, "Set Automatic Skybox", TW_TYPE_BOOL8, SetAutomaticSkyboxChange, GetAutomaticSkyboxChange, tweakVarsPtr, "group=Skybox label='Automatic Skybox Change'");
+
+	TwAddVarCB(ptr, "Set Depth", TW_TYPE_FLOAT, SetDepth, GetDepth, tweakVarsPtr, "group=Water label='Depth'");
+	TwAddVarCB(ptr, "Set Water Movement X", TW_TYPE_FLOAT, SetWaterMovementX, GetWaterMovementX, tweakVarsPtr, "group=Water label='Water Movement X'");
+	TwAddVarCB(ptr, "Set Water Movement Y", TW_TYPE_FLOAT, SetWaterMovementY, GetWaterMovementY, tweakVarsPtr, "group=Water label='Water Movement Y'");
+	TwAddVarCB(ptr, "Set Wave Height", TW_TYPE_FLOAT, SetWaveHeight, GetWaveHeight, tweakVarsPtr, "group=Water label='Wave Height'");
+	TwAddVarCB(ptr, "Set Wave Scale", TW_TYPE_FLOAT, SetWaveScale, GetWaveScale, tweakVarsPtr, "group=Water label='Wave Scale'");
+	TwAddVarCB(ptr, "Set Refraction Distortion", TW_TYPE_FLOAT, SetRefractionDistortion, GetRefractionDistortion, tweakVarsPtr, "group=Water label='Refraction Distortion'");
+	TwAddVarCB(ptr, "Set Reflection Distortion", TW_TYPE_FLOAT, SetReflectionDistortion, GetReflectionDistortion, tweakVarsPtr, "group=Water label='Reflection Distortion'");
+	TwAddVarCB(ptr, "Set Refraction Strength", TW_TYPE_FLOAT, SetRefractionStrength, GetRefractionStrength, tweakVarsPtr, "group=Water label='Refraction Strength'");
+	TwAddVarCB(ptr, "Set Reflection Strength", TW_TYPE_FLOAT, SetReflectionStrength, GetReflectionStrength, tweakVarsPtr, "group=Water label='Reflection Strength'");
 }
 
 /* A callback function which dictates what behaviour should occur when the height setting on the tweakbar is changed. */
@@ -397,11 +446,205 @@ void TW_CALL GetOctaves(void * value, void * clientData)
 	*static_cast<unsigned int *>(value) = tweakVars->heightMapPtr->GetNumberOfOctaves();
 }
 
+void TW_CALL SetDayTime(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	tweakVars->enginePtr->SetDayTime();
+}
+
+void TW_CALL GetDayTime(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<bool *>(value) = tweakVars->enginePtr->IsDayTime();
+}
+
+void TW_CALL SetEveningTime(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	tweakVars->enginePtr->SetEveningTime();
+}
+
+void TW_CALL GetEveningTime(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<bool *>(value) = tweakVars->enginePtr->IsEveningTime();
+}
+
+void TW_CALL SetNightTime(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	tweakVars->enginePtr->SetNightTime();
+}
+
+void TW_CALL GetNightTime(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<bool *>(value) = tweakVars->enginePtr->IsNightTime();
+}
+
+void TW_CALL SetAutomaticSkyboxChange(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+
+	AutomaticSkyboxChangeEnabled = *static_cast<const bool *>(value);
+	
+	if (AutomaticSkyboxChangeEnabled)
+	{
+		tweakVars->enginePtr->EnableAutomaticSkyboxChange();
+	}
+	else
+	{
+		tweakVars->enginePtr->DisableAutomaticSkyboxChange();
+	}
+}
+
+void TW_CALL GetAutomaticSkyboxChange(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<bool *>(value) = AutomaticSkyboxChangeEnabled;
+}
+
 /* The callback function for our update button. Should run the thread which updates the terrain.*/
 void TW_CALL UpdateTerrain(void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	tweakVars->hUpdateTerrainThread = (HANDLE)_beginthreadex(NULL, 0, UpdateMapThread, clientData, 0, NULL);
+}
+
+void TW_CALL SetWaterMovementX(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float movementX = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetMovementX(movementX);
+}
+
+void TW_CALL GetWaterMovementX(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetMovement().x;
+}
+
+void TW_CALL SetWaterMovementY(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float movementY = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetMovementY(movementY);
+}
+
+void TW_CALL GetWaterMovementY(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetMovement().y;
+}
+
+void TW_CALL SetWaveHeight(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float waveHeight = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetWaveHeight(waveHeight);
+}
+
+void TW_CALL GetWaveHeight(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetWaveHeight();
+}
+
+//void TW_CALL SetWaterMovementX(const void * value, void * clientData);
+//void TW_CALL GetWaterMovementX(void * value, void * clientData);
+//void TW_CALL SetWaterMovementY(const void * value, void * clientData);
+//void TW_CALL GetWaterMovementY(void * value, void * clientData);
+//void TW_CALL SetWaveHeight(const void * value, void * clientData);
+//void TW_CALL GetWaveHeight(void * value, void * clientData);
+//void TW_CALL SetWaveScale(const void * value, void * clientData);
+//void TW_CALL GetWaveScale(void * value, void * clientData);
+//void TW_CALL SetRefractionDistortion(const void * value, void * clientData);
+//void TW_CALL GetRefractionDistortion(void * value, void * clientData);
+//void TW_CALL SetReflectionDistortion(const void * value, void * clientData);
+//void TW_CALL GetReflectionDistortion(void * value, void * clientData);
+//void TW_CALL SetRefractionStrength(const void * value, void * clientData);
+//void TW_CALL GetRefractionStrength(void * value, void * clientData);
+//void TW_CALL SetReflectionStrength(const void * value, void * clientData);
+//void TW_CALL GetReflectionStrength(void * value, void * clientData);
+//void TW_CALL SetDepth(const void * value, void * clientData);
+//void TW_CALL GetDepth(void * value, void * clientData);
+
+void TW_CALL SetWaveScale(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float waveScale = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetWaveScale(waveScale);
+}
+
+void TW_CALL GetWaveScale(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetWaveScale();
+}
+
+void TW_CALL SetRefractionDistortion(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float refrDist = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetRefractionDistortion(refrDist);
+}
+
+void TW_CALL GetRefractionDistortion(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetRefractionDistortion();
+}
+
+void TW_CALL SetReflectionDistortion(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float reflDist = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetReflectionDistortion(reflDist);
+}
+
+void TW_CALL GetReflectionDistortion(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetReflectionDistortion();
+}
+
+void TW_CALL SetRefractionStrength(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float refStren = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetRefractionStrength(refStren);
+}
+
+void TW_CALL GetRefractionStrength(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetRefractionStrength();
+}
+
+void TW_CALL SetReflectionStrength(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float refStren = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetReflectionStrength(refStren);
+}
+
+void TW_CALL GetReflectionStrength(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetReflectionStrength();
+}
+
+void TW_CALL SetDepth(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float depth = *static_cast<const float *>(value);
+	tweakVars->terrainPtr->GetWater()->SetDepth(depth);
+}
+
+void TW_CALL GetDepth(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetDepth();
 }
 
 /* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */

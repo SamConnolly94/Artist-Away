@@ -1,22 +1,11 @@
 #ifndef DIFFUSELIGHTSHADER_H
 #define DIFFUSELIGHTSHADER_H
 
-#include <d3d11.h>
-#include <D3DX10math.h>
-#include <D3DX11async.h>
-#include "PrioEngineVars.h"
+#include "Shader.h"
 
-class CDiffuseLightShader
+class CDiffuseLightShader : public CShader
 {
 private:
-	CLogger* logger;
-private:
-	struct MatrixBufferType
-	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-	};
 
 	struct LightBufferType
 	{
@@ -31,6 +20,7 @@ private:
 		bool useAlphaMap;
 		bool useSpecularMap;
 		D3DXVECTOR3 padding2;
+		D3DXVECTOR4 padding3;
 	};
 
 public:
@@ -44,7 +34,7 @@ public:
 	bool UpdateMapBuffer(ID3D11DeviceContext* deviceContext, bool useAlphaMap, bool useSpecularMap);
 
 private:
-	bool InitialiseShader(ID3D11Device * device, HWND hwnd, std::string vsFilename, std::string psFilename);
+	bool InitialiseShader(ID3D11Device * device, HWND hwnd, std::string vsFilename, std::string psFilename, std::string transparentPSFilename);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob *errorMessage, HWND hwnd, std::string shaderFilename);
 
@@ -54,6 +44,7 @@ private:
 private:
 	ID3D11VertexShader* mpVertexShader;
 	ID3D11PixelShader* mpPixelShader;
+	ID3D11PixelShader* mpTransparentPixelShader;
 	ID3D11InputLayout* mpLayout;
 	ID3D11Buffer* mpMatrixBuffer;
 	ID3D11SamplerState* mpSampleState;

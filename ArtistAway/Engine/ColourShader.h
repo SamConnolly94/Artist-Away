@@ -1,23 +1,10 @@
 #ifndef COLOURSHADER_H
 #define COLOURSHADER_H
 
-#include <d3d11.h>
-#include <D3DX10math.h>
-#include <D3DX11async.h>
-#include "PrioEngineVars.h"
+#include "Shader.h"
 
-class CColourShader
+class CColourShader : public CShader
 {
-private:
-	CLogger* logger;
-private:
-	struct MatrixBufferType
-	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-	};
-
 public:
 	CColourShader();
 	~CColourShader();

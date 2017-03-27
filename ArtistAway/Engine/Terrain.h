@@ -7,10 +7,11 @@
 #include "ModelControl.h"
 #include "Texture.h"
 #include "Mesh.h"
-
+#include "Water.h"
 #include <vector>
 #include <sstream>
 #include "PrioEngineVars.h"
+#include "D3D11.h"
 
 class CTerrain : public CModelControl
 {
@@ -33,7 +34,7 @@ private:
 	};
 
 public:
-	CTerrain(ID3D11Device* device);
+	CTerrain(ID3D11Device* device, int screenWidth, int screenHeight);
 	~CTerrain();
 private:
 	void ReleaseHeightMap();
@@ -45,15 +46,18 @@ private:
 	const unsigned int kNumberOfRockTextures = 2;
 	float mLowestPoint;
 	float mHighestPoint;
+	CTexture* mpPatchMap;
 public:
 	bool CreateTerrain(ID3D11Device* device);
 	void Render(ID3D11DeviceContext* context);
+	void Update(float updateTime);
 	CTexture** GetTexturesArray();
 	CTexture** GetGrassTextureArray();
 	CTexture** GetRockTextureArray();
 	unsigned int GetNumberOfTextures() { return kmNumberOfTextures; };
 	unsigned int GetNumberOfGrassTextures();
 	unsigned int GetNumberOfRockTextures();
+	CTexture* GetPatchMap() { return mpPatchMap; };
 private:
 	bool InitialiseBuffers(ID3D11Device* device);
 	void ShutdownBuffers();
@@ -92,8 +96,6 @@ public:
 	bool LoadHeightMapFromFile(std::string filename);
 	bool UpdateBuffers(ID3D11Device* device, ID3D11DeviceContext* deviceContext, double** heightMap, int newWidth, int newHeight);
 // Update functions.
-public:
-	void UpdateMatrices(D3DXMATRIX& world);
 private:
 	struct TerrainEntityType
 	{
@@ -121,6 +123,14 @@ public:
 	float GetGrassHeight() { return mGrassHeight; };
 	float GetSandHeight() { return mSandHeight; };
 	float GetDirtHeight() { return mDirtHeight; };
+	CWater* GetWater() { return mpWater; };
+private:
+	CWater* mpWater;
+	int mScreenWidth;
+	int mScreenHeight;
+	bool mUpdating = false;
+public:
+	bool GetUpdateFlag() { return mUpdating; };
 };
 
 #endif

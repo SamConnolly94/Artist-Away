@@ -8,11 +8,13 @@ class CModelControl
 {
 private:
 	CLogger* logger;
+	float ToRadians(float degrees);
 protected:
 	D3DXVECTOR3 mPosition;
 	D3DXVECTOR3 mRotation;
 	D3DXVECTOR3 mScale;
 	CModelControl* mpParent;
+	D3DXMATRIX mWorldMatrix;
 public:
 	/* Rotation. */
 	void RotateX(float x);
@@ -54,6 +56,7 @@ public:
 	float GetScaleY();
 	float GetScaleZ();
 	D3DXVECTOR3 GetScale();
+	float GetScaleRadius(float initialRadius);
 
 	void SetScaleX(float x);
 	void SetScaleY(float y);
@@ -64,6 +67,9 @@ public:
 	void AttatchToParent(CModelControl* parent);
 	void SeperateFromParent();
 
+	void UpdateMatrices();
+
+	void GetWorldMatrix(D3DXMATRIX& world) { world = mWorldMatrix; };
 public:
 	CModelControl();
 	~CModelControl();

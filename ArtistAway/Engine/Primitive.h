@@ -41,7 +41,6 @@ public:
 	bool HasTexture();
 	bool HasColour();
 	bool UseDiffuseLight();
-	void UpdateMatrices(D3DXMATRIX& world);
 
 protected:
 	ID3D11Device * mpDevice;

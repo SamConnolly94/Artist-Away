@@ -1,8 +1,8 @@
 #ifndef PRIO_ENGINE_VARS_H
 #define PRIO_ENGINE_VARS_H
 
-#include <windows.h>
 #include "Logger.h"
+#include <windows.h>
 
 namespace PrioEngine
 {

@@ -1,26 +1,14 @@
 #ifndef SKYBOXSHADER_H
 #define SKYBOXSHADER_H
 
-#include <d3d11.h>
-#include <d3dx10math.h>
-#include <d3dx11async.h>
-#include "PrioEngineVars.h"
+#include "Shader.h"
 
-class CSkyboxShader
+class CSkyboxShader : public CShader
 {
-private:
-	CLogger* logger;
 public:
 	CSkyboxShader();
 	~CSkyboxShader();
 private:
-	struct MatrixBufferType
-	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX proj;
-	};
-
 	struct GradientBufferType
 	{
 		D3DXVECTOR4 apexColour;

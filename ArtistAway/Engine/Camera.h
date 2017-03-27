@@ -10,6 +10,7 @@ public:
 	~CCamera();
 
 	// Set the position of the camera in the world.
+	void SetPosition(D3DXVECTOR3 pos);
 	void SetPosition(float x, float y, float z);
 	void SetPositionX(float x);
 	void SetPosizionY(float y);
@@ -41,8 +42,11 @@ public:
 	D3DXVECTOR3 GetRotation();
 
 	void Render();
+	void GetWorldMatrix(D3DXMATRIX& worldMatrix);
 	void GetViewMatrix(D3DXMATRIX& viewMatrix);
-
+	void SetWorldMatrix(D3DXMATRIX world) { mWorldMatrix = world; };
+	void GetViewProjMatrix(D3DXMATRIX& ViewProjMatrix);
+	void GetReflectionView(D3DXMATRIX& view);
 private:
 	int mScreenWidth;
 	int mScreenHeight;
@@ -60,6 +64,8 @@ private:
 	D3DXMATRIX mViewProjMatrix;
 
 	void UpdateMatrices();
+	float ToRadians(float degrees);
+
 };
 
 #endif

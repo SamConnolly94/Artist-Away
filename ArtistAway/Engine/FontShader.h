@@ -1,26 +1,15 @@
 #ifndef FONTSHADER_H
 #define FONTSHADER_H
 
-#include <d3d11.h>
-#include <D3DX10math.h>
-#include <D3DX11async.h>
-#include "PrioEngineVars.h"
+#include "Shader.h"
 
-class CFontShader
+class CFontShader : public CShader
 {
 private:
-	CLogger* logger;
-private:
-	struct ConstantBufferType
-	{
-		D3DXMATRIX world;
-		D3DXMATRIX view;
-		D3DXMATRIX projection;
-	};
-
 	struct PixelBufferType
 	{
 		D3DXVECTOR4 pixelColour;
+		D3DXVECTOR4 pixelBufferPadding;
 	};
 public:
 	CFontShader();
