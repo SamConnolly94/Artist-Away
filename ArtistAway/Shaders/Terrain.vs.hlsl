@@ -1,7 +1,3 @@
-//
-// VERTEX SHADER FILE.
-//
-
 // Globals
 
 cbuffer MatrixBuffer : register(b0)
@@ -9,6 +5,7 @@ cbuffer MatrixBuffer : register(b0)
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+	matrix ViewProjMatrix;
 };
 
 // Typedefs
@@ -40,8 +37,9 @@ PixelInputType TerrainVertex(VertexInputType input)
 
 	// Calculate the position of the vertex against the world, view and projection matrices.
 	output.screenPosition = mul(input.position, worldMatrix);
-	output.screenPosition = mul(output.screenPosition, viewMatrix);
-	output.screenPosition = mul(output.screenPosition, projectionMatrix);
+	output.screenPosition = mul(output.screenPosition, ViewProjMatrix);
+	//output.screenPosition = mul(output.screenPosition, viewMatrix);
+	//output.screenPosition = mul(output.screenPosition, projectionMatrix);
 
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;

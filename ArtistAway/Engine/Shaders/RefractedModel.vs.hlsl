@@ -7,6 +7,7 @@ cbuffer MatrixBuffer : register(b0)
 	matrix WorldMatrix;
 	matrix ViewMatrix;
 	matrix ProjectionMatrix;
+	matrix ViewProjMatrix;
 };
 
 //////////////////////////
@@ -37,8 +38,9 @@ PixelInputType RefractionVS(VertexInputType input)
 	PixelInputType output;
 
 	output.WorldPosition = mul(input.WorldPosition, WorldMatrix);
-	output.ProjectedPosition = mul(output.WorldPosition, ViewMatrix);
-	output.ProjectedPosition = mul(output.ProjectedPosition, ProjectionMatrix);
+	output.ProjectedPosition = mul(output.WorldPosition, ViewProjMatrix);
+	//output.ProjectedPosition = mul(output.WorldPosition, ViewMatrix);
+	//output.ProjectedPosition = mul(output.ProjectedPosition, ProjectionMatrix);
 
 	output.Normal = mul(input.Normal, (float3x3)WorldMatrix);
 

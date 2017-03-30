@@ -69,7 +69,7 @@ public:
 	CModel* CreateModel();
 	bool LoadMesh(std::string filename, float modelRadius = 1.0f);
 
-	void Render(ID3D11DeviceContext* context, CFrustum* frustum, CDiffuseLightShader* shader, D3DXMATRIX &view, D3DXMATRIX &proj, CLight* light);
+	void Render(ID3D11DeviceContext* context, CFrustum* frustum, CDiffuseLightShader* shader, CLight* light);
 	void Shutdown();
 private:
 	bool LoadAssimpModel(std::string filename);

@@ -11,7 +11,6 @@
 #include <vector>
 #include <sstream>
 #include "PrioEngineVars.h"
-#include "D3D11.h"
 
 class CTerrain : public CModelControl
 {
@@ -100,15 +99,15 @@ private:
 	struct TerrainEntityType
 	{
 		D3DXVECTOR3 position;
-		float rotation;
+		D3DXVECTOR3 rotation;
 		float scale;
 	};
 	std::vector<TerrainEntityType> mTreesInfo;
 	std::vector<TerrainEntityType> mPlantsInfo;
 	bool PositionTreeHere();
-	bool CreateTree(D3DXVECTOR3 position);
+	bool CreateTree(D3DXVECTOR3 position, D3DXVECTOR3 normal);
 	bool PositionPlantHere();
-	bool CreatePlant(D3DXVECTOR3 position);
+	bool CreatePlant(D3DXVECTOR3 position, D3DXVECTOR3 normal);
 	CTerrain::VertexAreaType FindAreaType(float height);
 public:
 	std::vector<TerrainEntityType> GetTreeInformation() { return mTreesInfo; };

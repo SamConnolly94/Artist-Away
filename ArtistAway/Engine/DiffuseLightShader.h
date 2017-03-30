@@ -29,8 +29,7 @@ public:
 
 	bool Initialise(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
-		D3DXMATRIX projMatrix, ID3D11ShaderResourceView** textures, int numberOfTextures, D3DXVECTOR3 lightDirection, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
+	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, ID3D11ShaderResourceView** textures, int numberOfTextures, D3DXVECTOR3 lightDirection, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
 	bool UpdateMapBuffer(ID3D11DeviceContext* deviceContext, bool useAlphaMap, bool useSpecularMap);
 
 private:
@@ -38,7 +37,7 @@ private:
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob *errorMessage, HWND hwnd, std::string shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix, ID3D11ShaderResourceView** textures, int numberOfTextures, D3DXVECTOR3 lightDirection, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView** textures, int numberOfTextures, D3DXVECTOR3 lightDirection, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
 private:
@@ -46,7 +45,6 @@ private:
 	ID3D11PixelShader* mpPixelShader;
 	ID3D11PixelShader* mpTransparentPixelShader;
 	ID3D11InputLayout* mpLayout;
-	ID3D11Buffer* mpMatrixBuffer;
 	ID3D11SamplerState* mpSampleState;
 	ID3D11Buffer* mpLightBuffer;
 	ID3D11Buffer* mpMapBuffer;

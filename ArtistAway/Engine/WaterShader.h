@@ -60,9 +60,6 @@ public:
 
 	bool RenderHeight(ID3D11DeviceContext* deviceContext, int indexCount);
 private:
-	D3DXMATRIX mWorldMatrix; 
-	D3DXMATRIX mViewMatrix; 
-	D3DXMATRIX mProjMatrix;
 	D3DXVECTOR2 mWaterMovement; 
 	float mWaveHeight; 
 	float mWaveScale; 
@@ -86,7 +83,6 @@ private:
 	ID3D11ShaderResourceView* mpRefractionMap; 
 	ID3D11ShaderResourceView* mpReflectionMap;
 public:
-	void SetMatrices(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
 	void SetWaterMovement(D3DXVECTOR2 movement);
 	void SetWaveHeight(float height);
 	void SetWaveScale(float scale);
@@ -119,8 +115,7 @@ private:
 	ID3D11InputLayout* mpLayout;
 	ID3D11SamplerState* mpTrilinearWrap;
 	ID3D11SamplerState* mpBilinearMirror;
-
-	ID3D11Buffer* mpMatrixBuffer;
+	
 	ID3D11Buffer* mpWaterBuffer;
 	ID3D11Buffer* mpCameraBuffer;
 	ID3D11Buffer* mpViewportBuffer;

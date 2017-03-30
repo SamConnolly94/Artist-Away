@@ -83,9 +83,6 @@ private:
 	ID3D11ShaderResourceView* mpPatchMap;
 	ID3D11ShaderResourceView* mpRockTextures[2];
 public:
-	void SetWorld(D3DXMATRIX worldMatrix);
-	void SetView(D3DXMATRIX viewMatrix);
-	void SetProj(D3DXMATRIX projMatrix);
 	void SetLightProperties(CLight* light);
 	void SetViewportProperties(int screenWidth, int screenHeight);
 	void SetTerrainAreaProperties(float snowHeight, float grassHeight, float dirtHeight, float sandHeight);
@@ -107,7 +104,7 @@ private:
 
 	void CReflectRefractShader::RenderRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
 	void CReflectRefractShader::RenderReflectionShader(ID3D11DeviceContext * deviceContext, int indexCount);
-	void RenderSkyboxRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
+	//void RenderSkyboxRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
 
 private:
 	ID3D11VertexShader* mpVertexShader;
@@ -119,7 +116,6 @@ private:
 	ID3D11InputLayout* mpLayout;
 	ID3D11SamplerState* mpTrilinearWrap;
 	ID3D11SamplerState* mpBilinearMirror;
-	ID3D11Buffer* mpMatrixBuffer;
 	ID3D11Buffer* mpLightBuffer;
 	ID3D11Buffer* mpViewportBuffer;
 	ID3D11Buffer* mpTerrainAreaBuffer;

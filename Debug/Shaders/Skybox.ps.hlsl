@@ -1,35 +1,33 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: skydome.ps
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////
+// Buffers
+///////////////////////////
 
-
-/////////////
-// GLOBALS //
-/////////////
 cbuffer GradientBuffer
 {
-	float4 apexColor;
-	float4 centerColor;
+	float4 apexColour;
+	float4 centerColour;
 };
 
 
-//////////////
-// TYPEDEFS //
-//////////////
+///////////////////////////
+// Pixel structures
+///////////////////////////
+
+
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float4 domePosition : TEXCOORD0;
 };
 
+///////////////////////////
+// Pixel shader
+///////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
-// Pixel Shader
-////////////////////////////////////////////////////////////////////////////////
 float4 SkyDomePixelShader(PixelInputType input) : SV_TARGET
 {
 	float height;
-	float4 outputColor;
+	float4 outputColour;
 
 
 	// Determine the position on the sky dome where this pixel is located.
@@ -42,7 +40,7 @@ float4 SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	}
 
 	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
-	outputColor = lerp(centerColor, apexColor, height);
+	outputColour = lerp(centerColour, apexColour, height);
 
-	return outputColor;
+	return outputColour;
 }

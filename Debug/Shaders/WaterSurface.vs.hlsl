@@ -21,6 +21,7 @@ cbuffer MatrixBuffer : register(b0)
 	matrix WorldMatrix;
 	matrix ViewMatrix;
 	matrix ProjectionMatrix;
+	matrix ViewProjMatrix;
 }
 
 cbuffer WaterBuffer : register(b1)
@@ -88,8 +89,9 @@ PixelInputType WaterSurfaceVS(VertexInputType input)
 	
 	float4 worldPosition = mul(modelPosition, WorldMatrix);
 	output.WorldPosition = worldPosition;
-	float4 viewPosition = mul(worldPosition, ViewMatrix);
-	output.ProjectedPosition = mul(viewPosition, ProjectionMatrix);
+	//float4 viewPosition = mul(worldPosition, ViewMatrix);
+	//output.ProjectedPosition = mul(viewPosition, ProjectionMatrix);
+	output.ProjectedPosition = mul(worldPosition, ViewProjMatrix);
 
 	output.UV = input.UV;
 

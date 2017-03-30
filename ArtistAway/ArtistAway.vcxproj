@@ -114,7 +114,7 @@ xcopy /e /y "$(ProjectDir)Engine\Shaders" "$(ProjectDir)Shaders"
 xcopy /e /y "$(ProjectDir)Engine\Dependencies\DLLs" "$(TargetDir)"
 if not exist "$(TargetDir)Resources" mkdir "$(TargetDir)Resources"
 echo "Made resources dir, copying resources to that dir."
-xcopy /e /y "$(ProjectDir)Resources" "$(TargetDir)Resources"</Command>
+xcopy /e /y "$(ProjectDir)Engine\Resources" "$(TargetDir)Resources"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

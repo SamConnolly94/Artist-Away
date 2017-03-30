@@ -7,6 +7,7 @@ cbuffer MatrixBuffer : register(b0)
 	matrix WorldMatrix;
 	matrix ViewMatrix;
 	matrix ProjectionMatrix;
+	matrix ViewProjMatrix;
 };
 
 //////////////////////////
@@ -45,8 +46,9 @@ PixelInputType SkyboxVS(VertexInputType input)
 	output.WorldPosition = mul(modelPos, WorldMatrix);
 
 	output.ProjectedPosition = mul(modelPos, WorldMatrix);
-	output.ProjectedPosition = mul(output.ProjectedPosition, ViewMatrix);
-	output.ProjectedPosition = mul(output.ProjectedPosition, ProjectionMatrix);
+	output.ProjectedPosition = mul(output.ProjectedPosition, ViewProjMatrix);
+	//output.ProjectedPosition = mul(output.ProjectedPosition, ViewMatrix);
+	//output.ProjectedPosition = mul(output.ProjectedPosition, ProjectionMatrix);
 
 	output.Normal = mul(input.Normal, (float3x3)WorldMatrix);
 

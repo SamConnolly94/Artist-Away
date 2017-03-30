@@ -1,30 +1,36 @@
+//////////////////////////
+// Input Structures
+/////////////////////////
+
 cbuffer PerFrameBuffer
 {
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+	matrix WorldMatrix;
+	matrix ViewMatrix;
+	matrix ProjMatrix;
+	matrix ViewProjMatrix;
 };
 
+//////////////////////////
+// Input Structures
+/////////////////////////
 
-//////////////
-// TYPEDEFS //
-//////////////
 struct VertexInputType
 {
 	float4 position : POSITION;
-	float2 tex : TEXCOORD0;
+	float2 uv : TEXCOORD0;
 };
 
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD0;
+	float2 uv : TEXCOORD0;
 };
 
 
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////
 // Vertex Shader
-////////////////////////////////////////////////////////////////////////////////
+/////////////////////////
+
 PixelInputType FontVertexShader(VertexInputType input)
 {
 	PixelInputType output;
@@ -34,12 +40,13 @@ PixelInputType FontVertexShader(VertexInputType input)
 	input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	output.position = mul(input.position, WorldMatrix);
+	output.position = mul(output.position, ViewProjMatrix);
+	//output.position = mul(output.position, ViewMatrix);
+	//output.position = mul(output.position, ProjMatrix);
 
 	// Store the texture coordinates for the pixel shader.
-	output.tex = input.tex;
+	output.uv = input.uv;
 
 	return output;
 }

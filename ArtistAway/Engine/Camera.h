@@ -45,8 +45,10 @@ public:
 	void GetWorldMatrix(D3DXMATRIX& worldMatrix);
 	void GetViewMatrix(D3DXMATRIX& viewMatrix);
 	void SetWorldMatrix(D3DXMATRIX world) { mWorldMatrix = world; };
-	void GetViewProjMatrix(D3DXMATRIX& ViewProjMatrix);
+	void GetViewProjMatrix(D3DXMATRIX& ViewProjMatrix, D3DXMATRIX proj);
 	void GetReflectionView(D3DXMATRIX& view);
+	void RenderReflection(float waterHeight);
+	void GetReflectionViewMatrix(D3DXMATRIX& reflectionView);
 private:
 	int mScreenWidth;
 	int mScreenHeight;
@@ -62,6 +64,7 @@ private:
 	D3DXMATRIX mViewMatrix;
 	D3DXMATRIX mProjMatrix;
 	D3DXMATRIX mViewProjMatrix;
+	D3DXMATRIX mReflectionMatrix;
 
 	void UpdateMatrices();
 	float ToRadians(float degrees);

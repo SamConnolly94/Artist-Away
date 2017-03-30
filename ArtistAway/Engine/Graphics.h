@@ -26,9 +26,12 @@
 #include "Water.h"
 #include "WaterShader.h"
 #include <mutex>
+#include "CloudPlane.h"
+#include "CloudShader.h"
+#include "RainShader.h"
+#include "Rain.h"
 
 // Global variables.
-// Will the window run in full screen?
 
 // Will VSYNC be enabled? (Caps at your monitor refresh rate)
 const bool VSYNC_ENABLED = false;
@@ -58,16 +61,17 @@ public:
 private:
 	bool Render();
 private:
-	bool RenderModels(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
-	bool RenderPrimitives(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
-	bool RenderMeshes(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
-	bool RenderTerrains(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
-	bool RenderSkybox(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
-	bool RenderWater(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
+	bool RenderModels(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderPrimitives(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderMeshes(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderTerrains(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderSkybox(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderWater(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderRain(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
 private:
 	CD3D11* mpD3D;
 	CCamera* mpCamera;
-	CCamera* mpReflectionCamera;
+	//CCamera* mpReflectionCamera;
 	CPrimitive* mpTriangle;
 	CGameText* mpText;
 	D3DXMATRIX mBaseView;
@@ -80,6 +84,7 @@ private:
 	CSkyboxShader* mpSkyboxShader;
 	CWaterShader* mpWaterShader;
 	CReflectRefractShader* mpRefractionShader;
+	CRainShader* mpRainShader;
 	
 	bool RenderPrimitiveWithTexture(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
 	bool RenderPrimitiveWithColour(CPrimitive* model, D3DMATRIX worldMatrix, D3DMATRIX viewMatrix, D3DMATRIX projMatrix);
@@ -96,9 +101,8 @@ private:
 	bool CreateColourShader(HWND hwnd);
 	bool CreateTextureAndDiffuseLightShaderFromModel(HWND hwnd);
 	bool CreateTerrainShader(HWND hwnd);
-	bool RenderText(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho);
-	bool RenderBitmaps(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho);
-
+	bool RenderText(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, D3DXMATRIX viewProj);
+	bool RenderBitmaps(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, D3DXMATRIX viewProj);
 	float mFrameTime;
 
 	HWND mHwnd;
@@ -158,6 +162,10 @@ public:
 	bool IsEveningTime();
 private:
 	std::mutex mMutex;
+	CCloudPlane* mpCloudPlane;
+	CCloudShader* mpCloudShader;
+	CRain* mpRain;
+	float mRunTime = 0.0f;
 };
 
 #endif
