@@ -14,8 +14,8 @@ private:
 	CLogger* logger;
 public:
 	// Constructors.
-	CPerlinNoise();
-	CPerlinNoise(unsigned int seed);
+	CPerlinNoise(int repeatVal = -1);
+	CPerlinNoise(unsigned int seed, int repeatVal = -1);
 
 	// Destructor.
 	~CPerlinNoise();
@@ -35,6 +35,10 @@ private:
 	int repeat = -1;
 	float mFrequency;
 	float mAmplitude;
+
+
+	int inc(int number);
+
 };
 
 #endif

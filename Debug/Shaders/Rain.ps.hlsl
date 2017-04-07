@@ -27,5 +27,5 @@ struct PixelInputType
 
 float4 RainPS(PixelInputType input) : SV_TARGET
 {
-	return RainTexture.Sample(TrilinearWrap, float3(input.UV, 0));
+	return RainTexture.Sample(TrilinearWrap, float3(input.UV, 0)) * float4(0.0f, 0.8f, 1.0f, 1.0f);
 }

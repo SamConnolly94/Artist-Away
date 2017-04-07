@@ -47,6 +47,7 @@ private:
 	float mGameTime;
 	D3DXVECTOR3 mEmiterPosition;
 	D3DXVECTOR3 mEmitterDirection;
+	bool mEnabled = false;
 public:
 	void SetNumberOfParticles(unsigned int numParticles);
 	void SetFirstRun(bool firstRun);
@@ -65,6 +66,9 @@ public:
 
 	ID3D11ShaderResourceView* GetRainTexture();
 	ID3D11ShaderResourceView* GetRandomTexture();
+
+	void SetEnabled(bool value) { mEnabled = value; };
+	bool IsEnabled() { return mEnabled; };
 };
 
 #endif

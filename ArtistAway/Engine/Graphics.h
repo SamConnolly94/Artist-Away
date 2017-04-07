@@ -25,11 +25,14 @@
 #include "RefractReflectShader.h"
 #include "Water.h"
 #include "WaterShader.h"
-#include <mutex>
 #include "CloudPlane.h"
 #include "CloudShader.h"
 #include "RainShader.h"
 #include "Rain.h"
+#include "SnowShader.h"
+#include "Snow.h"
+#include "FoliageShader.h"
+#include "Foliage.h"
 
 // Global variables.
 
@@ -61,18 +64,19 @@ public:
 private:
 	bool Render();
 private:
-	bool RenderModels(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderModels(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj, D3DXMATRIX reflectionViewProj);
 	bool RenderPrimitives(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
 	bool RenderMeshes(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
 	bool RenderTerrains(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
 	bool RenderSkybox(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
-	bool RenderWater(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderWater(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj, D3DXMATRIX reflectionViewProj);
 	bool RenderRain(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderSnow(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
+	bool RenderFoliage(D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj, D3DXMATRIX viewProj);
 private:
 	CD3D11* mpD3D;
 	CCamera* mpCamera;
-	//CCamera* mpReflectionCamera;
-	CPrimitive* mpTriangle;
+	CCamera* mpReflectionCamera;
 	CGameText* mpText;
 	D3DXMATRIX mBaseView;
 
@@ -85,6 +89,8 @@ private:
 	CWaterShader* mpWaterShader;
 	CReflectRefractShader* mpRefractionShader;
 	CRainShader* mpRainShader;
+	CSnowShader* mpSnowShader;
+	CFoliageShader* mpFoliageShader;
 	
 	bool RenderPrimitiveWithTexture(CPrimitive* model, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix, D3DXMATRIX projMatrix);
 	bool RenderPrimitiveWithColour(CPrimitive* model, D3DMATRIX worldMatrix, D3DMATRIX viewMatrix, D3DMATRIX projMatrix);
@@ -161,11 +167,21 @@ public:
 	bool IsNightTime();
 	bool IsEveningTime();
 private:
-	std::mutex mMutex;
 	CCloudPlane* mpCloudPlane;
 	CCloudShader* mpCloudShader;
 	CRain* mpRain;
+	CSnow* mpSnow;
 	float mRunTime = 0.0f;
+	CFoliage* mpFoliage;
+public:
+	bool CreateFoliage(std::string filename);
+	bool CreateFoliage(double** heightMap, int width, int height);
+	CFoliage* GetFoliage() { return mpFoliage; };
+	bool UpdateFoliage(double** heightMap, int width, int height);
+	void SetSnowEnabled(bool value);
+	bool GetSnowEnabled();
+	void SetRainEnabled(bool value);
+	bool GetRainEnabled();
 };
 
 #endif

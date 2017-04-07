@@ -175,17 +175,28 @@ void GameLoop(CEngine* &engine)
 	float frameTime;
 	CLight* ambientLight;
 	CHeightMap* heightMap;
+	CHeightMap* foliageHeightMap;
 	CTerrain* terrain;
 	terrain = engine->CreateTerrain("");
 	heightMap = new CHeightMap();
+	foliageHeightMap = new CHeightMap();
 	gLogger->GetInstance().MemoryAllocWriteLine(typeid(heightMap).name());
 	CTwBar* tweakBar;
 
 	heightMap->SetHeight(200);
 	heightMap->SetWidth(200);
+	foliageHeightMap->SetFrequency(0.6f);
 	heightMap->InitialiseMap();
 	heightMap->WriteMapToFile("Default.map");
+
+	foliageHeightMap->SetHeight(200);
+	foliageHeightMap->SetWidth(200);
+	foliageHeightMap->SetFrequency(1.0f);
+	foliageHeightMap->InitialiseMap();
+	foliageHeightMap->WriteMapToFile("Foliage.map");
+
 	terrain = engine->CreateTerrain(heightMap->GetMap(), 200, 200);
+	CFoliage* foliage = engine->CreateFoliage(foliageHeightMap->GetMap(), 200, 200);
 
 	TweakStruct* tweakVars = new TweakStruct();
 	gLogger->GetInstance().MemoryAllocWriteLine(typeid(tweakVars).name());
@@ -224,9 +235,9 @@ void GameLoop(CEngine* &engine)
 				gLogger->GetInstance().WriteLine("Failed to close handle of thread.");
 			}
 			// Remove the unecessary meshes which will no longer be used.
-			tweakVars->enginePtr->RemoveScenery();
+			//tweakVars->enginePtr->RemoveScenery();
 			// The list should have been populated now, so add scenery to the terrain again.
-			tweakVars->enginePtr->AddSceneryToTerrain(tweakVars->terrainPtr);
+			//tweakVars->enginePtr->AddSceneryToTerrain(tweakVars->terrainPtr);
 			tweakVars->readyForJoin = false;
 		}
 
@@ -252,6 +263,7 @@ void GameLoop(CEngine* &engine)
 	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(tweakVars).name());
 	delete heightMap;
 	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(heightMap).name());
+	delete foliageHeightMap;
 }
 
 /* This is where user input is controlled. This function must be called once every tick of our gameloop without exceptions, because we need to make sure we don't miss something like the quit key!
@@ -336,10 +348,10 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	TwDefine(" GLOBAL help='Control the perlin noise generation through these tabs. ' ");
 	TwAddVarCB(ptr, "Height", TW_TYPE_INT32, SetHeight, GetHeight, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Height' ");
 	TwAddVarCB(ptr, "Width", TW_TYPE_INT32, SetWidth, GetWidth, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Width' ");
-	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, tweakVarsPtr, "min=1 max=1000 step=0.1 group=Terrain label='Persistence' ");
+	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, tweakVarsPtr, "min=0 max=1 step=0.1 group=Terrain label='Persistence' ");
 	TwAddVarCB(ptr, "Frequency", TW_TYPE_FLOAT, SetFrequency, GetFrequency, tweakVarsPtr, "min=0 max=1000 step=0.1 group=Terrain label='Frequency' ");
 	TwAddVarCB(ptr, "Octaves", TW_TYPE_UINT32, SetOctaves, GetOctaves, tweakVarsPtr, "min=1 max=100 step=1 group=Terrain label='Octaves'");
-	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, tweakVarsPtr, "min=0 max=100000 step=10000 group=Terrain label='Amplitude' ");
+	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, tweakVarsPtr, "min=0 max=1 step=0.1 group=Terrain label='Amplitude' ");
 	TwAddButton(ptr, "Update", UpdateTerrain, tweakVarsPtr, "group=Terrain label='Update'");
 
 	TwAddVarCB(ptr, "Set Day Time", TW_TYPE_BOOL8, SetDayTime, GetDayTime, tweakVarsPtr, "group=Skybox label='Day Time'");
@@ -521,7 +533,15 @@ void TW_CALL SetWaterMovementX(const void * value, void * clientData)
 void TW_CALL GetWaterMovementX(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
-	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetMovement().x;
+
+	if (!tweakVars->terrainPtr->GetUpdateFlag())
+	{
+		*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetMovement().x;
+	}
+	else
+	{
+		*static_cast<float *>(value) = 0.0f;
+	}
 }
 
 void TW_CALL SetWaterMovementY(const void * value, void * clientData)
@@ -534,7 +554,15 @@ void TW_CALL SetWaterMovementY(const void * value, void * clientData)
 void TW_CALL GetWaterMovementY(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
-	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetMovement().y;
+
+	if (!tweakVars->terrainPtr->GetUpdateFlag())
+	{
+		*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetMovement().y;
+	}
+	else
+	{
+		*static_cast<float *>(value) = 0.0f;
+	}
 }
 
 void TW_CALL SetWaveHeight(const void * value, void * clientData)
@@ -547,7 +575,14 @@ void TW_CALL SetWaveHeight(const void * value, void * clientData)
 void TW_CALL GetWaveHeight(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
-	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetWaveHeight();
+	if (!tweakVars->terrainPtr->GetUpdateFlag())
+	{
+		*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetWaveHeight();
+	}
+	else
+	{
+		*static_cast<float *>(value) = 0.0f;
+	}
 }
 
 //void TW_CALL SetWaterMovementX(const void * value, void * clientData);
@@ -644,7 +679,16 @@ void TW_CALL SetDepth(const void * value, void * clientData)
 void TW_CALL GetDepth(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
-	*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetDepth();
+	CWater* water = tweakVars->terrainPtr->GetWater();
+
+	if (water == nullptr || tweakVars->terrainPtr->GetUpdateFlag())
+	{
+		*static_cast<float *>(value) = 0.0f;
+	}
+	else
+	{
+		*static_cast<float *>(value) = tweakVars->terrainPtr->GetWater()->GetDepth();
+	}
 }
 
 /* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */

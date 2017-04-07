@@ -76,11 +76,11 @@ void RainUpdateGS(point GeometryInputType input[1], inout PointStream<GeometryIn
 
 	if (input[0].Type == PT_EMITTER)
 	{
-		if (input[0].Age > 0.0001f)
+		if (input[0].Age > 0.001f)
 		{
 			for (int i = 0; i < 3; ++i)
 			{
-				float3 vRandom = 35.0f * RandVec3((float)i / 5.0f);
+				float3 vRandom = 200.0f * RandVec3((float)i / 5.0f);
 				vRandom.y = 40.0f;
 
 				GeometryInputType p;
@@ -100,13 +100,13 @@ void RainUpdateGS(point GeometryInputType input[1], inout PointStream<GeometryIn
 	}
 	else
 	{
-		if (input[0].Age <= 3.0f)
+		if (input[0].Age <= 4.0f)
 		{
 			pOutStream.Append(input[0]);
 		}
 		else
 		{
-			float3 vRandom = 35.0f * RandVec3((float)5.0f);
+			float3 vRandom = 200.0f * RandVec3((float)5.0f);
 			vRandom.y = 40.0f;
 			input[0].InitialPosition = EmitPos.xyz + vRandom;
 			input[0].Age = 0.0f;

@@ -33,7 +33,7 @@ CHeightMap::CHeightMap()
 	SetFrequency(1.0f);
 	SetNumberOfOctaves(6);
 	// Default gain quite high, great for terrain maps.
-	SetGain(150.0f);
+	SetGain(250.0f);
 
 }
 
@@ -69,10 +69,9 @@ void CHeightMap::InitialiseMap()
 
 			double X = (double)x / ((double)mWidth);
 			double Y = (double)y / ((double)mHeight);
-			 
+
 			// Typical Perlin noise
 			double n = 0.0;
-
 			n = mpPerlinNoise->OctavePerlin(X, Y, 0.0, mNumberOfOctaves, mPersistence);
 
 			n *= mGain;

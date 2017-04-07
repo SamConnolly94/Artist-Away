@@ -92,6 +92,19 @@ public:
 	bool AddSceneryToTerrain(CTerrain* terrainPtr);
 
 	/////////////////////////
+	// Foliage control
+	////////////////////////
+
+	// Create foliage quads from a height map text file with a higher frequency than the standard terrain.
+	CFoliage* CreateFoliage(std::string mapFile);
+	// Create foliage from a dynamic array height map passed in which should have a higher frequency than the standard terrain height map.
+	CFoliage* CreateFoliage(double** heightMap, int mapWidth, int mapHeight);
+	// Update the foliage map being used. May prove to be useful when generating new terrains.
+	bool UpdateFoliage(double** heightMap, int width, int height);
+	// Get a pointer to the foliage object.
+	CFoliage* GetFoliage();
+
+	/////////////////////////
 	// Mesh control
 	////////////////////////
 	
@@ -161,6 +174,19 @@ public:
 	bool KeyHit(const unsigned int key);
 	// Has keen been held down?
 	bool KeyHeld(const unsigned int key);
+
+	/////////////////////////
+	// Weather functions
+	////////////////////////
+
+	// Toggle on or off rain which will fall from above the terrain.
+	void SetRainEnabled(bool value);
+	// Grab the toggle to find if rain is enabled or not.
+	bool GetRainEnabled();
+	// Toggle on or off snow which will fall from above the terrain.
+	void SetSnowEnabled(bool value);
+	// Grab the toggle to find if snow is enabled or not.
+	bool GetSnowEnabled();
 private:
 	std::vector<CMesh*> mpListOfTreeMeshes;
 };

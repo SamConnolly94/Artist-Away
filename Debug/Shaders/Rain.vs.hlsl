@@ -49,6 +49,7 @@ GeometryInputType RainVS(VertexInputType input)
 {
 	GeometryInputType output;
 	float3 Acceleration = float3(0.0f, Gravity, 0.0f);
+	
 	output.position = 0.5f * input.Age * input.Age * Acceleration + input.Age + input.initialVelocity + input.initialPosition;
 	output.Type = input.Type;
 	return output;

@@ -57,6 +57,7 @@ public:
 
 	// Misc
 	void WriteMapToFile(std::string fileName);
+
 };
 
 #endif

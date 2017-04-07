@@ -39,7 +39,7 @@ float4 FontPixelShader(PixelInputType input): SV_TARGET
 
 
 	// Sample the texture pixel at this location.
-colour = shaderTexture.Sample(SampleType, input.uv);
+	colour = shaderTexture.Sample(SampleType, input.uv);
 
 	// If the colour is black on the texture then treat this pixel as transparent.
 	colour.a = (colour.r + colour.g + colour.b) * 0.333f;

@@ -2,7 +2,7 @@
 
 
 /* Default constructor which uses default prenumeration. */
-CPerlinNoise::CPerlinNoise()
+CPerlinNoise::CPerlinNoise(int repeatVal)
 {
 	logger->GetInstance().MemoryAllocWriteLine(typeid(this).name());
 
@@ -25,11 +25,11 @@ CPerlinNoise::CPerlinNoise()
 
 	mFrequency = 1;
 	mAmplitude = 0.5;
-	repeat = -1;
+	repeat = repeatVal;
 }
 
 /* Constructor for a custom seed which we want to use, this will be more random. */
-CPerlinNoise::CPerlinNoise(unsigned int seed)
+CPerlinNoise::CPerlinNoise(unsigned int seed, int repeatVal)
 {
 	// Set the initial size of our prenumeration vector.
 	p.resize(256);
@@ -48,7 +48,7 @@ CPerlinNoise::CPerlinNoise(unsigned int seed)
 
 	mFrequency = 1;
 	mAmplitude = 1;
-	repeat = -1;
+	repeat = repeatVal;
 }
 
 
@@ -84,14 +84,23 @@ double CPerlinNoise::Perlin(double x, double y, double z)
 	// Hash the coordinates of the 8 cube coordinates (vertices) which our perlin noise will occur in.
 	int aaa, aba, aab, abb, baa, bba, bab, bbb;
 	aaa = p[p[p[xi] + yi] + zi];
-	aba = p[p[p[xi] + yi + 1] + zi];
-	aab = p[p[p[xi] + yi] + zi + 1];
-	abb = p[p[p[xi] + yi + 1] + zi + 1];
-	baa = p[p[p[xi + 1] + yi] + zi];
-	bba = p[p[p[xi + 1] + yi + 1] + zi];
-	bab = p[p[p[xi + 1] + yi] + zi + 1];
-	bbb = p[p[p[xi + 1] + yi + 1] + zi + 1];
-	
+	aba = p[p[p[xi] + inc(yi)] + zi];
+	aab = p[p[p[xi] + yi] + inc(zi)];
+	abb = p[p[p[xi] + inc(yi)] + inc(zi)];
+	baa = p[p[p[inc(xi)] + yi] + zi];
+	bba = p[p[p[inc(xi)] + inc(yi)] + zi];
+	bab = p[p[p[inc(xi)] + yi] + inc(zi)];
+	bbb = p[p[p[inc(xi)] + inc(yi)] + inc(zi)];
+
+	//aaa = p[p[p[xi] + yi] + zi];
+	//aba = p[p[p[xi] + yi + 1] + zi];
+	//aab = p[p[p[xi] + yi] + zi + 1];
+	//abb = p[p[p[xi] + yi + 1] + zi + 1];
+	//baa = p[p[p[xi + 1] + yi] + zi];
+	//bba = p[p[p[xi + 1] + yi + 1] + zi];
+	//bab = p[p[p[xi + 1] + yi] + zi + 1];
+	//bbb = p[p[p[xi + 1] + yi + 1] + zi + 1];
+
 	double x1;
 	double x2;
 	double y1;
@@ -114,6 +123,7 @@ double CPerlinNoise::OctavePerlin(double x, double y, double z, unsigned int oct
 	double total = 0.0;
 
 	double maxVal = 0.0;
+
 	for (unsigned int i = 0; i < octaves; i++)
 	{
 		total += Perlin(x * mFrequency, y * mFrequency, z * mFrequency) * mAmplitude;
@@ -144,4 +154,16 @@ double CPerlinNoise::Gradient(int hash, double x, double y, double z)
 	double u = h < 8 ? x : y,
 		v = h < 4 ? y : h == 12 || h == 14 ? x : z;
 	return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
+}
+
+int CPerlinNoise::inc(int number)
+{
+	int num = number + 1;
+
+	if (repeat > 0)
+	{
+		num %= repeat;
+	}
+
+	return num;
 }

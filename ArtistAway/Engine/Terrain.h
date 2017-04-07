@@ -11,6 +11,7 @@
 #include <vector>
 #include <sstream>
 #include "PrioEngineVars.h"
+#include "TerrainTile.h"
 
 class CTerrain : public CModelControl
 {
@@ -130,6 +131,10 @@ private:
 	bool mUpdating = false;
 public:
 	bool GetUpdateFlag() { return mUpdating; };
+private:
+	CTerrainTile** mpTerrainTiles;
+public:
+	CTerrainTile** GetTerrainTiles() { return mpTerrainTiles; };
 };
 
 #endif

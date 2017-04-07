@@ -41,12 +41,13 @@ private:
 		D3DXVECTOR4 posPadding2;
 	};
 
-	struct GradientBufferType
+	struct FoliageBufferType
 	{
-		D3DXVECTOR4 apexColour;
-		D3DXVECTOR4 centreColour;
+		D3DXVECTOR3 WindDirection;
+		float FrameTime;
+		D3DXVECTOR3 FoliageTranslation;
+		float WindStrength;
 	};
-
 public:
 	CReflectRefractShader();
 	~CReflectRefractShader();
@@ -54,11 +55,9 @@ public:
 	bool Initialise(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
 	bool RefractionRender(ID3D11DeviceContext* deviceContext, int indexCount);
-
 	bool ReflectionRender(ID3D11DeviceContext* deviceContext, int indexCount);
 
-	/*bool SkyboxRefractionRender(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
-		D3DXMATRIX projMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColour, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 apexColour, D3DXVECTOR4 centreColour, ID3D11ShaderResourceView* waterHeightMap);*/
+	bool RenderFoliageRefraction(ID3D11DeviceContext* deviceContext, int indexCount);
 private:
 	D3DXMATRIX mWorldMatrix; 
 	D3DXMATRIX mViewMatrix;
@@ -93,34 +92,51 @@ public:
 	void SetPatchMap(CTexture* patchMap);
 	void SetRockTexture(CTexture** rockTexArray);
 private:
-	bool InitialiseShader(ID3D11Device * device, HWND hwnd, std::string vsFilename, std::string psFilename, std::string reflectionPSFilename, std::string modelReflectionPSName/*, std::string skyboxRefractionVSName, std::string skyboxRefractionPSName*/);
+	bool InitialiseShader(ID3D11Device * device, HWND hwnd, std::string vsFilename, std::string psFilename, std::string reflectionPSFilename, std::string modelReflectionPSName, std::string foliageRefractionVSName, std::string foliageRefractionPSName);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob *errorMessage, HWND hwnd, std::string shaderFilename);
 
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext);
+	bool SetFoliageShaderParameters(ID3D11DeviceContext* deviceContext);
 
-	//bool SetSkyboxShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
-	//	D3DXMATRIX projMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColour, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 apexColour, D3DXVECTOR4 centreColour, ID3D11ShaderResourceView* waterHeightMap);
 
-	void CReflectRefractShader::RenderRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
-	void CReflectRefractShader::RenderReflectionShader(ID3D11DeviceContext * deviceContext, int indexCount);
-	//void RenderSkyboxRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
+	void RenderRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
+	void RenderReflectionShader(ID3D11DeviceContext * deviceContext, int indexCount);
+	void RenderFoliageRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
 
 private:
 	ID3D11VertexShader* mpVertexShader;
-	//ID3D11VertexShader* mpSkyboxVertexShader;
 	ID3D11PixelShader* mpRefractionPixelShader;
 	ID3D11PixelShader* mpReflectionPixelShader;
 	ID3D11PixelShader* mpModelReflectionPixelShader;
-	//ID3D11PixelShader* mpSkyboxRefractionPixelShader;
+
+	ID3D11VertexShader* mpFoliageVertexShader;
+	ID3D11PixelShader* mpFoliageRefractionPixelShader;
+
 	ID3D11InputLayout* mpLayout;
 	ID3D11SamplerState* mpTrilinearWrap;
+	ID3D11SamplerState* mpPointClamp;
 	ID3D11SamplerState* mpBilinearMirror;
 	ID3D11Buffer* mpLightBuffer;
 	ID3D11Buffer* mpViewportBuffer;
 	ID3D11Buffer* mpTerrainAreaBuffer;
 	ID3D11Buffer* mpPositioningBuffer;
-	ID3D11Buffer* mpGradientBuffer;
+	ID3D11Buffer* mpFoliageBuffer;
+
+public:
+	void SetGrassTexture(ID3D11ShaderResourceView * grassTexture);
+	void SetGrassAlphaTexture(ID3D11ShaderResourceView * alphaTexture);
+	void SetWindDirection(D3DXVECTOR3 direction);
+	void SetFrameTime(float frameTime);
+	void SetWindStrength(float strength);
+	void SetTranslation(D3DXVECTOR3 translation);
+private:
+	ID3D11ShaderResourceView * mpGrassTexture;
+	ID3D11ShaderResourceView * mpGrassAlphaTexture;
+	D3DXVECTOR3 mWindDirection;
+	float mFrameTime;
+	float mStrength;
+	D3DXVECTOR3 mTranslation;
 };
 
 #endif
