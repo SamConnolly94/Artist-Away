@@ -1,18 +1,21 @@
 ///////////////////////////
 // Terrain pixel shader.
 // Author: Sam Connolly
-// Last update: 25/01/2017
+// Last update: 28/03/2017
 ///////////////////////////
 
 //////////////////////////
-// 1) Dirt
-// 2) Sand
+// Sampler states
+/////////////////////////
+SamplerState SampleType;
+
+//////////////////////////
+// Textures
 /////////////////////////
 Texture2D shaderTexture[2];
 Texture2D grassTextures[2];
 Texture2D patchMap;
 Texture2D rockTextures[2];
-SamplerState SampleType;
 
 ///////////////////////////
 // Buffers

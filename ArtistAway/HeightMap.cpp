@@ -86,9 +86,9 @@ void CHeightMap::InitialiseMap()
 
 void CHeightMap::UpdateMap()
 {
+	mUpdating = true;
 	// Release old height map.
 	ReleaseHeightmap();
-	mUpdating = true;
 
 	// Allocate row space.
 	mpHeightMap = new double*[mRequestedHeight];

@@ -173,6 +173,8 @@ private:
 	CSnow* mpSnow;
 	float mRunTime = 0.0f;
 	CFoliage* mpFoliage;
+	bool mRenderingMeshes = false;
+	bool mRenderingFoliage = false;
 public:
 	bool CreateFoliage(std::string filename);
 	bool CreateFoliage(double** heightMap, int width, int height);
@@ -182,6 +184,8 @@ public:
 	bool GetSnowEnabled();
 	void SetRainEnabled(bool value);
 	bool GetRainEnabled();
+	bool IsRenderingMeshes() { return mRenderingMeshes; };
+	bool IsRenderingFoliage() { return mRenderingFoliage; };
 };
 
 #endif

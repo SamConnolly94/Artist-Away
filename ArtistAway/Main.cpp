@@ -14,6 +14,7 @@ struct TweakStruct
 	CEngine* enginePtr;
 	CTerrain* terrainPtr;
 	CHeightMap* heightMapPtr;
+	CHeightMap* foliageMapPtr;
 	bool readyForJoin;
 };
 
@@ -202,6 +203,7 @@ void GameLoop(CEngine* &engine)
 	gLogger->GetInstance().MemoryAllocWriteLine(typeid(tweakVars).name());
 	tweakVars->enginePtr = engine;
 	tweakVars->heightMapPtr = heightMap;
+	tweakVars->foliageMapPtr = foliageHeightMap;
 	tweakVars->terrainPtr = terrain;
 	tweakVars->readyForJoin = false;
 	SetupTweakbar(tweakBar, tweakVars);
@@ -235,9 +237,9 @@ void GameLoop(CEngine* &engine)
 				gLogger->GetInstance().WriteLine("Failed to close handle of thread.");
 			}
 			// Remove the unecessary meshes which will no longer be used.
-			//tweakVars->enginePtr->RemoveScenery();
+			tweakVars->enginePtr->RemoveScenery();
 			// The list should have been populated now, so add scenery to the terrain again.
-			//tweakVars->enginePtr->AddSceneryToTerrain(tweakVars->terrainPtr);
+			tweakVars->enginePtr->AddSceneryToTerrain(tweakVars->terrainPtr);
 			tweakVars->readyForJoin = false;
 		}
 
@@ -585,25 +587,6 @@ void TW_CALL GetWaveHeight(void * value, void * clientData)
 	}
 }
 
-//void TW_CALL SetWaterMovementX(const void * value, void * clientData);
-//void TW_CALL GetWaterMovementX(void * value, void * clientData);
-//void TW_CALL SetWaterMovementY(const void * value, void * clientData);
-//void TW_CALL GetWaterMovementY(void * value, void * clientData);
-//void TW_CALL SetWaveHeight(const void * value, void * clientData);
-//void TW_CALL GetWaveHeight(void * value, void * clientData);
-//void TW_CALL SetWaveScale(const void * value, void * clientData);
-//void TW_CALL GetWaveScale(void * value, void * clientData);
-//void TW_CALL SetRefractionDistortion(const void * value, void * clientData);
-//void TW_CALL GetRefractionDistortion(void * value, void * clientData);
-//void TW_CALL SetReflectionDistortion(const void * value, void * clientData);
-//void TW_CALL GetReflectionDistortion(void * value, void * clientData);
-//void TW_CALL SetRefractionStrength(const void * value, void * clientData);
-//void TW_CALL GetRefractionStrength(void * value, void * clientData);
-//void TW_CALL SetReflectionStrength(const void * value, void * clientData);
-//void TW_CALL GetReflectionStrength(void * value, void * clientData);
-//void TW_CALL SetDepth(const void * value, void * clientData);
-//void TW_CALL GetDepth(void * value, void * clientData);
-
 void TW_CALL SetWaveScale(const void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -702,6 +685,15 @@ unsigned int __stdcall UpdateMapThread(void* pdata)
 	tweakVars->heightMapPtr->UpdateMap();
 	// Set the new values in the vertex and index buffers of the terrain, and copy over the values out the new heightmap we just generated.
 	tweakVars->enginePtr->UpdateTerrainBuffers(tweakVars->terrainPtr, tweakVars->heightMapPtr->GetMap(), tweakVars->heightMapPtr->GetWidth(), tweakVars->heightMapPtr->GetHeight());
+	
+	// Update foliage.
+	int width = tweakVars->heightMapPtr->GetWidth();
+	int height = tweakVars->heightMapPtr->GetHeight();
+	tweakVars->foliageMapPtr->SetWidth(width);
+	tweakVars->foliageMapPtr->SetHeight(height);
+	tweakVars->foliageMapPtr->UpdateMap();
+	tweakVars->enginePtr->UpdateFoliage(tweakVars->heightMapPtr->GetMap(), width, height);
+
 	// Remove thhe sentence because we're done now.
 	tweakVars->enginePtr->RemoveText(sentence);
 	// Output a deallocation of memory message to the log.

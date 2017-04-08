@@ -53,6 +53,7 @@ private:
 	int mInstanceCount;
 	float mFoliageMinCuttoff;
 	float mFoliageMaxCutoff;
+	bool mIsUpdating = false;
 // Height map functions
 private:
 	double** mpHeightMap;
@@ -71,6 +72,8 @@ public:
 	bool UpdateBuffers(ID3D11Device* device, double** heightMap, int mapWidth, int mapHeight, CTerrainTile** terrainTiles, int terrainWidth, int terrainHeight);
 	float GetFoliageMinimumFreq() { return mFoliageMinCuttoff; };
 	float GetFoliageMaximumFreq() { return mFoliageMaxCutoff; };
+	bool IsUpdating() { return mIsUpdating; };
+	void SetUpdating(bool value) { mIsUpdating = value; };
 };
 
 #endif

@@ -1,52 +1,104 @@
 ﻿  HeightMap.cpp
 HeightMap.cpp(12): warning C4018: '<': signed/unsigned mismatch
 HeightMap.cpp(54): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(99): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(151): warning C4018: '<': signed/unsigned mismatch
-HeightMap.cpp(153): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(98): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(150): warning C4018: '<': signed/unsigned mismatch
+HeightMap.cpp(152): warning C4018: '<': signed/unsigned mismatch
   Main.cpp
-Main.cpp(146): warning C4101: 'ambientLight': unreferenced local variable
-Main.cpp(380): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+Main.cpp(177): warning C4101: 'ambientLight': unreferenced local variable
+Main.cpp(439): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   PerlinNoise.cpp
-PerlinNoise.cpp(123): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
+PerlinNoise.cpp(133): warning C4244: '*=': conversion from 'double' to 'float', possible loss of data
   Generating code
-  0 of 1767 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    48 functions had inline decision re-evaluated but remain unchanged
+  1147 of 2106 functions (54.5%) were compiled, the rest were copied from previous compilation.
+    619 functions were new in current compilation
+    79 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Release\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Clouds.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Clouds.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Foliage.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Foliage.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\FoliageRefraction.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\FoliageRefraction.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\ModelReflection.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Rain.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Rain.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Rain.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\RainParticleUpdate.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\RainParticleUpdate.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\RefractedModel.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Skybox.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Skybox.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SkyboxRefraction.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SkyboxRefraction.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Snow.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Snow.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Snow.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SnowParticleUpdate.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SnowParticleUpdate.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainReflection.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainRefraction.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  14 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Transparent.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\WaterHeight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\WaterSurface.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\WaterSurface.vs.hlsl
+  40 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Clouds.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Clouds.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Colour.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\DiffuseLight.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Foliage.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Foliage.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\FoliageRefraction.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\FoliageRefraction.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Font.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\ModelReflection.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Rain.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Rain.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Rain.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\RainParticleUpdate.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\RainParticleUpdate.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\RefractedModel.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Skybox.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Skybox.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SkyboxRefraction.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SkyboxRefraction.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Snow.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Snow.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Snow.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SnowParticleUpdate.gs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SnowParticleUpdate.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\SpecularLight.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Terrain.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainReflection.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\TerrainRefraction.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Texture.vs.hlsl
-  14 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\Transparent.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\WaterHeight.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\WaterSurface.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Shaders\WaterSurface.vs.hlsl
+  40 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar64.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll
@@ -57,23 +109,72 @@ PerlinNoise.cpp(123): warning C4244: '*=': conversion from 'double' to 'float', 
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.tga
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Fonts\font01.txt
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cone.FBX
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.obj
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Cube.sam
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Triangle.sam
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\bath.txt
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Ferns.fbx
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\firtree3.3ds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Light.x
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Skybox.FBX
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Sphere.fbx
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Wooden_House.fbx
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Models\Bushes\LS13_01.3ds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Normal Maps\BrightGrassNormalMap.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Normal Maps\RockNormalMap.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Normal Maps\StoneNormalMap.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Patch Maps\PatchMap.png
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Baize.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\bark_loo.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\bark_tree.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\bark_tree_nor.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\blade_sample.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\blatt1.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\blatt1_a.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Branches0030_1_M.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Branches0030_1_M_NRM.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\BrightGrass.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\cloud1.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\cloud2.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\DarkGrass.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Dirt.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Flare.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\House_Texture.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\human.jpg
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Ice.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\leaves_01.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\leaves_02.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\leaves_03.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\leaves_alpha.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\leaves_alpha_inverted.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LightRock.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13brk1.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13brn1.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13brn2.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13frt1.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13frt1_a.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13lef1.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13lef1_a.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13lef1_r.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13lef2.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13lef2_a.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\LS13lef2_r.tif
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\marble01.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\nadeln4.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\nadeln4a.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\PlowedField.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\raindrop.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Rock.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Sand.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\seafloor.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Snow.dds
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\stamm2.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\stamm21.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\stamm22.jpg
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Stone.dds
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Test.dds
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TestTex.dds
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\TriangleTex.dds
-  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\YellowGrass.dds
-  24 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\WaterNormalHeight.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Grass.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\GrassAlpha.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Reeds.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\ReedsAlpha.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Thin\Grass.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Thin\GrassAlpha.png
+  73 File(s) copied

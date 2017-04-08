@@ -6,6 +6,7 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projMatrix;
+	matrix ViewProjMatrix;
 };
 
 // Typedefs
@@ -31,8 +32,9 @@ PixelInputType TextureVertexShader(VertexInputType input)
 
 	// Calculate the position of the vertex within the world, proj and view matrices.
 	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projMatrix);
+	output.position = mul(output.position, ViewProjMatrix);
+	//output.position = mul(output.position, viewMatrix);
+	//output.position = mul(output.position, projMatrix);
 
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
