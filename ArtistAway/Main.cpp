@@ -186,13 +186,13 @@ void GameLoop(CEngine* &engine)
 
 	heightMap->SetHeight(200);
 	heightMap->SetWidth(200);
-	foliageHeightMap->SetFrequency(0.6f);
+	heightMap->SetFrequency(0.6f);
 	heightMap->InitialiseMap();
 	heightMap->WriteMapToFile("Default.map");
 
 	foliageHeightMap->SetHeight(200);
 	foliageHeightMap->SetWidth(200);
-	foliageHeightMap->SetFrequency(1.0f);
+	foliageHeightMap->SetFrequency(16.0f);
 	foliageHeightMap->InitialiseMap();
 	foliageHeightMap->WriteMapToFile("Foliage.map");
 
@@ -689,8 +689,8 @@ unsigned int __stdcall UpdateMapThread(void* pdata)
 	// Update foliage.
 	int width = tweakVars->heightMapPtr->GetWidth();
 	int height = tweakVars->heightMapPtr->GetHeight();
-	tweakVars->foliageMapPtr->SetWidth(width);
-	tweakVars->foliageMapPtr->SetHeight(height);
+	tweakVars->foliageMapPtr->SetRequestedWidth(width);
+	tweakVars->foliageMapPtr->SetRequestedHeight(height);
 	tweakVars->foliageMapPtr->UpdateMap();
 	tweakVars->enginePtr->UpdateFoliage(tweakVars->heightMapPtr->GetMap(), width, height);
 

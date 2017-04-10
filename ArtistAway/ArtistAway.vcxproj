@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine\Dependencies\SFML\include</IncludePath>
     <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>Engine\Dependencies\AntTweakBar\include;$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;</IncludePath>
+    <IncludePath>Engine\Dependencies\AntTweakBar\include;$(IncludePath);$(DXSDK_DIR)Include;$(WindowsSDK_IncludePath);Engine/;Engine/Dependencies/;Engine/Pixel Shaders/;Engine/Vertex Shaders/;Engine\Dependencies\assimp-3.3.1\include\assimp;;Engine\Dependencies\SFML\include</IncludePath>
     <LibraryPath>Engine\Dependencies\AntTweakBar\lib;Engine\Lib\Release;Engine\Dependencies\assimp-3.3.1\lib\Release;$(LibraryPath);$(DXSDK_DIR)Lib\x86;D:\Documents\Visual Studio 2015\Projects\ArtistAway\ArtistAway\Engine\Lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -102,19 +102,17 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>AntTweakBar.lib;assimp_debug.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>Engine\Dependencies\AntTweakBar\lib;Engine\Dependencies\assimp-3.3.1\lib\Debug;Engine\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>AntTweakBar.lib;assimp_debug.lib;PrioEngineStaticLibrary.lib;sfml-audio-d.lib;sfml-system-d.lib;openal32.lib;flac.lib;vorbis.lib;vorbisfile.lib;ogg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Engine\Dependencies\AntTweakBar\lib;Engine\Dependencies\assimp-3.3.1\lib\Debug;Engine\Lib\Debug;Engine\Dependencies\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(TargetDir)Shaders" mkdir "$(TargetDir)Shaders"
 echo "Made dir, copying shaders to that dir."
-xcopy /e /y "$(ProjectDir)Engine\Shaders" "$(TargetDir)Shaders"
-if not exist "$(ProjectDir)Shaders" mkdir "$(ProjectDir)Shaders"
-xcopy /e /y "$(ProjectDir)Engine\Shaders" "$(ProjectDir)Shaders"
+xcopy /e /y "$(ProjectDir)Shaders" "$(TargetDir)Shaders"
 xcopy /e /y "$(ProjectDir)Engine\Dependencies\DLLs" "$(TargetDir)"
 if not exist "$(TargetDir)Resources" mkdir "$(TargetDir)Resources"
 echo "Made resources dir, copying resources to that dir."
-xcopy /e /y "$(ProjectDir)Engine\Resources" "$(TargetDir)Resources"</Command>
+xcopy /e /y "$(ProjectDir)Resources" "$(TargetDir)Resources"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -162,14 +160,13 @@ xcopy /e /y "$(ProjectDir)Resources" "$(TargetDir)Resources"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>AntTweakBar.lib;assimp_release.lib;PrioEngineStaticLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AntTweakBar.lib;assimp_release.lib;PrioEngineStaticLibrary.lib;sfml-audio.lib;sfml-system-s.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Engine\Dependencies\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>if not exist "$(TargetDir)Shaders" mkdir "$(TargetDir)Shaders"
 echo "Made dir, copying shaders to that dir."
-xcopy /e /y "$(ProjectDir)Engine\Shaders" "$(TargetDir)Shaders"
-if not exist "$(ProjectDir)Shaders" mkdir "$(ProjectDir)Shaders"
-xcopy /e /y "$(ProjectDir)Engine\Shaders" "$(ProjectDir)Shaders"
+xcopy /e /y "$(ProjectDir)Shaders" "$(TargetDir)Shaders"
 xcopy /e /y "$(ProjectDir)Engine\Dependencies\DLLs" "$(TargetDir)"
 if not exist "$(TargetDir)Resources" mkdir "$(TargetDir)Resources"
 echo "Made resources dir, copying resources to that dir."

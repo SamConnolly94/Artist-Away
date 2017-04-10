@@ -34,7 +34,7 @@ struct PixelInputType
 };
 
 ///////////////////////////
-// Vertex shader
+// Pixel shader
 ///////////////////////////
 
 float4 CloudPS(PixelInputType input) : SV_TARGET

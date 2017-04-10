@@ -48,6 +48,15 @@ private:
 		D3DXVECTOR3 FoliageTranslation;
 		float WindStrength;
 	};
+
+	struct CloudBufferType
+	{
+		D3DXVECTOR2 Cloud1Movement;
+		D3DXVECTOR2 Cloud2Movement;
+		float Brightness;
+		D3DXVECTOR2 ViewportSize;
+		float WaterPlaneY;
+	};
 public:
 	CReflectRefractShader();
 	~CReflectRefractShader();
@@ -56,7 +65,7 @@ public:
 	void Shutdown();
 	bool RefractionRender(ID3D11DeviceContext* deviceContext, int indexCount);
 	bool ReflectionRender(ID3D11DeviceContext* deviceContext, int indexCount);
-
+	bool RenderCloudReflection(ID3D11DeviceContext* deviceContext, int indexCount);
 	bool RenderFoliageRefraction(ID3D11DeviceContext* deviceContext, int indexCount);
 private:
 	D3DXMATRIX mWorldMatrix; 
@@ -81,6 +90,15 @@ private:
 	ID3D11ShaderResourceView* mpGrassTextures[2];
 	ID3D11ShaderResourceView* mpPatchMap;
 	ID3D11ShaderResourceView* mpRockTextures[2];
+
+	/////////////////////////////
+	// Cloud properties
+	/////////////////////////////
+	D3DXVECTOR2 mCloud1Movement;
+	D3DXVECTOR2 mCloud2Movement;
+	float mCloudBrightness;
+	ID3D11ShaderResourceView* mpCloudTex1;
+	ID3D11ShaderResourceView* mpCloudTex2;
 public:
 	void SetLightProperties(CLight* light);
 	void SetViewportProperties(int screenWidth, int screenHeight);
@@ -91,29 +109,39 @@ public:
 	void SetGrassTextureArray(CTexture** grassTexArray);
 	void SetPatchMap(CTexture* patchMap);
 	void SetRockTexture(CTexture** rockTexArray);
+	void SetCloudTextures(ID3D11ShaderResourceView* tex1, ID3D11ShaderResourceView* tex2);
+	void SetCloudMovement(D3DXVECTOR2 cloud1Movement, D3DXVECTOR2 cloud2Movement);
+	void SetCloudBrightness(float value);
 private:
 	bool InitialiseShader(ID3D11Device * device, HWND hwnd, std::string vsFilename, std::string psFilename, std::string reflectionPSFilename, std::string modelReflectionPSName, std::string foliageRefractionVSName, std::string foliageRefractionPSName);
+	bool InitialiseCloudShader(ID3D11Device * device, HWND hwnd, std::string vsFilename, std::string psFilename);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob *errorMessage, HWND hwnd, std::string shaderFilename);
 
 	bool SetShaderParameters(ID3D11DeviceContext* deviceContext);
 	bool SetFoliageShaderParameters(ID3D11DeviceContext* deviceContext);
+	bool SetCloudShaderParameters(ID3D11DeviceContext* deviceContext);
 
 
 	void RenderRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
 	void RenderReflectionShader(ID3D11DeviceContext * deviceContext, int indexCount);
 	void RenderFoliageRefractionShader(ID3D11DeviceContext * deviceContext, int indexCount);
-
+	void RenderCloudReflectionShader(ID3D11DeviceContext * deviceContext, int indexCount);
 private:
 	ID3D11VertexShader* mpVertexShader;
 	ID3D11PixelShader* mpRefractionPixelShader;
+
 	ID3D11PixelShader* mpReflectionPixelShader;
 	ID3D11PixelShader* mpModelReflectionPixelShader;
 
 	ID3D11VertexShader* mpFoliageVertexShader;
 	ID3D11PixelShader* mpFoliageRefractionPixelShader;
 
-	ID3D11InputLayout* mpLayout;
+	ID3D11VertexShader* mpCloudVertexShader;
+	ID3D11PixelShader* mpCloudPixelShader;
+
+	ID3D11InputLayout* mpTerrainLayout;
+	ID3D11InputLayout* mpCloudLayout;
 	ID3D11SamplerState* mpTrilinearWrap;
 	ID3D11SamplerState* mpPointClamp;
 	ID3D11SamplerState* mpBilinearMirror;
@@ -122,7 +150,7 @@ private:
 	ID3D11Buffer* mpTerrainAreaBuffer;
 	ID3D11Buffer* mpPositioningBuffer;
 	ID3D11Buffer* mpFoliageBuffer;
-
+	ID3D11Buffer* mpCloudBuffer;
 public:
 	void SetGrassTexture(ID3D11ShaderResourceView * grassTexture);
 	void SetGrassAlphaTexture(ID3D11ShaderResourceView * alphaTexture);

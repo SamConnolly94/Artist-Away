@@ -114,12 +114,12 @@ public:
 	std::vector<TerrainEntityType> GetTreeInformation() { return mTreesInfo; };
 	std::vector<TerrainEntityType> GetPlantInformation() { return mPlantsInfo; };
 private:
-	float mSnowHeight;	// 60% and upwards will be snow.
+	float mRockHeight;	// 60% and upwards will be snow.
 	float mGrassHeight;	// 30% and upwards will be grass.
 	float mSandHeight;	// 10% and upwards will be sand.
 	float mDirtHeight;	// 15% and upwards will be dirt.
 public:
-	float GetSnowHeight() { return mSnowHeight; };
+	float GetSnowHeight() { return mRockHeight; };
 	float GetGrassHeight() { return mGrassHeight; };
 	float GetSandHeight() { return mSandHeight; };
 	float GetDirtHeight() { return mDirtHeight; };

@@ -33,6 +33,7 @@
 #include "Snow.h"
 #include "FoliageShader.h"
 #include "Foliage.h"
+#include <SFML/Audio.hpp>
 
 // Global variables.
 
@@ -175,6 +176,15 @@ private:
 	CFoliage* mpFoliage;
 	bool mRenderingMeshes = false;
 	bool mRenderingFoliage = false;
+	sf::SoundBuffer* mpRainSoundBuffer;
+	sf::Sound* mpRainSound;
+	sf::SoundBuffer* mpBirdSquawkSoundBuffer;
+	sf::Sound* mpBirdSquawkSound;
+	sf::SoundBuffer* mpRunningWaterSoundBuffer;
+	sf::Sound* mpRunningWaterSound;
+
+	float mTimeSinceLastBirdSquawk = 0.0f;
+	const float mBirdSquawkPlayInterval = 20.0f;
 public:
 	bool CreateFoliage(std::string filename);
 	bool CreateFoliage(double** heightMap, int width, int height);
