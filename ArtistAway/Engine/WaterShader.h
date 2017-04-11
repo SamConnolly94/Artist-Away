@@ -113,7 +113,6 @@ private:
 	ID3D11PixelShader* mpSurfacePixelShader;
 	ID3D11PixelShader* mpHeightPixelShader;
 	ID3D11InputLayout* mpLayout;
-	ID3D11InputLayout* mpFoliageLayout;
 	ID3D11SamplerState* mpTrilinearWrap;
 	ID3D11SamplerState* mpBilinearMirror;
 	

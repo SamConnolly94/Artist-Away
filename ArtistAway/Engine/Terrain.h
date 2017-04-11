@@ -110,9 +110,15 @@ private:
 	bool PositionPlantHere();
 	bool CreatePlant(D3DXVECTOR3 position, D3DXVECTOR3 normal);
 	CTerrain::VertexAreaType FindAreaType(float height);
+	float mTreeClusterRadius = 25.0f;
+	float mPlantClusterRadius = 25.0f;
 public:
 	std::vector<TerrainEntityType> GetTreeInformation() { return mTreesInfo; };
 	std::vector<TerrainEntityType> GetPlantInformation() { return mPlantsInfo; };
+	void SetTreeClusterRadius(float value);
+	float GetTreeClusterRadius();
+	void SetPlantClusterRadius(float value);
+	float GetPlantClusterRadius();
 private:
 	float mRockHeight;	// 60% and upwards will be snow.
 	float mGrassHeight;	// 30% and upwards will be grass.

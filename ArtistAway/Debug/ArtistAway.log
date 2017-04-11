@@ -1,7 +1,7 @@
 ﻿  Main.cpp
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(156): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(177): warning C4101: 'ambientLight': unreferenced local variable
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(439): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(161): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(182): warning C4101: 'ambientLight': unreferenced local variable
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(450): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
@@ -20,6 +20,7 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(439): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Font.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Font.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\ModelReflection.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\ModelRefraction.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Rain.gs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Rain.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Rain.vs.hlsl
@@ -45,7 +46,7 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(439): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\WaterHeight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\WaterSurface.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\WaterSurface.vs.hlsl
-  40 File(s) copied
+  41 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar64.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll

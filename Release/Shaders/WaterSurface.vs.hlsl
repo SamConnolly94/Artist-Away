@@ -75,7 +75,7 @@ PixelInputType WaterSurfaceVS(VertexInputType input)
 	PixelInputType output;
 
 	float2 waterUV = input.UV;
-	//waterUV /= 8;
+
 	float normal1 = NormalHeightMap.SampleLevel(TrilinearWrap, WaterSize1 * (waterUV + WaterMovement * WaterSpeed1), 0.0f).a;
 	float normal2 = NormalHeightMap.SampleLevel(TrilinearWrap, WaterSize2 * (waterUV + WaterMovement * WaterSpeed2), 0.0f).a;
 	float normal3 = NormalHeightMap.SampleLevel(TrilinearWrap, WaterSize3 * (waterUV + WaterMovement * WaterSpeed3), 0.0f).a;
@@ -85,12 +85,10 @@ PixelInputType WaterSurfaceVS(VertexInputType input)
 
 	float4 modelPosition = float4(input.WorldPosition.xyz, 1.0f);
 
-	modelPosition.y += (0.25f * height - 0.5f) * WaveHeight * WaveScale; 			// Transform new water vertex position to world space and send to pixel shader
+	modelPosition.y += (0.25f * height - 0.5f) * WaveHeight * WaveScale;
 	
 	float4 worldPosition = mul(modelPosition, WorldMatrix);
 	output.WorldPosition = worldPosition;
-	//float4 viewPosition = mul(worldPosition, ViewMatrix);
-	//output.ProjectedPosition = mul(viewPosition, ProjectionMatrix);
 	output.ProjectedPosition = mul(worldPosition, ViewProjMatrix);
 
 	output.UV = input.UV;

@@ -11,9 +11,10 @@ SamplerState PointClamp : register(s2);
 //////////////////////////
 
 Texture2D WaterHeightMap : register(t0);
-Texture2D ReedTexture : register(t1);
-Texture2D ReedAlphaTexture : register(t2);
-
+Texture2D GrassTexture : register(t1);
+Texture2D AlphaMask : register(t2);
+Texture2D ReedTexture : register(t3);
+Texture2D ReedAlphaTexture : register(t4);
 
 //////////////////////////
 // Constant buffers
@@ -22,6 +23,8 @@ Texture2D ReedAlphaTexture : register(t2);
 cbuffer ViewportBuffer : register(b0)
 {
 	float2 ViewportSize;
+	float4 viewportPadding1;
+	float2 viewportPadding2;
 }
 
 cbuffer LightBuffer : register(b1)
@@ -45,20 +48,34 @@ struct PixelInputType
 	float4 WorldPosition : POSITION;
 	float2 UV : TEXCOORD0;
 	float3 Normal : NORMAL;
+	uint Type : TEXCOORD1;
 };
 
 ///////////////////////
 // Helper Functions
 ///////////////////////
+#define GrassType 0
+#define ReedType 1
 
 float4 FoliagePS(PixelInputType input) : SV_TARGET
 {
 	float4 textureColour = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	float4 alpha = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	
-	textureColour = ReedTexture.Sample(PointClamp, input.UV);
-	alpha = ReedAlphaTexture.Sample(PointClamp, input.UV);
+	if (input.Type == GrassType)
+	{
+		textureColour = GrassTexture.Sample(PointClamp, input.UV);
+		alpha = AlphaMask.Sample(PointClamp, input.UV);
+	}
+	else if (input.Type == ReedType)
+	{
+		textureColour = ReedTexture.Sample(PointClamp, input.UV);
+		alpha = ReedAlphaTexture.Sample(PointClamp, input.UV);
+	}
+	else
+	{
+		discard;
+	}
 
 	if (alpha.g == 0.0f)
 	{
@@ -88,7 +105,7 @@ float4 FoliagePS(PixelInputType input) : SV_TARGET
 
 	if (lightIntensity > 0.0f)
 	{
-		colour += (AmbientColour * lightIntensity);
+		colour += (DiffuseColour * lightIntensity);
 	}
 
 	// Determine the final amount of diffuse color based on the diffuse color combined with the light intensity.
@@ -100,12 +117,9 @@ float4 FoliagePS(PixelInputType input) : SV_TARGET
 	return colour;
 }
 
-
-
 //////////////////////////
 // Pixel shader
 //////////////////////////
-
 float4 FoliageRefractionPS(PixelInputType input) : SV_TARGET
 {
 	float2 screenUV = input.ProjectedPosition.xy / ViewportSize;

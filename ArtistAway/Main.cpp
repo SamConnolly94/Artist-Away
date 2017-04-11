@@ -100,6 +100,11 @@ void TW_CALL GetReflectionStrength(void * value, void * clientData);
 void TW_CALL SetDepth(const void * value, void * clientData);
 void TW_CALL GetDepth(void * value, void * clientData);
 
+void TW_CALL SetRainEnabled(const void * value, void * clientData);
+void TW_CALL GetRainEnabled(void * value, void * clientData);
+void TW_CALL SetSnowEnabled(const void * value, void * clientData);
+void TW_CALL GetSnowEnabled(void * value, void * clientData);
+
 /* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */
 unsigned int __stdcall UpdateMapThread(void* pdata);
 
@@ -370,6 +375,12 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	TwAddVarCB(ptr, "Set Reflection Distortion", TW_TYPE_FLOAT, SetReflectionDistortion, GetReflectionDistortion, tweakVarsPtr, "group=Water label='Reflection Distortion'");
 	TwAddVarCB(ptr, "Set Refraction Strength", TW_TYPE_FLOAT, SetRefractionStrength, GetRefractionStrength, tweakVarsPtr, "group=Water label='Refraction Strength'");
 	TwAddVarCB(ptr, "Set Reflection Strength", TW_TYPE_FLOAT, SetReflectionStrength, GetReflectionStrength, tweakVarsPtr, "group=Water label='Reflection Strength'");
+	
+	// Weather vars
+	TwAddVarCB(ptr, "Rain Enabled", TW_TYPE_BOOL8, SetRainEnabled, GetRainEnabled, tweakVarsPtr, "group=Weather label='Rain Enabled'");
+	TwAddVarCB(ptr, "Snow Enabled", TW_TYPE_BOOL8, SetSnowEnabled, GetSnowEnabled, tweakVarsPtr, "group=Weather label='Snow Enabled'");
+
+
 }
 
 /* A callback function which dictates what behaviour should occur when the height setting on the tweakbar is changed. */
@@ -659,6 +670,32 @@ void TW_CALL SetDepth(const void * value, void * clientData)
 	tweakVars->terrainPtr->GetWater()->SetDepth(depth);
 }
 
+void TW_CALL SetRainEnabled(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	bool rainEnabled = *static_cast<const bool *>(value);
+	tweakVars->enginePtr->SetRainEnabled(rainEnabled);
+}
+
+void TW_CALL GetRainEnabled(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<bool *>(value) = tweakVars->enginePtr->GetRainEnabled();
+}
+
+void TW_CALL SetSnowEnabled(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	bool snowEnabled = *static_cast<const bool *>(value);
+	tweakVars->enginePtr->SetSnowEnabled(snowEnabled);
+}
+
+void TW_CALL GetSnowEnabled(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<bool *>(value) = tweakVars->enginePtr->GetSnowEnabled();
+}
+
 void TW_CALL GetDepth(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -691,6 +728,7 @@ unsigned int __stdcall UpdateMapThread(void* pdata)
 	int height = tweakVars->heightMapPtr->GetHeight();
 	tweakVars->foliageMapPtr->SetRequestedWidth(width);
 	tweakVars->foliageMapPtr->SetRequestedHeight(height);
+	tweakVars->foliageMapPtr->SetFrequency(tweakVars->heightMapPtr->GetFrequency() * 100.0f);
 	tweakVars->foliageMapPtr->UpdateMap();
 	tweakVars->enginePtr->UpdateFoliage(tweakVars->heightMapPtr->GetMap(), width, height);
 

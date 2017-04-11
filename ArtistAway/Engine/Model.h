@@ -19,7 +19,6 @@ public:
 	void Shutdown();
 
 	void UpdateMatrices();
-	void RenderBuffers(ID3D11DeviceContext* deviceContext, int subMeshIndex, ID3D11Buffer* &vertexBuffer, ID3D11Buffer* &indexBuffer, unsigned int stride);
 	D3DXMATRIX GetWorldMatrix() { return mWorldMatrix; };
 };
 
