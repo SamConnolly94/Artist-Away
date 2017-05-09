@@ -35,14 +35,11 @@ struct PixelInputType
 	float4 ProjectedPosition : SV_POSITION;
 	float4 WorldPosition : POSITION;
 	float2 UV : TEXCOORD0;
-	float3 Normal : NORMAL;
 };
 
 
 float4 CloudPS(PixelInputType input) : SV_TARGET
 {
-	return float4(0.0f, 1.0f, 0.0f, 1.0f);
-
 	float2 texCoords;
 
 	// Texture coordinates at the x pos of the first cloud, accounts for movement.

@@ -53,113 +53,97 @@ struct PixelInputType
 
 float3 GetPosition(VertexInputType input)
 {
-	float3 pos = float3(0.0f, 0.0f, 0.0f);
+	float3 offset = float3(0.0f, 0.0f, 0.0f);
+	float3 leftPos = float3(0.0f, 0.0f, 0.0f);
+	float3 rightPos = float3(0.0f, 0.0f, 0.0f);
 
-	//switch (input.VertexIndex)
-	//{
-	//	// Lower left vertex on centre quad.
-	//case 0:
-	//	pos.y = input.instanceTileULVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	break;
-	//	// Lower right vertex on centre quad.
-	//case 1:
-	//	pos.y = input.instanceTileURVertexPos.y - input.instanceTileLRVertexPos.y;
-	//	break;
-	//	// Upper left vertex on centre quad.
-	//case 2:
-	//	pos.y = input.instanceTileULVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	break;
-	//	// Upper right vertex on centre quad.
-	//case 3:
-	//	pos.y = input.instanceTileURVertexPos.y - input.instanceTileLRVertexPos.y;
-	//	break;
-	//	// Lower left vertex on diag down and to the right quad.
-	//case 4:
-	//	if (input.instanceTileULVertexPos.y > input.instanceTileLLVertexPos.y)
-	//	{
-	//		pos.y = input.instanceTileULVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	}
-	//	else
-	//	{
-	//		pos.y = input.instanceTileLLVertexPos.y - input.instanceTileULVertexPos.y;
-	//	}
-	//	break;
-	//	// Lower right vertex on diag down and to the right quad.
-	//case 5:
-	//	if (input.instanceTileLLVertexPos.y > input.instanceTileLLVertexPos.y)
-	//	{
-	//		pos.y = input.instanceTileLRVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	}
-	//	else
-	//	{
-	//		pos.y = input.instanceTileLLVertexPos.y - input.instanceTileLRVertexPos.y;
-	//	}
-	//	break;
-	//	// Upper left vertex on diag down and to the right quad.
-	//case 6:
-	//	if (input.instanceTileULVertexPos.y > input.instanceTileLLVertexPos.y)
-	//	{
-	//		pos.y = input.instanceTileULVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	}
-	//	else
-	//	{
-	//		pos.y = input.instanceTileLLVertexPos.y - input.instanceTileULVertexPos.y;
-	//	}
-	//	break;
-	//	// Upper right vertex on diag down and to the right quad.
-	//case 7:
-	//	if (input.instanceTileLRVertexPos.y > input.instanceTileLLVertexPos.y)
-	//	{
-	//		pos.y = input.instanceTileLRVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	}
-	//	else
-	//	{
-	//		pos.y = input.instanceTileLLVertexPos.y - input.instanceTileLRVertexPos.y;
-	//	}
-	//	break;
-	//	// Lower left vertex on diag up and to the right quad.
-	//case 8:
-	//	pos.y = 0.0f;
-	//	break;
-	//	// Lower right vertex on diag up and to the right.
-	//case 9:
-	//	if (input.instanceTileURVertexPos.y > input.instanceTileLLVertexPos.y)
-	//	{
-	//		pos.y = input.instanceTileURVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	}
-	//	else
-	//	{
-	//		pos.y = input.instanceTileLLVertexPos.y - input.instanceTileURVertexPos.y;
-	//	}
-	//	break;
-	//case 10:
-	//	pos.y = 0.0f;
-	//	break;
-	//case 11:
-	//	if (input.instanceTileURVertexPos.y > input.instanceTileLLVertexPos.y)
-	//	{
-	//		pos.y = input.instanceTileURVertexPos.y - input.instanceTileLLVertexPos.y;
-	//	}
-	//	else
-	//	{
-	//		pos.y = input.instanceTileLLVertexPos.y - input.instanceTileURVertexPos.y;
-	//	}
-	//	break;
-	//}
+	switch (input.VertexIndex)
+	{
+	// Lower left vertex on centre quad.
+	case 0:
+		leftPos = (input.instanceTileULVertexPos + input.instanceTileLLVertexPos) / 2;
+		offset.y = leftPos.y;
+		break;
 
-	//pos += input.instanceTileLLVertexPos;
+	// Lower right vertex on centre quad.
+	case 1:
+		rightPos = (input.instanceTileURVertexPos + input.instanceTileLRVertexPos) / 2;
+		offset.y = rightPos.y;
+		break;
 
-	return input.instanceTileLLVertexPos + pos;
+	// Upper left vertex on centre quad.
+	case 2:
+		leftPos = (input.instanceTileULVertexPos + input.instanceTileLLVertexPos) / 2;
+		offset.y = leftPos.y;
+		break;
+
+	// Upper right vertex on centre quad.
+	case 3:
+		rightPos = (input.instanceTileURVertexPos + input.instanceTileLRVertexPos) / 2;
+		offset.y = rightPos.y;
+		break;
+
+	// Lower left vertex on diag down and to the right quad.
+	case 4:
+		offset.y = input.instanceTileULVertexPos.y;
+		break;
+
+	// Lower right vertex on diag down and to the right quad.
+	case 5:
+		offset.y = input.instanceTileLRVertexPos.y;
+		break;
+
+	// Upper left vertex on diag down and to the right quad.
+	case 6:
+		offset.y = input.instanceTileULVertexPos.y;
+		break;
+
+	// Upper right vertex on diag down and to the right quad.
+	case 7:
+		offset.y = input.instanceTileLRVertexPos.y;
+		break;
+
+	// Lower left vertex on diag up and to the right quad.
+	case 8:
+		offset.y = input.instanceTileLLVertexPos.y;
+		break;
+
+	// Lower right vertex on diag up and to the right.
+	case 9:
+		offset.y = input.instanceTileURVertexPos.y;
+		break;
+
+	// Upper left vertex on diag up and to the right.
+	case 10:
+		offset.y = input.instanceTileLLVertexPos.y;
+		break;
+
+	case 11:
+		offset.y = input.instanceTileURVertexPos.y;
+		break;
+	}
+
+	offset.y -= input.instanceTileLLVertexPos.y;
+
+	return offset;
 }
 
 PixelInputType FoliageVS(VertexInputType input)
 {
 	PixelInputType output;
 
-	input.WorldPosition.xyz += GetPosition(input);
-	//input.WorldPosition.x += input.instanceTileCentrePos.x;
-	//input.WorldPosition.y += input.instanceTileCentrePos.y;
-	//input.WorldPosition.z += input.instanceTileCentrePos.z;
+	input.WorldPosition.xyz += input.instanceTileLLVertexPos.xyz;
+
+	float offset = GetPosition(input).y;
+
+	if (offset < 0.0f)
+	{
+		input.WorldPosition.y += offset;
+	}
+	else
+	{
+		input.WorldPosition.y -= offset;
+	}
 
 	// Give a 4th element to our matrix so it's the correct size;
 	input.WorldPosition.w = 1.0f;
@@ -188,3 +172,4 @@ PixelInputType FoliageVS(VertexInputType input)
 
 	return output;
 }
+

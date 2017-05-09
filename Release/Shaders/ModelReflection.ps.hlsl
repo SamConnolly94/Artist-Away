@@ -10,7 +10,8 @@ SamplerState BilinearMirror : register(s1);
 //////////////////////////
 
 Texture2D WaterHeightMap : register(t0);
-Texture2D shaderTexture[3] : register(t1);
+Texture2D DiffuseMap : register(t1);
+Texture2D AlphaMap : register(t2);
 
 //////////////////////////
 // Constant buffers
@@ -32,20 +33,20 @@ cbuffer LightBuffer : register(b1)
 	float	lightBufferPadding;
 }
 
-cbuffer MapBuffer : register(b2)
+cbuffer PositioningBuffer : register(b2)
+{
+	float yOffset;
+	float WaterPlaneY;
+	float2 posPadding;
+	float4 posPadding2;
+}
+
+cbuffer MapBuffer : register(b3)
 {
 	bool useAlphaMap;
 	bool useSpecularMap;
 	float3 padding2;
-	float3 viewDirection : TEXCOORD1;
 };
-
-cbuffer PositioningBuffer : register(b3)
-{
-	float WaterPlaneY;
-	float3 posPadding;
-	float4 posPadding2;
-}
 
 //////////////////////////
 // Structures
@@ -70,9 +71,8 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	float lightIntensity;
 	float4 colour;
 
-
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
-	textureColour = shaderTexture[0].Sample(TrilinearWrap, input.UV);
+	textureColour = DiffuseMap.Sample(TrilinearWrap, input.UV);
 
 	// Set the colour to the ambient colour.
 	colour = AmbientColour;
@@ -96,7 +96,7 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 
 	if (useAlphaMap)
 	{
-		float4 alphaColour = shaderTexture[1].Sample(TrilinearWrap, input.UV);
+		float4 alphaColour = AlphaMap.Sample(TrilinearWrap, input.UV);
 		if (alphaColour.r == 0.0f)
 		{
 			// Don't want to draw this pixel if the alpha map is black.
@@ -105,8 +105,6 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
 	}
 	return colour;
 }
-
-
 
 float4 ModelReflectionPS(PixelInputType input) : SV_TARGET
 {

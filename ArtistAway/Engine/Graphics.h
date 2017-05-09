@@ -176,6 +176,7 @@ private:
 	CFoliage* mpFoliage;
 	bool mRenderingMeshes = false;
 	bool mRenderingFoliage = false;
+	bool mRenderingWater = false;
 	sf::SoundBuffer* mpRainSoundBuffer;
 	sf::Sound* mpRainSound;
 	sf::SoundBuffer* mpBirdSquawkSoundBuffer;
@@ -185,6 +186,8 @@ private:
 
 	float mTimeSinceLastBirdSquawk = 0.0f;
 	const float mBirdSquawkPlayInterval = 20.0f;
+	float mLevelOfDetail = 1000.0f;
+	D3DXVECTOR3 mWindDirection = { 0.0f, 0.0f, 0.0f };
 public:
 	bool CreateFoliage(std::string filename);
 	bool CreateFoliage(double** heightMap, int width, int height);
@@ -196,6 +199,15 @@ public:
 	bool GetRainEnabled();
 	bool IsRenderingMeshes() { return mRenderingMeshes; };
 	bool IsRenderingFoliage() { return mRenderingFoliage; };
+	float GetLevelOfDetail() { return mLevelOfDetail; };
+	void SetLevelOfDetail(float value);
+	D3DXVECTOR3 GetWindDirection() { return mWindDirection; };
+	void SetWindDirection(D3DXVECTOR3 windDir);
+
+	bool IsRenderingWater() { return mRenderingWater; };
+
+	int GetScreenWidth() { return mScreenWidth; };
+	int GetScreenHeight() { return mScreenHeight; };
 };
 
 #endif

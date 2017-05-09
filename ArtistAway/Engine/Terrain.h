@@ -47,6 +47,8 @@ private:
 	float mLowestPoint;
 	float mHighestPoint;
 	CTexture* mpPatchMap;
+	float mGrassSlopeCutoff = 0.4f;
+	float mRockSlopeCutoff = 0.9f;
 public:
 	bool CreateTerrain(ID3D11Device* device);
 	void Render(ID3D11DeviceContext* context);
@@ -58,6 +60,12 @@ public:
 	unsigned int GetNumberOfGrassTextures();
 	unsigned int GetNumberOfRockTextures();
 	CTexture* GetPatchMap() { return mpPatchMap; };
+
+	float GetGrassSlopeCutoff() { return mGrassSlopeCutoff; };
+	float GetRockSlopeCutoff() { return mRockSlopeCutoff; };
+	void SetGrassSlopeCutoff(float value) { mGrassSlopeCutoff = value; };
+	void SetRockSlopeCutoff(float value) { mRockSlopeCutoff = value; };
+
 private:
 	bool InitialiseBuffers(ID3D11Device* device);
 	void ShutdownBuffers();

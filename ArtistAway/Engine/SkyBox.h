@@ -67,7 +67,8 @@ private:
 	const D3DXVECTOR4 kNightCentreColour = { 0.27f, 0.11f, 0.70f, 1.0f };
 	const D3DXVECTOR4 kNightApexColour = { 0.07f, 0.0f, 0.25f, 1.0f };
 	const D3DXVECTOR4 kEveningCentreColour = { 1.0f, 0.44f, 0.11f, 1.0f };
-	const D3DXVECTOR4 kEveningApexColour = { 0.0f, 0.15f, 0.66f, 1.0f };
+	//const D3DXVECTOR4 kEveningApexColour = { 0.0f, 0.15f, 0.66f, 1.0f };
+	const D3DXVECTOR4 kEveningApexColour = { 0.94f, 0.45f, 0.12f, 1.0f };
 
 	bool mIsDayTime = true;
 	bool mIsNightTime = false;

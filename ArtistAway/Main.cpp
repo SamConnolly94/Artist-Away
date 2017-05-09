@@ -11,14 +11,34 @@
 struct TweakStruct
 {
 	HANDLE hUpdateTerrainThread;
+	HANDLE hUpdateFoliageThread;
 	CEngine* enginePtr;
 	CTerrain* terrainPtr;
 	CHeightMap* heightMapPtr;
 	CHeightMap* foliageMapPtr;
 	bool readyForJoin;
+	bool foliageThreadReadyForJoin;
+	bool autorunDemo;
 };
 
+enum DemoState
+{
+	Setup,
+	FoliageDemo,
+	CloudDemo,
+	WaterDemo,
+	WaterGlide,
+	SlopeTexturingDemo,
+	GPURain,
+	GPUSnow,
+	Complete
+};
+
+DemoState currentDemoState;
+
+
 bool AutomaticSkyboxChangeEnabled;
+bool AutorunRunning;
 
 /// Function definitions.
 
@@ -26,6 +46,7 @@ bool AutomaticSkyboxChangeEnabled;
  * PARAM engine - The engine which we'll be running on, must already be initialised and allocated memory before being passed in.
 */
 void GameLoop(CEngine* &engine);
+void AutorunDemo(CEngine* &engine, TweakStruct* tweakVars, SentenceType* autorunMsg);
 
 /* This is where user input is controlled. This function must be called once every tick of our gameloop without exceptions, because we need to make sure we don't miss something like the quit key! 
  * PARAM engine - The pointer to the engine which is being used in our gameloop.
@@ -39,6 +60,12 @@ void Control(CEngine* &engine, CCamera* cam, CTerrain* terrain);
  * PARAM tweakVars - These are all the variables that will be required to be used throughout our tweakbar. Please look at the TweakStruct to understand the layout of this bar.
 */
 void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars);
+
+void TW_CALL SetLevelOfDetail(const void * value, void * clientData);
+void TW_CALL GetLevelOfDetail(void * value, void * clientData);
+
+/* The callback function for our update button. Should run the thread which updates the terrain.*/
+void TW_CALL AutorunDemonstration(void* clientData);
 
 /* A callback function which dictates what behaviour should occur when the height setting on the tweakbar is changed. */
 void TW_CALL SetHeight(const void *value, void * clientData);
@@ -65,11 +92,36 @@ void TW_CALL SetPersistence(const void *value, void *clientData);
 /* A getter function which keeps the persistence variable in our tweakbar up to date. */
 void TW_CALL GetPersistence(void *value, void * clientData);
 
+void TW_CALL SetOctaves(const void * value, void * clientData);
+void TW_CALL GetOctaves(void * value, void * clientData);
+
 /* The callback function for our update button. Should run the thread which updates the terrain.*/
 void TW_CALL UpdateTerrain(void* clientData);
 
-void TW_CALL SetOctaves(const void * value, void * clientData);
-void TW_CALL GetOctaves(void * value, void * clientData);
+//////////////////////////////
+// Foliage
+/////////////////////////////
+
+/* A callback function which dictates what behaviour should occur when the frequency setting on the tweakbar is changed. */
+void TW_CALL SetFoliageFrequency(const void *value, void *clientData);
+/* A getter function which keeps the frequency variable in our tweakbar up to date. */
+void TW_CALL GetFoliageFrequency(void *value, void * clientData);
+
+/* A callback function which dictates what behaviour should occur when the amplitude setting on the tweakbar is changed. */
+void TW_CALL SetFoliageAmplitude(const void *value, void *clientData);
+/* A getter function which keeps the amplitude variable in our tweakbar up to date. */
+void TW_CALL GetFoliageAmplitude(void *value, void * clientData);
+
+/* A callback function which dictates what behaviour should occur when the persistence setting on the tweakbar is changed. */
+void TW_CALL SetFoliagePersistence(const void *value, void *clientData);
+/* A getter function which keeps the persistence variable in our tweakbar up to date. */
+void TW_CALL GetFoliagePersistence(void *value, void * clientData);
+
+void TW_CALL SetFoliageOctaves(const void * value, void * clientData);
+void TW_CALL GetFoliageOctaves(void * value, void * clientData);
+
+/* The callback function for our update button. Should run the thread which updates the terrain.*/
+void TW_CALL UpdateFoliageMap(void* clientData);
 
 void TW_CALL SetDayTime(const void * value, void * clientData);
 void TW_CALL GetDayTime(void * value, void * clientData);
@@ -105,8 +157,14 @@ void TW_CALL GetRainEnabled(void * value, void * clientData);
 void TW_CALL SetSnowEnabled(const void * value, void * clientData);
 void TW_CALL GetSnowEnabled(void * value, void * clientData);
 
+void TW_CALL GetWindDirectionX(void * value, void * clientData);
+void TW_CALL SetWindDirectionX(const void * value, void * clientData);
+void TW_CALL GetWindDirectionZ(void * value, void * clientData);
+void TW_CALL SetWindDirectionZ(const void * value, void * clientData);
+
 /* The function which the thread will execute whiich should update a heightmap to the desired values, update the terrains heightmap, vertex and index buffers, and redraw the terrain. */
 unsigned int __stdcall UpdateMapThread(void* pdata);
+unsigned int __stdcall UpdateFoliageMapThread(void* pdata);
 
 /// Globals
 
@@ -117,6 +175,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	CEngine* engine;
 	AutomaticSkyboxChangeEnabled = true;
+	AutorunRunning = false;
+
 	// Enable run time memory check while running in debug.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -226,6 +286,10 @@ void GameLoop(CEngine* &engine)
 	const float kTextUpdateInterval = 0.2f;
 	float timeSinceTextUpdate = kTextUpdateInterval;
 
+	SentenceType* autorunSentence = engine->CreateText("", engine->GetScreenWidth() - 100.0f, engine->GetScreenHeight() - 100.0f, 128);
+
+	engine->GetFoliage()->SetWindStrength(0.1f);
+
 	// Process anything which should happen in the game here.
 	while (engine->IsRunning())
 	{
@@ -248,6 +312,21 @@ void GameLoop(CEngine* &engine)
 			tweakVars->readyForJoin = false;
 		}
 
+		if (tweakVars->foliageThreadReadyForJoin)
+		{
+			if (!CloseHandle(tweakVars->hUpdateFoliageThread))
+			{
+				gLogger->GetInstance().WriteLine("Failed to close handle of thread.");
+			}
+			tweakVars->enginePtr->GetFoliage()->SetUpdating(false);
+			tweakVars->foliageThreadReadyForJoin = false;
+		}
+
+		if (tweakVars->autorunDemo)
+		{
+			AutorunDemo(engine, tweakVars, autorunSentence);
+		}
+
 		// Update the text on our game.
 		if (timeSinceTextUpdate >= kTextUpdateInterval)
 		{
@@ -266,11 +345,292 @@ void GameLoop(CEngine* &engine)
 
 	heightMap->WriteMapToFile("Final.map");
 
+	tweakVars->enginePtr->RemoveText(autorunSentence);
+
 	delete tweakVars;
 	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(tweakVars).name());
 	delete heightMap;
 	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(heightMap).name());
 	delete foliageHeightMap;
+}
+
+float currentCloudRot = 0.0f;
+float currentGlideRot = 0.0f;
+float currentSlopeRot = 0.0f;
+float currentRainRot = 0.0f;
+float currentSnowRot = 0.0f;
+
+float elapsedTime = 0.0f;
+const float startLingerTime = 1.0f;
+const float foliageLingerTime = 1.0f;
+const float cloudLingerTime = 1.0f;
+const float waterLingerTime = 2.0f;
+const float waterGlideTime = 2.0f;
+const float slopeLingerTime = 2.0f;
+const float GPURainTime = 2.0f;
+const float GPUSnowTime = 2.0f;
+
+void AutorunDemo(CEngine *& engine, TweakStruct * tweakVars, SentenceType* autorunMsg)
+{
+	// Define a new sentence and display it on the screen so that the user is aware what's happening since they've clicked update.
+	engine->UpdateText(autorunMsg, "Autorunning Demonstration", (engine->GetScreenWidth() / 2) - 200.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+
+	CCamera* camera = engine->GetMainCamera();
+
+	float frameTime = engine->GetFrameTime();
+
+	const float rotSpeed = 5.0f;
+	const float sharpRotSpeed = 50.0f;
+	const float moveSpeed = 20.0f;
+	const float slowMoveSpeed = 2.0f;
+
+	switch (currentDemoState)
+	{
+	case DemoState::Setup:
+		camera->SetPosition({ -100.0f, 50.0f, 0.0f });
+		camera->SetRotation(20.0f, 50.0f, 0.0f);
+		engine->SetLevelOfDetail(10000.0f);
+		engine->SetWindDirection({ 0.0f, 0.0f, 0.2f });
+		engine->GetFoliage()->SetWindStrength(1.0f);
+		engine->SetSnowEnabled(false);
+		engine->SetRainEnabled(false);
+
+		elapsedTime += frameTime;
+
+		if (elapsedTime > startLingerTime)
+		{
+			currentDemoState = DemoState::FoliageDemo;
+			elapsedTime = 0.0f;
+		}
+		break;
+	case DemoState::FoliageDemo:
+		engine->UpdateText(autorunMsg, "Foliage", (engine->GetScreenWidth() / 2) - 100.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+		if (camera->GetPosition().x < -70.0f && camera->GetPosition().z < 30.0f)
+		{
+			camera->RotateY(-rotSpeed * frameTime);
+			camera->MoveLocalZ(moveSpeed * frameTime);
+		}
+		else
+		{
+			elapsedTime += frameTime;
+
+			if (elapsedTime > foliageLingerTime)
+			{
+				elapsedTime = 0.0f;
+				currentDemoState = DemoState::CloudDemo;
+			}
+		}
+
+		break;
+
+	case DemoState::CloudDemo:
+	{
+		engine->UpdateText(autorunMsg, "Bitmap clouds and colour changing skybox", (engine->GetScreenWidth() / 2) - 200.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+		bool keepRotating = false;
+
+		if (currentCloudRot < 75.0f)
+		{
+			keepRotating = true;
+		}
+
+		if (keepRotating)
+		{
+			camera->RotateX(-sharpRotSpeed * frameTime);
+			camera->RotateY(-rotSpeed * frameTime);
+			camera->MoveLocalZ(moveSpeed * frameTime);
+
+			currentCloudRot += sharpRotSpeed * frameTime;
+		}
+		else
+		{
+			//currentDemoState = DemoState::Complete;
+
+			elapsedTime += frameTime;
+			if (elapsedTime > foliageLingerTime)
+			{
+				elapsedTime = 0.0f;
+				tweakVars->terrainPtr->GetWater()->SetDepth(20.0f);
+				currentDemoState = DemoState::WaterDemo;
+
+			}
+		}
+		break;
+	}
+	case DemoState::WaterDemo:
+	{
+		engine->UpdateText(autorunMsg, "Water", (engine->GetScreenWidth() / 2) - 100.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+		bool keepRotating = false;
+
+		if (currentCloudRot > -35.0f)
+		{
+			keepRotating = true;
+		}
+
+		bool turnAround = false;
+
+		if (keepRotating)
+		{
+			camera->RotateX(sharpRotSpeed * frameTime);
+			camera->RotateY((sharpRotSpeed / 2.0f )* frameTime);
+			camera->MoveLocalZ((moveSpeed * 3.0f) * frameTime);
+
+			currentCloudRot -= sharpRotSpeed * frameTime;
+		}
+		
+		else
+		{
+			elapsedTime += frameTime;
+			if (elapsedTime > waterLingerTime)
+			{
+				elapsedTime = 0.0f;
+				currentDemoState = DemoState::WaterGlide;
+			}
+			else
+			{
+				camera->RotateY(sharpRotSpeed * frameTime);
+				camera->RotateX(-rotSpeed * frameTime);
+				camera->MoveLocalZ((moveSpeed / 2.0f) * frameTime);
+			}
+		}
+		break;
+	}
+	case DemoState::WaterGlide:
+	{
+		engine->UpdateText(autorunMsg, "Reflection and refraction", (engine->GetScreenWidth() / 2) - 200.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+		bool keepRotating = false;
+
+		if (currentGlideRot < 60.0f)
+		{
+			keepRotating = true;
+		}
+
+		if (keepRotating)
+		{
+			camera->RotateX(-sharpRotSpeed * frameTime);
+			camera->RotateY(sharpRotSpeed * frameTime);
+			camera->MoveLocalZ((moveSpeed)* frameTime);
+			currentGlideRot += sharpRotSpeed * frameTime;
+		}
+		else
+		{
+			elapsedTime += frameTime;
+			if (elapsedTime > waterGlideTime)
+			{
+				elapsedTime = 0.0f;
+				currentDemoState = DemoState::SlopeTexturingDemo;
+			}
+			else
+			{
+				camera->RotateX(rotSpeed * 2.0f * frameTime);
+				camera->RotateY((sharpRotSpeed / 2.0f) * frameTime);
+				camera->MoveLocalZ((moveSpeed)* frameTime);
+			}
+		}
+	}
+		break;
+	case DemoState::SlopeTexturingDemo:
+	{
+		engine->UpdateText(autorunMsg, "Slope based texturing", (engine->GetScreenWidth() / 2) - 200.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+		bool keepRotating = false;
+
+		if (currentSlopeRot < 90.0f)
+		{
+			keepRotating = true;
+		}
+
+		if (keepRotating)
+		{
+			camera->RotateY(sharpRotSpeed * frameTime);
+			camera->RotateX(rotSpeed * frameTime);
+			currentSlopeRot += sharpRotSpeed * frameTime;
+		}
+		else
+		{
+			elapsedTime += frameTime;
+			if (elapsedTime > slopeLingerTime)
+			{
+				elapsedTime = 0.0f;
+				currentSlopeRot = 0.0f;
+				engine->SetRainEnabled(true);
+				engine->SetWindDirection({ 1.0f, 0.0f, 1.0f });
+				currentDemoState = DemoState::GPURain;
+			}
+
+		}
+	}
+		break;
+	case DemoState::GPURain:
+	{
+		engine->UpdateText(autorunMsg, "GPU rain particle systems", (engine->GetScreenWidth() / 2) - 200.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+		bool keepRotating = false;
+
+		if (currentRainRot < 350.0f)
+		{
+			keepRotating = true;
+		}
+
+		if (keepRotating)
+		{
+			camera->RotateX(-sharpRotSpeed * frameTime);
+			camera->MoveLocalZ((moveSpeed)* frameTime);
+			currentRainRot += sharpRotSpeed * frameTime;
+		}
+		else
+		{
+			elapsedTime += frameTime;
+			if (elapsedTime > GPURainTime)
+			{
+				currentRainRot = 0.0f;
+				elapsedTime = 0.0f;
+				engine->SetRainEnabled(false);
+				engine->SetWindDirection({ 0.0f, 0.0f, 0.0f });
+				engine->SetSnowEnabled(true);
+				currentDemoState = DemoState::GPUSnow;
+			}
+
+		}
+	}
+	break;
+	case DemoState::GPUSnow:
+	{
+		engine->UpdateText(autorunMsg, "GPU snow particle systems", (engine->GetScreenWidth() / 2) - 200.0f, 50.0f, { 1.0f, 1.0f, 0.0f });
+	
+		bool keepTurning = false;
+
+		if (currentSnowRot < 30.0f)
+		{
+			keepTurning = true;
+		}
+
+		if (keepTurning)
+		{
+			camera->RotateY((-rotSpeed * 2.0f) * frameTime);
+			camera->RotateX((rotSpeed) * frameTime);
+			currentSnowRot += (rotSpeed * 2.0f) * frameTime;
+		}
+		else
+		{
+			elapsedTime += frameTime;
+			if (elapsedTime > GPUSnowTime)
+			{
+				elapsedTime = 0.0f;
+				currentSnowRot = 0.0f;
+				currentDemoState = DemoState::Complete;
+			}
+			else
+			{
+				camera->MoveLocalZ(-(moveSpeed * 3.0f) * frameTime);
+			}
+		}
+	}
+	break;
+	case DemoState::Complete:
+			tweakVars->autorunDemo = false;
+			engine->UpdateText(autorunMsg, "", engine->GetScreenWidth() - 300.0f, engine->GetScreenHeight() - 300.0f, { 0.0f, 0.7f, 0.0f });
+			currentCloudRot = 0.0f;
+		break;
+	}
+
 }
 
 /* This is where user input is controlled. This function must be called once every tick of our gameloop without exceptions, because we need to make sure we don't miss something like the quit key!
@@ -341,6 +701,11 @@ void Control(CEngine* &engine, CCamera* cam, CTerrain* terrain)
 		engine->ToggleWireframe();
 	}
 
+	if (engine->KeyHit(PrioEngine::Key::kF11))
+	{
+		engine->ToggleFullscreen(PrioEngine::Key::kF11);
+	}
+
 }
 
 /* Sets up the tweakbar on our window, adds variables to the window.
@@ -353,6 +718,10 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	ptr = TwNewBar("Perlin Noise");
 	gLogger->GetInstance().MemoryAllocWriteLine(typeid(ptr).name());
 	TwDefine(" GLOBAL help='Control the perlin noise generation through these tabs. ' ");
+
+	TwAddVarCB(ptr, "Level of Detail", TW_TYPE_FLOAT, SetLevelOfDetail, GetLevelOfDetail, tweakVarsPtr, "min=1 max=10000 step=1 group=Options label='Level of Detail' ");
+	TwAddButton(ptr, "RunDemo", AutorunDemonstration, tweakVarsPtr, "group=Options label='Run Demonstration'");
+
 	TwAddVarCB(ptr, "Height", TW_TYPE_INT32, SetHeight, GetHeight, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Height' ");
 	TwAddVarCB(ptr, "Width", TW_TYPE_INT32, SetWidth, GetWidth, tweakVarsPtr, "min=10 max=1000 step=1 group=Terrain label='Width' ");
 	TwAddVarCB(ptr, "Persistence", TW_TYPE_DOUBLE, SetPersistence, GetPersistence, tweakVarsPtr, "min=0 max=1 step=0.1 group=Terrain label='Persistence' ");
@@ -360,6 +729,13 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	TwAddVarCB(ptr, "Octaves", TW_TYPE_UINT32, SetOctaves, GetOctaves, tweakVarsPtr, "min=1 max=100 step=1 group=Terrain label='Octaves'");
 	TwAddVarCB(ptr, "Amplitude", TW_TYPE_FLOAT, SetAmplitude, GetAmplitude, tweakVarsPtr, "min=0 max=1 step=0.1 group=Terrain label='Amplitude' ");
 	TwAddButton(ptr, "Update", UpdateTerrain, tweakVarsPtr, "group=Terrain label='Update'");
+
+	// Foliage vars
+	TwAddVarCB(ptr, "Foliage Persistence", TW_TYPE_DOUBLE, SetFoliagePersistence, GetFoliagePersistence, tweakVarsPtr, "min=0 max=1 step=0.1 group=Foliage label='Persistence' ");
+	TwAddVarCB(ptr, "Foliage Frequency", TW_TYPE_FLOAT, SetFoliageFrequency, GetFoliageFrequency, tweakVarsPtr, "min=0 max=1000 step=0.1 group=Foliage label='Frequency' ");
+	TwAddVarCB(ptr, "Foliage Octaves", TW_TYPE_UINT32, SetFoliageOctaves, GetFoliageOctaves, tweakVarsPtr, "min=1 max=100 step=1 group=Foliage label='Octaves'");
+	TwAddVarCB(ptr, "Foliage Amplitude", TW_TYPE_FLOAT, SetFoliageAmplitude, GetFoliageAmplitude, tweakVarsPtr, "min=0 max=1 step=0.1 group=Foliage label='Amplitude' ");
+	TwAddButton(ptr, "Foliage Update", UpdateFoliageMap, tweakVarsPtr, "group=Foliage label='Update'");
 
 	TwAddVarCB(ptr, "Set Day Time", TW_TYPE_BOOL8, SetDayTime, GetDayTime, tweakVarsPtr, "group=Skybox label='Day Time'");
 	TwAddVarCB(ptr, "Set Evening Time", TW_TYPE_BOOL8, SetEveningTime, GetEveningTime, tweakVarsPtr, "group=Skybox label='Evening Time'");
@@ -379,8 +755,32 @@ void SetupTweakbar(CTwBar *& ptr, TweakStruct* tweakVars)
 	// Weather vars
 	TwAddVarCB(ptr, "Rain Enabled", TW_TYPE_BOOL8, SetRainEnabled, GetRainEnabled, tweakVarsPtr, "group=Weather label='Rain Enabled'");
 	TwAddVarCB(ptr, "Snow Enabled", TW_TYPE_BOOL8, SetSnowEnabled, GetSnowEnabled, tweakVarsPtr, "group=Weather label='Snow Enabled'");
+	TwAddVarCB(ptr, "Wind X", TW_TYPE_FLOAT, SetWindDirectionX, GetWindDirectionX, tweakVarsPtr, "group=Weather label='Wind X'");
+	TwAddVarCB(ptr, "Wind Z", TW_TYPE_FLOAT, SetWindDirectionZ, GetWindDirectionZ, tweakVarsPtr, "group=Weather label='Wind Z'");
+}
 
+void TW_CALL SetLevelOfDetail(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float levelOfDetail = *static_cast<const float *>(value);
+	tweakVars->enginePtr->SetLevelOfDetail(levelOfDetail);
+}
 
+void TW_CALL GetLevelOfDetail(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->enginePtr->GetLevelOfDetail();
+}
+
+void TW_CALL AutorunDemonstration(void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	tweakVars->autorunDemo = true;
+	currentDemoState = DemoState::Setup;
+	elapsedTime = 0.0f;
+	currentCloudRot = 0.0f;
+	currentGlideRot = 0.0f;
+	currentSlopeRot = 0.0f;
 }
 
 /* A callback function which dictates what behaviour should occur when the height setting on the tweakbar is changed. */
@@ -534,6 +934,65 @@ void TW_CALL UpdateTerrain(void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
 	tweakVars->hUpdateTerrainThread = (HANDLE)_beginthreadex(NULL, 0, UpdateMapThread, clientData, 0, NULL);
+}
+
+void TW_CALL UpdateFoliageMap(void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	tweakVars->hUpdateFoliageThread = (HANDLE)_beginthreadex(NULL, 0, UpdateFoliageMapThread, clientData, 0, NULL);
+}
+
+
+void TW_CALL SetFoliageFrequency(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float frequency = *static_cast<const float *>(value);
+	tweakVars->foliageMapPtr->SetFrequency(frequency);
+}
+
+void TW_CALL GetFoliageFrequency(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->foliageMapPtr->GetFrequency();
+}
+
+void TW_CALL SetFoliageAmplitude(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float amplitude = *static_cast<const float *>(value);
+	tweakVars->foliageMapPtr->SetAmplitude(amplitude);
+}
+
+void TW_CALL GetFoliageAmplitude(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->foliageMapPtr->GetAmplitude();
+}
+
+void TW_CALL SetFoliagePersistence(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	double persistence = *static_cast<const double *>(value);
+	tweakVars->foliageMapPtr->SetPersistence(persistence);
+}
+
+void TW_CALL GetFoliagePersistence(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<double *>(value) = tweakVars->foliageMapPtr->GetPersistence();
+}
+
+void TW_CALL SetFoliageOctaves(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	int octaves = *static_cast<const int *>(value);
+	tweakVars->foliageMapPtr->SetNumberOfOctaves(octaves);
+}
+
+void TW_CALL GetFoliageOctaves(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<unsigned int *>(value) = tweakVars->foliageMapPtr->GetNumberOfOctaves();
 }
 
 void TW_CALL SetWaterMovementX(const void * value, void * clientData)
@@ -696,6 +1155,36 @@ void TW_CALL GetSnowEnabled(void * value, void * clientData)
 	*static_cast<bool *>(value) = tweakVars->enginePtr->GetSnowEnabled();
 }
 
+void TW_CALL GetWindDirectionX(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->enginePtr->GetWindDirection().x;
+}
+
+void TW_CALL SetWindDirectionX(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float windXVal = *static_cast<const float *>(value);
+	D3DXVECTOR3 windDir = tweakVars->enginePtr->GetWindDirection();
+	windDir.x = windXVal;
+	tweakVars->enginePtr->SetWindDirection(windDir);
+}
+
+void TW_CALL GetWindDirectionZ(void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	*static_cast<float *>(value) = tweakVars->enginePtr->GetWindDirection().z;
+}
+
+void TW_CALL SetWindDirectionZ(const void * value, void * clientData)
+{
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
+	float windZVal = *static_cast<const float *>(value);
+	D3DXVECTOR3 windDir = tweakVars->enginePtr->GetWindDirection();
+	windDir.z = windZVal;
+	tweakVars->enginePtr->SetWindDirection(windDir);
+}
+
 void TW_CALL GetDepth(void * value, void * clientData)
 {
 	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(clientData);
@@ -728,9 +1217,10 @@ unsigned int __stdcall UpdateMapThread(void* pdata)
 	int height = tweakVars->heightMapPtr->GetHeight();
 	tweakVars->foliageMapPtr->SetRequestedWidth(width);
 	tweakVars->foliageMapPtr->SetRequestedHeight(height);
-	tweakVars->foliageMapPtr->SetFrequency(tweakVars->heightMapPtr->GetFrequency() * 100.0f);
+	//(height + width) / 2 * 0.6f;
+	tweakVars->foliageMapPtr->SetFrequency((height + width) / 2 * 0.6f);
 	tweakVars->foliageMapPtr->UpdateMap();
-	tweakVars->enginePtr->UpdateFoliage(tweakVars->heightMapPtr->GetMap(), width, height);
+	tweakVars->enginePtr->UpdateFoliage(tweakVars->foliageMapPtr->GetMap(), width, height);
 
 	// Remove thhe sentence because we're done now.
 	tweakVars->enginePtr->RemoveText(sentence);
@@ -742,4 +1232,36 @@ unsigned int __stdcall UpdateMapThread(void* pdata)
 	// No errors, return success!
 	return 0;
 
+}
+
+unsigned int __stdcall UpdateFoliageMapThread(void * pdata)
+{
+	// Cast the void data back over to our TweakStructure type.
+	TweakStruct* tweakVars = reinterpret_cast<TweakStruct*>(pdata);
+	// Define a new sentence and display it on the screen so that the user is aware what's happening since they've clicked update.
+	SentenceType* sentence = tweakVars->enginePtr->CreateText("Generating foliage height map on separate thread, please wait...", 500, 100, 128);
+	
+	// Delay this thread until both the render passes are done.
+	while (tweakVars->enginePtr->IsRenderingFoliage() || tweakVars->enginePtr->IsRenderingWater()) {};
+
+	tweakVars->enginePtr->GetFoliage()->SetUpdating(true);
+	// Update foliage.
+	int width = tweakVars->heightMapPtr->GetWidth();
+	int height = tweakVars->heightMapPtr->GetHeight();
+	tweakVars->foliageMapPtr->SetRequestedWidth(width);
+	tweakVars->foliageMapPtr->SetRequestedHeight(height);
+	//(height + width) / 2 * 0.6f;
+	//tweakVars->foliageMapPtr->SetFrequency((height + width) / 2 * 0.6f);
+	tweakVars->foliageMapPtr->UpdateMap();
+	tweakVars->enginePtr->UpdateFoliage(tweakVars->foliageMapPtr->GetMap(), width, height);
+
+	// Remove thhe sentence because we're done now.
+	tweakVars->enginePtr->RemoveText(sentence);
+	// Output a deallocation of memory message to the log.
+	gLogger->GetInstance().MemoryDeallocWriteLine(typeid(sentence).name());
+	// Set flag which indicates that the thread is ready to rejoin the main thread, the mainthread should be checking this in the game loop.
+	tweakVars->foliageThreadReadyForJoin = true;
+
+	// No errors, return success!
+	return 0;
 }

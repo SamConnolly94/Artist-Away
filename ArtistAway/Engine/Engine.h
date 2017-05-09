@@ -187,6 +187,28 @@ public:
 	void SetSnowEnabled(bool value);
 	// Grab the toggle to find if snow is enabled or not.
 	bool GetSnowEnabled();
+
+	// Get the direction of the wind, this will be applied throughout the scene to foliage and weather functions
+	D3DXVECTOR3 GetWindDirection();
+	// Set the direction of the wind, this will be applied throughout the scene to foliage and weather.
+	void SetWindDirection(D3DXVECTOR3 value);
+
+	///////////////////////////
+	// Model optimisation stuff.
+	///////////////////////////
+
+	float GetLevelOfDetail();
+	void SetLevelOfDetail(float value);
+
+	/////////////////////////
+	// Boolean flags to prevent threading issues.
+	/////////////////////////
+
+	bool IsRenderingFoliage() { return mpGraphics->IsRenderingFoliage(); };
+	bool IsRenderingWater() { return mpGraphics->IsRenderingWater(); };
+
+	int GetScreenWidth() { return mpGraphics->GetScreenWidth(); };
+	int GetScreenHeight() { return mpGraphics->GetScreenHeight(); };
 private:
 	std::vector<CMesh*> mpListOfTreeMeshes;
 };

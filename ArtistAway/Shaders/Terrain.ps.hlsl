@@ -46,6 +46,12 @@ cbuffer TerrainAreaBuffer : register(b2)
 	float sandHeight;
 }
 
+cbuffer SlopeBuffer : register (b3)
+{
+	float slopeGrassCutoff;
+	float slopeRockCuttoff;
+	float2 slopePadding;
+}
 //////////////////////
 // Typedefs
 /////////////////////
@@ -157,6 +163,9 @@ float4 TerrainPixel(PixelInputType input) : SV_TARGET
 
 	float4 patchColour = patchMap.Sample(SampleType, input.tex);
 
+	//float slopeGrassCutoff = 0.6f;
+	//float slopeRockCuttoff = 0.8f;
+
 	/////////// SNOW //////////////////
 	if (worldPos > snowHeight)
 	{
@@ -171,12 +180,51 @@ float4 TerrainPixel(PixelInputType input) : SV_TARGET
 		float4 grassTex = GetPatchGrassColour(input, blending);
 		float heightDiff = snowHeight - worldPos;
 		float blendFactor = heightDiff / 5.0f;
-		textureColour = lerp(rockTex, grassTex, blendFactor);
+		float4 grassColour = lerp(rockTex, grassTex, blendFactor);
+
+		float4 slopeColour = GetCombinedRockLerp(input, blending); 
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
 	}
 	////////////// GRASS ///////////////////
 	else if (worldPos > grassHeight)
 	{
-		textureColour = GetPatchGrassColour(input, blending);
+		float4 slopeColour = GetCombinedRockLerp(input, blending);
+		float4 grassColour = GetPatchGrassColour(input, blending);
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
 	}
 	////////////////// GRASS BLENDED WITH DIRT ////////////////
 	else if (worldPos > grassHeight - 2.0f)
@@ -184,13 +232,54 @@ float4 TerrainPixel(PixelInputType input) : SV_TARGET
 		float4 grassTex = GetPatchGrassColour(input, blending);
 		float4 dirtTex = GetTriplanarTextureColour(0, blending, input.worldPosition, 1.0f);
 		float heightDiff = grassHeight - worldPos;
-		float blendFactor = heightDiff / 2.0f;
-		textureColour = lerp(grassTex, dirtTex, blendFactor);
+		float grassBlendFactor = heightDiff / 2.0f;
+		float4 grassColour = lerp(grassTex, dirtTex, grassBlendFactor);
+
+		float4 slopeColour = GetCombinedRockLerp(input, blending);
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
 	}
 	/////////////////////// DIRT //////////////////////
 	else if (worldPos > dirtHeight)
 	{
-		textureColour = GetTriplanarTextureColour(0, blending, input.worldPosition, 1.0f);
+		float4 grassColour = GetTriplanarTextureColour(0, blending, input.worldPosition, 1.0f);
+
+		float4 slopeColour = GetCombinedRockLerp(input, blending);
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
+
 	}
 	////////////////////// DIRT BLENDED WITH SAND ///////////////
 	else if (worldPos > dirtHeight - 2.0f)
@@ -199,17 +288,80 @@ float4 TerrainPixel(PixelInputType input) : SV_TARGET
 		float4 sandTex = GetTriplanarTextureColour(1, blending, input.worldPosition, 1.0f);
 		float heightDiff = dirtHeight - worldPos;
 		float blendFactor = heightDiff / 2.0f;
-		textureColour = lerp(dirtTex, sandTex, blendFactor);
+		float4 grassColour = lerp(dirtTex, sandTex, blendFactor);
+
+		float4 slopeColour = GetCombinedRockLerp(input, blending);
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
+
 	}
 	//////////////////// SAND //////////////////
 	else if (worldPos > sandHeight)
 	{
-		textureColour = GetTriplanarTextureColour(1, blending, input.worldPosition, 1.0f);
+		float4 grassColour = GetTriplanarTextureColour(1, blending, input.worldPosition, 1.0f);
+
+
+		float4 slopeColour = GetCombinedRockLerp(input, blending);
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
 	}
 	// Below all height, assume sand.
 	else
 	{
-		textureColour = GetTriplanarTextureColour(1, blending, input.worldPosition, 1.0f);
+		float4 grassColour = GetTriplanarTextureColour(1, blending, input.worldPosition, 1.0f);
+
+
+		float4 slopeColour = GetCombinedRockLerp(input, blending);
+		float4 rockColour = GetCombinedRockLerp(input, blending);
+
+		float slope = 1.0f - input.normal.y;
+
+		if (slope < slopeGrassCutoff)
+		{
+			float blendFactor = slope / slopeGrassCutoff;
+			textureColour = lerp(grassColour, slopeColour, blendFactor);
+		}
+		else if (slope < slopeRockCuttoff && slope >= slopeGrassCutoff)
+		{
+			float blendFactor = (slope - slopeGrassCutoff) * (1.0f / (slopeRockCuttoff - slopeGrassCutoff));
+			textureColour = lerp(slopeColour, rockColour, blendFactor);
+		}
+		else
+		{
+			textureColour = rockColour;
+		}
 	}
 
 	// Set the colour to the ambient colour.

@@ -36,6 +36,13 @@ private:
 		float sandHeight;
 		D3DXVECTOR4 terrainAreaPadding;
 	};
+
+	struct SlopeBufferType
+	{
+		float slopeGrassCutoff;
+		float slopeRockCuttoff;
+		D3DXVECTOR2 slopePadding;
+	};
 public:
 	CTerrainShader();
 	~CTerrainShader();
@@ -45,7 +52,7 @@ public:
 	bool Render(ID3D11DeviceContext* deviceContext, int indexCount, CTexture** texturesArray, unsigned int numberOfTextures, CTexture** grassTexturesArray, unsigned int numberOfGrassTextures,
 		CTexture** rockTexturesArray, unsigned int numberOfRockTextures,
 		D3DXVECTOR3 lightDirection, D3DXVECTOR4 diffuseColour, 	D3DXVECTOR4 ambientColour, float highestPos, float lowestPos, D3DXVECTOR3 worldPosition,
-		float snowHeight, float grassHeight, float dirtHeight, float sandHeight);
+		float snowHeight, float grassHeight, float dirtHeight, float sandHeight, float slopeGrassCutoff, float slopeRockCutoff);
 
 private:
 	bool InitialiseShader(ID3D11Device* device, HWND hwnd, std::string vsFilename, std::string psFilename);
@@ -56,7 +63,8 @@ private:
 		CTexture** textureArray, unsigned int numberOfTextures, CTexture** grassTexturesArray, unsigned int numberOfGrassTextures,
 		CTexture** rockTexturesArray, unsigned int numberOfRockTextures,
 		D3DXVECTOR3 lightDirection, D3DXVECTOR4 diffuseColour, D3DXVECTOR4 ambientColour, 
-		float highestPos, float lowestPos, D3DXVECTOR3 worldPosition, float snowHeight, float grassHeight, float dirtHeight, float sandHeight);
+		float highestPos, float lowestPos, D3DXVECTOR3 worldPosition, float snowHeight, float grassHeight, float dirtHeight, float sandHeight,
+		float slopeGrassCutoff, float slopeRockCutoff);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
 private:
@@ -67,6 +75,7 @@ private:
 	ID3D11Buffer* mpLightBuffer;
 	ID3D11Buffer* mpPositioningBuffer;
 	ID3D11Buffer* mpTerrainAreaBuffer;
+	ID3D11Buffer* mpSlopeBuffer;
 	CTexture* mpPatchMap;
 };
 

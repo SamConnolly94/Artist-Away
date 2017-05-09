@@ -149,6 +149,8 @@ float4 WaterSurfacePS(PixelInputType input) : SV_TARGET
 	float exp = pow(1 - saturate(dot(waterNormal, normalToCamera)), 5);
 	float fresnel = saturate(lerp(r0, 1, exp));
 	fresnel = 0.25f;
+	
+	//fresnel = 1.0f;
 	return lerp(refractColour, reflectColour, fresnel);
 
 }

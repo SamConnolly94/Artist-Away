@@ -54,11 +54,13 @@ private:
 	float mFoliageMinCuttoff;
 	float mFoliageMaxCutoff;
 	bool mIsUpdating = false;
+	float mWindStrength;
 // Height map functions
 private:
 	double** mpHeightMap;
 	int mWidth;
 	int mHeight;
+	
 public:
 	void SetWidth(int width);
 	void SetHeight(int height);
@@ -74,6 +76,9 @@ public:
 	float GetFoliageMaximumFreq() { return mFoliageMaxCutoff; };
 	bool IsUpdating() { return mIsUpdating; };
 	void SetUpdating(bool value) { mIsUpdating = value; };
+	void SetWindDirection(D3DXVECTOR3 windDir);
+	void SetWindStrength(float value);
+	float GetWindStrength();
 };
 
 #endif

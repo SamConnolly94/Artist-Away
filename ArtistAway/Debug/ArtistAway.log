@@ -1,7 +1,17 @@
 ﻿  Main.cpp
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(161): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(182): warning C4101: 'ambientLight': unreferenced local variable
-c:\users\sam\source\repos\artist-away\artistaway\main.cpp(450): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(221): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(289): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(242): warning C4101: 'ambientLight': unreferenced local variable
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(375): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(404): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(425): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(458): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(496): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(530): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(560): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(591): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(608): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\sam\source\repos\artist-away\artistaway\main.cpp(829): warning C4244: 'initializing': conversion from 'const double' to 'float', possible loss of data
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.exe
   ArtistAway.vcxproj -> C:\Users\Sam\Source\Repos\Artist-Away\Debug\ArtistAway.pdb (Full PDB)
   "Made dir, copying shaders to that dir."
@@ -29,6 +39,8 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(450): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\RefractedModel.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Skybox.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Skybox.vs.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\SkyboxReflection.ps.hlsl
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\SkyboxReflection.vs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Snow.gs.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Snow.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\Snow.vs.hlsl
@@ -46,7 +58,7 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(450): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\WaterHeight.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\WaterSurface.ps.hlsl
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Shaders\WaterSurface.vs.hlsl
-  41 File(s) copied
+  43 File(s) copied
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\AntTweakBar64.dll
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Engine\Dependencies\DLLs\assimp-vc140-mt.dll
@@ -134,6 +146,14 @@ c:\users\sam\source\repos\artist-away\artistaway\main.cpp(450): warning C4244: '
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\GrassAlpha.png
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Reeds.png
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\ReedsAlpha.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Old\Grass.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Old\GrassAlpha.png
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Thin\Grass.png
   C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\Textures\Foliage\Thin\GrassAlpha.png
-  79 File(s) copied
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\UI\Clouds.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\UI\Foliage.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\UI\Rain.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\UI\Reflection.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\UI\Snow.png
+  C:\Users\Sam\Source\Repos\Artist-Away\ArtistAway\Resources\UI\Water.png
+  87 File(s) copied

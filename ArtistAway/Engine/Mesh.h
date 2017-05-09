@@ -70,8 +70,9 @@ public:
 	CModel* CreateModel();
 	bool LoadMesh(std::string filename, float modelRadius = 1.0f);
 
-	void Render(ID3D11DeviceContext* context, CFrustum* frustum, CDiffuseLightShader* shader, CLight* light);
-	void Render(ID3D11DeviceContext* context, CFrustum* frustum, CReflectRefractShader* shader);
+	void Render(ID3D11DeviceContext* context, CFrustum* frustum, CDiffuseLightShader* shader, CLight* light, D3DXVECTOR3 cameraPos);
+	void Render(ID3D11DeviceContext* context, CFrustum* frustum, CReflectRefractShader* shader, D3DXVECTOR3 cameraPos);
+	void RenderReflection(ID3D11DeviceContext* context, CFrustum* frustum, CReflectRefractShader* shader, D3DXVECTOR3 cameraPos);
 	void Shutdown();
 private:
 	bool LoadAssimpModel(std::string filename);
@@ -79,5 +80,9 @@ private:
 	unsigned int mIndexCount;
 	MaterialType* mSubMeshMaterials;
 	int numberOfSubMaterials;
+	float mLevelOfDetail = 100.0f;
+public:
+	void SetLevelOfDetail(float value) { mLevelOfDetail = value; };
+	float GetLevelOfDetail() { return mLevelOfDetail; };
 };
 #endif
